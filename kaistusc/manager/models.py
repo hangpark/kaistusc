@@ -23,7 +23,7 @@ class Category(models.Model):
     class Meta:
         ordering = ['is_open']
         verbose_name = _('카테고리')
-        verbose_name_plural = _('카테고리')
+        verbose_name_plural = _('카테고리(들)')
 
 
 class MenuQuerySet(models.QuerySet):
@@ -93,7 +93,7 @@ class Menu(models.Model):
     class Meta:
         ordering = ['category', 'is_open', 'level']
         verbose_name = _('메뉴')
-        verbose_name_plural = _('메뉴')
+        verbose_name_plural = _('메뉴(들)')
 
 
 class GroupMenuPermission(models.Model):
@@ -117,4 +117,4 @@ class GroupMenuPermission(models.Model):
     class Meta:
         ordering = ['menu', 'group']
         verbose_name = _('그룹별 메뉴 접근권한')
-        verbose_name_plural = _('그룹별 메뉴 접근권한')
+        verbose_name_plural = _('그룹별 메뉴 접근권한(들)')
