@@ -76,7 +76,7 @@ class Menu(models.Model):
         help_text=_("같은 카테고리 메뉴들 간의 노출순서"))
 
     is_open = models.BooleanField(
-        _("사이트맵 노출여부"),
+        _("메뉴 공개여부"),
         default=True)
 
     accessible_groups = models.ManyToManyField(
