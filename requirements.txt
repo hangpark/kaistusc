@@ -1,0 +1,4 @@
+Django==1.10.4
+pkg-resources==0.0.0
+PyMySQL==0.7.9
+uWSGI==2.0.14

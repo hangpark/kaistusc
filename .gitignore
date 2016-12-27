@@ -1,0 +1,12 @@
+# Byte-complied / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Django migrations
+migrations/
+
+# Private data
+private_settings.py
+
+# Swap files
+*.swp
