@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext as _
 
 
@@ -23,6 +24,32 @@ class Category(models.Model):
         ordering = ['is_open']
         verbose_name = _('카테고리')
         verbose_name_plural = _('카테고리')
+
+
+class MenuQuerySet(models.QuerySet):
+    """
+    Menu에 대한 커스텀 query set.
+    """
+
+    def available_for(self, user):
+        """
+        특정 유저가 접근가능한 메뉴를 필터링한다.
+        """
+        q_default = Q(is_open=True)
+        q_user = Q(groupmenupermission__group__in=user.groups.all())
+        return self.filter(q_default | q_user).distinct()
+
+
+class MenuManager(models.Manager):
+    """
+    Menu에 대한 커스텀 manager. Menu와 MenuQuerySet을 연결한다.
+    """
+
+    def get_queryset(self):
+        return MenuQuerySet(self.model, using=self._db)
+
+    def available_for(self, user):
+        return self.get_queryset().available_for(user)
 
 
 class Menu(models.Model):
@@ -56,6 +83,9 @@ class Menu(models.Model):
         'auth.Group',
         through='GroupMenuPermission', related_name='accessible_menus',
         verbose_name=_("접근가능그룹"))
+
+    # Custom Manager
+    objects = MenuManager()
 
     def __str__(self):
         return self.category.name + "/" + self.name
