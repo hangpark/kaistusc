@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+
 import pymysql
 
 # Private setting values are ignored by GIT by adding private_settings.py into .gitignore
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'manager',
 ]
 
 MIDDLEWARE = [
