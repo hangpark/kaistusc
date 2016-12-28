@@ -3,6 +3,12 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
+# Service access permissions
+PERMISSION_ALL_USERS = 'ALL'
+PERMISSION_LOGGED_IN_USERS = 'LOG'
+PERMISSION_ACCESSIBLE_GROUPS = 'GRP'
+PERMISSION_CLOSED = 'CLS'
+
 
 class Category(models.Model):
     """
@@ -17,13 +23,13 @@ class Category(models.Model):
         _("사이트맵 노출여부"),
         default=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         ordering = ['is_open']
         verbose_name = _('카테고리')
         verbose_name_plural = _('카테고리(들)')
+
+    def __str__(self):
+        return self.name
 
 
 class ServiceQuerySet(models.QuerySet):
@@ -31,13 +37,22 @@ class ServiceQuerySet(models.QuerySet):
     Service에 대한 커스텀 query set.
     """
 
-    def available_for(self, user):
+    def accessible_for(self, user):
         """
         특정 유저가 접근가능한 서비스를 필터링한다.
         """
-        q_default = Q(is_open=True)
-        q_user = Q(groupservicepermission__group__in=user.groups.all())
-        return self.filter(q_default | q_user).distinct()
+        # 관리자 계정인 경우 모든 서비스 접근 가능
+        if user.is_superuser:
+            return self
+
+        # 일반 유저의 경우 조건에 따라 서비스 필터링
+        q = Q(permission=PERMISSION_ALL_USERS)
+        if user.is_authenticated():
+            q |= Q(permission=PERMISSION_LOGGED_IN_USERS)
+        q |= Q(permission=PERMISSION_ACCESSIBLE_GROUPS,
+            groupservicepermission__group__in=user.groups.all())
+        q &= ~Q(permission=PERMISSION_CLOSED)
+        return self.filter(q).distinct()
 
 
 class ServiceManager(models.Manager):
@@ -48,8 +63,8 @@ class ServiceManager(models.Manager):
     def get_queryset(self):
         return ServiceQuerySet(self.model, using=self._db)
 
-    def available_for(self, user):
-        return self.get_queryset().available_for(user)
+    def accessible_for(self, user):
+        return self.get_queryset().accessible_for(user)
 
 
 class Service(models.Model):
@@ -75,25 +90,46 @@ class Service(models.Model):
         default=1,
         help_text=_("같은 카테고리 내 서비스 간의 노출순서"))
 
-    is_open = models.BooleanField(
-        _("서비스 운영여부"),
-        default=True)
+    PERMISSION_CHOICES = (
+        (PERMISSION_ALL_USERS, _("모든 유저")),
+        (PERMISSION_LOGGED_IN_USERS, _("로그인 한 유저")),
+        (PERMISSION_ACCESSIBLE_GROUPS, _("접근허가 그룹")),
+        (PERMISSION_CLOSED, _("비공개")),
+    )
+    permission = models.CharField(
+        _("서비스 이용권한"),
+        max_length=3, choices=PERMISSION_CHOICES, default='ALL',
+        help_text="접근허가 그룹 이외의 옵션으로 설정할 경우 서비스별 접근허가 그룹 설정이 적용되지 않습니다.")
 
     accessible_groups = models.ManyToManyField(
         'auth.Group',
         through='GroupServicePermission', related_name='accessible_services',
-        verbose_name=_("접근가능그룹"))
+        verbose_name=_("접근허가 그룹"))
 
     # Custom Manager
     objects = ServiceManager()
 
+    class Meta:
+        ordering = ['category', 'permission', 'level']
+        verbose_name = _('서비스')
+        verbose_name_plural = _('서비스(들)')
+
     def __str__(self):
         return self.category.name + "/" + self.name
 
-    class Meta:
-        ordering = ['category', 'is_open', 'level']
-        verbose_name = _('서비스')
-        verbose_name_plural = _('서비스(들)')
+    def is_accessible(self, user):
+        """
+        주어진 유저가 접근할 수 있는 서비스인지 확인하는 함수.
+        """
+        if user.is_superuser:
+            return True
+        if self.permission == PERMISSION_ALL_USERS:
+            return True
+        if self.permission == PERMISSION_LOGGED_IN_USERS:
+            return user.is_authenticated()
+        if self.permission == PERMISSION_ACCESSIBLE_GROUPS:
+            return (user.groups.all() & self.accessible_groups.all()).exists()
+        return False
 
 
 class GroupServicePermission(models.Model):
@@ -111,10 +147,10 @@ class GroupServicePermission(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("서비스"))
 
-    def __str__(self):
-        return "%s - %s" % (self.service, self.group)
-
     class Meta:
         ordering = ['service', 'group']
         verbose_name = _('그룹별 서비스 접근권한')
         verbose_name_plural = _('그룹별 서비스 접근권한(들)')
+
+    def __str__(self):
+        return "%s - %s" % (self.service, self.group)
