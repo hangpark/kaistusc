@@ -43,7 +43,7 @@ class NavigatorMixin(object):
         categories = Category.objects.all()
         for category in categories:
             kwargs['navigator'].append(Service.objects.filter(
-                category=category).is_accessible(self.request.user))
+                category=category).accessible_for(self.request.user))
         return super(NavigatorMixin, self).get_context_data(**kwargs)
 
 

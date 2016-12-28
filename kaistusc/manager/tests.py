@@ -1,6 +1,8 @@
-from django.test import TestCase
-from django.contrib.auth.models import User, AnonymousUser, Group
+# -*- coding: utf-8 -*-
+from django.contrib.auth.models import AnonymousUser, Group, User
+
 from .models import *
+
 
 class ServiceTestCase(TestCase):
     def setUp(self):

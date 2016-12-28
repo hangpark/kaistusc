@@ -3,7 +3,6 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
-
 # Service access permissions
 PERMISSION_ALL_USERS = 'ALL'
 PERMISSION_LOGGED_IN_USERS = 'LOG'
@@ -24,13 +23,13 @@ class Category(models.Model):
         _("사이트맵 노출여부"),
         default=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         ordering = ['is_open']
         verbose_name = _('카테고리')
         verbose_name_plural = _('카테고리(들)')
+
+    def __str__(self):
+        return self.name
 
 
 class ServiceQuerySet(models.QuerySet):
@@ -110,13 +109,13 @@ class Service(models.Model):
     # Custom Manager
     objects = ServiceManager()
 
-    def __str__(self):
-        return self.category.name + "/" + self.name
-
     class Meta:
         ordering = ['category', 'permission', 'level']
         verbose_name = _('서비스')
         verbose_name_plural = _('서비스(들)')
+
+    def __str__(self):
+        return self.category.name + "/" + self.name
 
     def is_accessible(self, user):
         """
@@ -148,10 +147,10 @@ class GroupServicePermission(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("서비스"))
 
-    def __str__(self):
-        return "%s - %s" % (self.service, self.group)
-
     class Meta:
         ordering = ['service', 'group']
         verbose_name = _('그룹별 서비스 접근권한')
         verbose_name_plural = _('그룹별 서비스 접근권한(들)')
+
+    def __str__(self):
+        return "%s - %s" % (self.service, self.group)
