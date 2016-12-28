@@ -37,6 +37,7 @@ class ServiceTestCase(TestCase):
         )
 
         # 유저 생성
+        self.anon = AnonymousUser()
         self.user1 = User.objects.create(
             username='User #1',
             email='user1@test.com',
@@ -84,12 +85,12 @@ class ServiceTestCase(TestCase):
 
         # 각 유저의 이용가능 서비스를 구한다.
         qs = Service.objects.order_by('pk')
-        res_anon = qs.available_for(AnonymousUser())
-        res_user1 = qs.available_for(self.user1)
-        res_user2 = qs.available_for(self.user2)
-        res_superuser = qs.available_for(self.superuser)
+        res_anon = qs.accessible_for(self.anon)
+        res_user1 = qs.accessible_for(self.user1)
+        res_user2 = qs.accessible_for(self.user2)
+        res_superuser = qs.accessible_for(self.superuser)
 
-        # 결과 테스트
+        # 이용가능 서비스 목록 결과 테스트
         self.assertQuerysetEqual(res_anon, map(repr, [
             self.svc_all]))
 
@@ -102,3 +103,22 @@ class ServiceTestCase(TestCase):
         self.assertQuerysetEqual(res_superuser, map(repr, [
             self.svc_all, self.svc_log, self.svc_grp1,
             self.svc_grp2, self.svc_cls]))
+
+        # 각 유저에 대하여 각 서비스가 이용가능한지 여부를 구한다.
+        users = [self.anon, self.user1, self.user2, self.superuser]
+        services = [
+            self.svc_all, self.svc_log, self.svc_grp1,
+            self.svc_grp2, self.svc_cls]
+        res_accessible = [(repr(user), repr(srv), srv.is_accessible(user))
+            for user in users for srv in services]
+        
+        # 유저-서비스 이용가능여부 결과 테스트
+        exp_res = [
+            True, False, False, False, False,
+            True, True, True, False, False,
+            True, True, True, True, False,
+            True, True, True, True, True]
+        temp_list = [[repr(user), repr(srv)]
+            for user in users for srv in services]
+        self.assertEqual(res_accessible, [
+            (e[0], e[1], exp_res[i]) for i, e in enumerate(temp_list)])

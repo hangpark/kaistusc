@@ -38,7 +38,7 @@ class ServiceQuerySet(models.QuerySet):
     Service에 대한 커스텀 query set.
     """
 
-    def available_for(self, user):
+    def accessible_for(self, user):
         """
         특정 유저가 접근가능한 서비스를 필터링한다.
         """
@@ -64,8 +64,8 @@ class ServiceManager(models.Manager):
     def get_queryset(self):
         return ServiceQuerySet(self.model, using=self._db)
 
-    def available_for(self, user):
-        return self.get_queryset().available_for(user)
+    def accessible_for(self, user):
+        return self.get_queryset().accessible_for(user)
 
 
 class Service(models.Model):
@@ -117,6 +117,20 @@ class Service(models.Model):
         ordering = ['category', 'permission', 'level']
         verbose_name = _('서비스')
         verbose_name_plural = _('서비스(들)')
+
+    def is_accessible(self, user):
+        """
+        주어진 유저가 접근할 수 있는 서비스인지 확인하는 함수.
+        """
+        if user.is_superuser:
+            return True
+        if self.permission == PERMISSION_ALL_USERS:
+            return True
+        if self.permission == PERMISSION_LOGGED_IN_USERS:
+            return user.is_authenticated()
+        if self.permission == PERMISSION_ACCESSIBLE_GROUPS:
+            return (user.groups.all() & self.accessible_groups.all()).exists()
+        return False
 
 
 class GroupServicePermission(models.Model):
