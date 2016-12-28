@@ -4,6 +4,13 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 
+# Service access permissions
+PERMISSION_ALL_USERS = 'ALL'
+PERMISSION_LOGGED_IN_USERS = 'LOG'
+PERMISSION_ACCESSIBLE_GROUPS = 'GRP'
+PERMISSION_CLOSED = 'CLS'
+
+
 class Category(models.Model):
     """
     홈페이지 구조에서 상위 단위로 카테고리를 정의한 모델.
@@ -35,9 +42,18 @@ class ServiceQuerySet(models.QuerySet):
         """
         특정 유저가 접근가능한 서비스를 필터링한다.
         """
-        q_default = Q(is_open=True)
-        q_user = Q(groupservicepermission__group__in=user.groups.all())
-        return self.filter(q_default | q_user).distinct()
+        # 관리자 계정인 경우 모든 서비스 접근 가능
+        if user.is_superuser:
+            return self
+
+        # 일반 유저의 경우 조건에 따라 서비스 필터링
+        q = Q(permission=PERMISSION_ALL_USERS)
+        if user.is_authenticated():
+            q |= Q(permission=PERMISSION_LOGGED_IN_USERS)
+        q |= Q(permission=PERMISSION_ACCESSIBLE_GROUPS,
+            groupservicepermission__group__in=user.groups.all())
+        q &= ~Q(permission=PERMISSION_CLOSED)
+        return self.filter(q).distinct()
 
 
 class ServiceManager(models.Manager):
@@ -75,10 +91,6 @@ class Service(models.Model):
         default=1,
         help_text=_("같은 카테고리 내 서비스 간의 노출순서"))
 
-    PERMISSION_ALL_USERS = 'ALL'
-    PERMISSION_LOGGED_IN_USERS = 'LOG'
-    PERMISSION_ACCESSIBLE_GROUPS = 'GRP'
-    PERMISSION_CLOSED = 'CLS'
     PERMISSION_CHOICES = (
         (PERMISSION_ALL_USERS, _("모든 유저")),
         (PERMISSION_LOGGED_IN_USERS, _("로그인 한 유저")),
