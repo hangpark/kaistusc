@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 06:28+0900\n"
+"POT-Creation-Date: 2016-12-28 17:50+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,54 +17,74 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: manager/models.py:12
+#: manager/apps.py:8
+msgid "사이트 관리도구"
+msgstr "Site Management"
+
+#: manager/models.py:13
 msgid "카테고리명"
 msgstr "Category name"
 
-#: manager/models.py:16 manager/models.py:52
+#: manager/models.py:17
 msgid "사이트맵 노출여부"
 msgstr "Shown in sitemap"
 
-#: manager/models.py:24 manager/models.py:25
+#: manager/models.py:25
 msgid "카테고리"
 msgstr "Category"
 
-#: manager/models.py:34
-msgid "메뉴명"
-msgstr "Menu name"
+#: manager/models.py:26
+msgid "카테고리(들)"
+msgstr "Categories"
 
-#: manager/models.py:39
-msgid "메뉴가 속한 카테고리"
-msgstr "Category of menu"
+#: manager/models.py:61
+msgid "서비스명"
+msgstr "Service name"
 
-#: manager/models.py:42
-msgid "메뉴 최상위 주소"
-msgstr "URL of menu"
+#: manager/models.py:66
+msgid "서비스가 속한 카테고리"
+msgstr "Category of service"
 
-#: manager/models.py:44
+#: manager/models.py:69
+msgid "서비스 최상위 주소"
+msgstr "URL of service"
+
+#: manager/models.py:71
 msgid "도메인 하위 경로만 적어주세요."
 msgstr "Please write down the path without domain."
 
-#: manager/models.py:47
+#: manager/models.py:74
 msgid "노출순서"
 msgstr "Display order"
 
-#: manager/models.py:49
-msgid "같은 카테고리 메뉴들 간의 노출순서"
-msgstr "Ordering for menus of same category"
+#: manager/models.py:76
+msgid "같은 카테고리 내 서비스 간의 노출순서"
+msgstr "Ordering for services of same category"
 
-#: manager/models.py:58
+#: manager/models.py:79
+msgid "서비스 운영여부"
+msgstr "Is running"
+
+#: manager/models.py:85
 msgid "접근가능그룹"
 msgstr "Accessible groups"
 
-#: manager/models.py:65 manager/models.py:66 manager/models.py:82
-msgid "메뉴"
-msgstr "Menu"
+#: manager/models.py:95 manager/models.py:112
+msgid "서비스"
+msgstr "Service"
 
-#: manager/models.py:77
+#: manager/models.py:96
+msgid "서비스(들)"
+msgstr "Services"
+
+#: manager/models.py:107
 msgid "그룹"
 msgstr "Group"
 
-#: manager/models.py:89 manager/models.py:90
-msgid "그룹별 메뉴 접근권한"
-msgstr "Group-Menu Permission"
+#: manager/models.py:119
+msgid "그룹별 서비스 접근권한"
+msgstr "Group-Service Permission"
+
+#: manager/models.py:120
+msgid "그룹별 서비스 접근권한(들)"
+msgstr "Group-Service Permission"
