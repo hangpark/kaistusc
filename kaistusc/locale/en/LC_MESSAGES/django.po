@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 17:50+0900\n"
+"POT-Creation-Date: 2016-12-29 00:29+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,70 +21,82 @@ msgstr ""
 msgid "사이트 관리도구"
 msgstr "Site Management"
 
-#: manager/models.py:13
+#: manager/models.py:19
 msgid "카테고리명"
 msgstr "Category name"
 
-#: manager/models.py:17
+#: manager/models.py:23
 msgid "사이트맵 노출여부"
 msgstr "Shown in sitemap"
 
-#: manager/models.py:25
+#: manager/models.py:28
 msgid "카테고리"
 msgstr "Category"
 
-#: manager/models.py:26
+#: manager/models.py:29
 msgid "카테고리(들)"
 msgstr "Categories"
 
-#: manager/models.py:61
+#: manager/models.py:76
 msgid "서비스명"
 msgstr "Service name"
 
-#: manager/models.py:66
+#: manager/models.py:81
 msgid "서비스가 속한 카테고리"
 msgstr "Category of service"
 
-#: manager/models.py:69
+#: manager/models.py:84
 msgid "서비스 최상위 주소"
 msgstr "URL of service"
 
-#: manager/models.py:71
+#: manager/models.py:86
 msgid "도메인 하위 경로만 적어주세요."
 msgstr "Please write down the path without domain."
 
-#: manager/models.py:74
+#: manager/models.py:89
 msgid "노출순서"
 msgstr "Display order"
 
-#: manager/models.py:76
+#: manager/models.py:91
 msgid "같은 카테고리 내 서비스 간의 노출순서"
 msgstr "Ordering for services of same category"
 
-#: manager/models.py:79
-msgid "서비스 운영여부"
-msgstr "Is running"
+#: manager/models.py:94
+msgid "모든 유저"
+msgstr "All Users"
 
-#: manager/models.py:85
-msgid "접근가능그룹"
-msgstr "Accessible groups"
+#: manager/models.py:95
+msgid "로그인 한 유저"
+msgstr "Logged-in Users"
 
-#: manager/models.py:95 manager/models.py:112
+#: manager/models.py:96 manager/models.py:107
+msgid "접근허가 그룹"
+msgstr "Users in permitted group"
+
+#: manager/models.py:97
+msgid "비공개"
+msgstr "Closed"
+
+#: manager/models.py:100
+msgid "서비스 이용권한"
+msgstr "Permission for service"
+
+#: manager/models.py:114 manager/models.py:148
 msgid "서비스"
 msgstr "Service"
 
-#: manager/models.py:96
+#: manager/models.py:115
 msgid "서비스(들)"
 msgstr "Services"
 
-#: manager/models.py:107
+#: manager/models.py:143
 msgid "그룹"
 msgstr "Group"
 
-#: manager/models.py:119
+#: manager/models.py:152
 msgid "그룹별 서비스 접근권한"
 msgstr "Group-Service Permission"
 
-#: manager/models.py:120
+#: manager/models.py:153
 msgid "그룹별 서비스 접근권한(들)"
-msgstr "Group-Service Permission"
+msgstr "Group-Service Permissions"
