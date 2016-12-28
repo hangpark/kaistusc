@@ -26,79 +26,79 @@ class Category(models.Model):
         verbose_name_plural = _('카테고리(들)')
 
 
-class MenuQuerySet(models.QuerySet):
+class ServiceQuerySet(models.QuerySet):
     """
-    Menu에 대한 커스텀 query set.
+    Service에 대한 커스텀 query set.
     """
 
     def available_for(self, user):
         """
-        특정 유저가 접근가능한 메뉴를 필터링한다.
+        특정 유저가 접근가능한 서비스를 필터링한다.
         """
         q_default = Q(is_open=True)
-        q_user = Q(groupmenupermission__group__in=user.groups.all())
+        q_user = Q(groupservicepermission__group__in=user.groups.all())
         return self.filter(q_default | q_user).distinct()
 
 
-class MenuManager(models.Manager):
+class ServiceManager(models.Manager):
     """
-    Menu에 대한 커스텀 manager. Menu와 MenuQuerySet을 연결한다.
+    Service에 대한 커스텀 manager. Service와 ServiceQuerySet을 연결한다.
     """
 
     def get_queryset(self):
-        return MenuQuerySet(self.model, using=self._db)
+        return ServiceQuerySet(self.model, using=self._db)
 
     def available_for(self, user):
         return self.get_queryset().available_for(user)
 
 
-class Menu(models.Model):
+class Service(models.Model):
     """
     홈페이지 구조에서 하위 단위인 메뉴를 정의한 모델.
     """
 
     name = models.CharField(
-        _("메뉴명"),
+        _("서비스명"),
         max_length=32, unique=True)
 
     category = models.ForeignKey(
         Category,
-        verbose_name=_("메뉴가 속한 카테고리"))
+        verbose_name=_("서비스가 속한 카테고리"))
 
     url = models.CharField(
-        _("메뉴 최상위 주소"),
+        _("서비스 최상위 주소"),
         max_length=32, default='/',
         help_text=_("도메인 하위 경로만 적어주세요."))
 
     level = models.IntegerField(
         _("노출순서"),
         default=1,
-        help_text=_("같은 카테고리 메뉴들 간의 노출순서"))
+        help_text=_("같은 카테고리 내 서비스 간의 노출순서"))
 
     is_open = models.BooleanField(
-        _("메뉴 공개여부"),
+        _("서비스 운영여부"),
         default=True)
 
     accessible_groups = models.ManyToManyField(
         'auth.Group',
-        through='GroupMenuPermission', related_name='accessible_menus',
+        through='GroupServicePermission', related_name='accessible_services',
         verbose_name=_("접근가능그룹"))
 
     # Custom Manager
-    objects = MenuManager()
+    objects = ServiceManager()
 
     def __str__(self):
         return self.category.name + "/" + self.name
 
     class Meta:
         ordering = ['category', 'is_open', 'level']
-        verbose_name = _('메뉴')
-        verbose_name_plural = _('메뉴(들)')
+        verbose_name = _('서비스')
+        verbose_name_plural = _('서비스(들)')
 
 
-class GroupMenuPermission(models.Model):
+class GroupServicePermission(models.Model):
     """
-    특정 그룹에 특정 메뉴에 대한 접근권한을 부여하는 모델.
+    특정 그룹에 특정 서비스에 대한 접근권한을 부여하는 모델.
     """
 
     group = models.ForeignKey(
@@ -106,15 +106,15 @@ class GroupMenuPermission(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("그룹"))
 
-    menu = models.ForeignKey(
-        Menu,
+    service = models.ForeignKey(
+        Service,
         on_delete=models.CASCADE,
-        verbose_name=_("메뉴"))
+        verbose_name=_("서비스"))
 
     def __str__(self):
-        return "%s - %s" % (self.menu, self.group)
+        return "%s - %s" % (self.service, self.group)
 
     class Meta:
-        ordering = ['menu', 'group']
-        verbose_name = _('그룹별 메뉴 접근권한')
-        verbose_name_plural = _('그룹별 메뉴 접근권한(들)')
+        ordering = ['service', 'group']
+        verbose_name = _('그룹별 서비스 접근권한')
+        verbose_name_plural = _('그룹별 서비스 접근권한(들)')
