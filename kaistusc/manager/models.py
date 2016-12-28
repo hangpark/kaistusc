@@ -75,14 +75,25 @@ class Service(models.Model):
         default=1,
         help_text=_("같은 카테고리 내 서비스 간의 노출순서"))
 
-    is_open = models.BooleanField(
-        _("서비스 운영여부"),
-        default=True)
+    PERMISSION_ALL_USERS = 'ALL'
+    PERMISSION_LOGGED_IN_USERS = 'LOG'
+    PERMISSION_ACCESSIBLE_GROUPS = 'GRP'
+    PERMISSION_CLOSED = 'CLS'
+    PERMISSION_CHOICES = (
+        (PERMISSION_ALL_USERS, _("모든 유저")),
+        (PERMISSION_LOGGED_IN_USERS, _("로그인 한 유저")),
+        (PERMISSION_ACCESSIBLE_GROUPS, _("접근허가 그룹")),
+        (PERMISSION_CLOSED, _("비공개")),
+    )
+    permission = models.CharField(
+        _("서비스 이용권한"),
+        max_length=3, choices=PERMISSION_CHOICES, default='ALL',
+        help_text="접근허가 그룹 이외의 옵션으로 설정할 경우 서비스별 접근허가 그룹 설정이 적용되지 않습니다.")
 
     accessible_groups = models.ManyToManyField(
         'auth.Group',
         through='GroupServicePermission', related_name='accessible_services',
-        verbose_name=_("접근가능그룹"))
+        verbose_name=_("접근허가 그룹"))
 
     # Custom Manager
     objects = ServiceManager()
@@ -91,7 +102,7 @@ class Service(models.Model):
         return self.category.name + "/" + self.name
 
     class Meta:
-        ordering = ['category', 'is_open', 'level']
+        ordering = ['category', 'permission', 'level']
         verbose_name = _('서비스')
         verbose_name_plural = _('서비스(들)')
 
