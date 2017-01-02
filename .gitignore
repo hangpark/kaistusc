@@ -10,3 +10,8 @@ private_settings.py
 
 # Swap files
 *.swp
+
+# NPM files
+node_modules/
+bower_components/
+dist/

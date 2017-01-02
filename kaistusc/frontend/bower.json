@@ -1,0 +1,14 @@
+{
+  "name": "web",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Hang Park <hangpark@kaist.ac.kr>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/HangPark/KAIST-USC",
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "bootstrap-sass": "^3.3.7"
+  }
+}
