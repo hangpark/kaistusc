@@ -1,2 +1,11 @@
-@import 'variables';
-@import 'bootstrap';
+// 변수 재정의, 신규 정의
+@import 'variables_custom';
+
+// 부트스트랩
+@import 'bootstrap_custom';
+
+// 사이트 커스터마이징
+@import 'base_layout';
+@import 'header';
+@import 'footer';
+@import 'service';

@@ -1,0 +1,28 @@
+{% extends 'manager/base.html' %}
+
+{% load staticfiles %}
+
+{% block main_area %}
+<div id="container" class="spot">
+  <div id="main" class="page-item container-fluid">
+    <div id="main-header" class="row hidden-xs">
+      <img src="{% static 'manager/images/header_wall.png' %}">
+      <div class="main-header-container">
+        <div class="main-header-item col-sm-2">
+          <span>[메뉴명]</span>
+        </div>
+      </div>
+    </div>
+    <div id="main-content" class="row">
+      <nav id="lnb" class="hidden-xs col-sm-2 list-group">
+        <a class="list-group-item" href="#"><span class="lnb-arrow"></span>[서비스 #1]</a>
+        <a class="list-group-item lnb-selected" href="#"><span class="lnb-arrow"></span>[서비스 #2]</a>
+        <a class="list-group-item" href="#"><span class="lnb-arrow"></span>[서비스 #3]</a>
+      </nav>
+      <article id="main-body" class="col-xs-12 col-sm-10">
+        [컨텐츠 영역]
+      </article>
+    </div>
+  </div>
+</div>
+{% endblock %}

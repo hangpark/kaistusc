@@ -1,0 +1,131 @@
+//
+// Header
+// --------------------------------------------------
+
+
+//== 기본값 설정
+//
+//##
+
+#header {
+  position: relative;
+  z-index: $main-high-zindex + 1;
+  background-color: $body-bg;
+  @media (max-width: $grid-float-breakpoint - 1) {
+    background-color: $gray-lighter;
+  }
+}
+
+
+//== Navigation bar
+//
+//## Bootstrap의 navbar를 수정
+
+.navbar {
+  margin-bottom: 0;
+  border-width: 0 0 1px;
+}
+
+.navbar-toggle {
+  margin: 0 15px 0 0;
+  float: left;
+}
+
+.navbar-brand {
+  padding: 0;
+  height: auto;
+}
+
+@media (min-width: $grid-float-breakpoint) {
+  .navbar-default {
+    background-color: $body-bg;
+  }
+  #gnb.dropdown:hover .dropdown-menu{
+    display: block;
+  }
+  .navbar-header,
+  .navbar-brand {
+    float: none;
+  }
+}
+
+
+//== Toolbar
+//
+//##
+
+#tb-top {
+  position: absolute;
+  top: $header-tb-top-pos;
+  right: $header-tb-right-pos;
+  font-size: $header-tb-font-size;
+  font-weight: bold;
+  a {
+    padding: 0 $header-tb-gap;
+    color: $header-tb-text-color;
+  }
+}
+
+
+//== Service title area
+//
+//##
+
+#sta {
+  position: relative;
+  margin: $header-vertical-base-margin auto;
+  @media (min-width: $grid-float-breakpoint) {
+    margin-top: $header-vertical-large-margin;
+  }
+  & > a {
+    margin: 0 auto;
+    max-width: $header-img-width;
+    display: block;
+  }
+}
+
+
+//== Global navigation bar
+//
+//##
+
+#gnb-menu-container,
+#gnb-svc-container {
+  margin: 0 auto;
+  max-width: $header-gnb-width;
+}
+
+#gnb-menu-container {
+  margin-bottom: $header-vertical-base-margin;
+}
+
+#gnb-svc-wrapper {
+  @include full-jumbotron($main-service-bg);
+}
+
+.gnb-menu {
+  text-align: center;
+  font-weight: bold;
+  a {
+    @include reset-effect();
+  }
+}
+
+.gnb-svc-col {
+  margin: $header-col-margin 0;
+  padding: 0 $header-col-padding;
+  font-size: $font-size-small;
+  list-style-type: none;
+  .list-group-item {
+    @include reset-effect();
+    display: list-item;
+    margin: $header-col-margin 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: $body-bg;
+    &:hover {
+      color: $body-bg;
+    }
+  }
+}

@@ -1,0 +1,106 @@
+//
+// Custom variables
+// --------------------------------------------------
+
+
+//== Fonts
+//
+//##
+
+@import url(https://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+@import url(https://fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+
+$font-family-sans-serif:  "Nanum Gothic", sans-serif;
+$font-family-script:      "Nanum Pen Script", serif;
+
+$font-size-base:          11pt;
+$font-size-lg:            16pt;
+$font-size-sm:            10pt;
+$font-size-xm:            9pt;
+
+
+//== Base layout
+//
+//##
+
+$screen-xs-min:           480px;
+$screen-sm-min:           768px;
+$screen-md-min:           992px;
+$screen-lg-min:           1200px;
+
+$main-max-width:          $screen-md-min;
+//$body-bg:
+// Jumbotron 등에서 사용
+$body-black-bg:           #dcdcdd;
+
+//** 우선적 z-index 값
+// Header, Footer 등이 다른 컨텐츠보다 우선적으로 보여야 하는 경우 사용
+$main-high-zindex:        100;
+
+//** 페이지 구성요소 구분선
+$main-default-border:     #9f9f9f;
+
+
+//== Header
+//
+//##
+
+//** 네비게이션바
+$navbar-border-radius:    0;
+$navbar-default-border:   $main-default-border;
+
+$header-tb-top-pos:       -23px;
+$header-tb-right-pos:     12px;
+$header-tb-font-size:     8pt;
+$header-tb-gap:           12px;
+$header-tb-text-color:    #666666;
+
+$header-img-width:        273px;
+
+$header-vertical-base-margin:     19px;
+$header-vertical-large-margin:    35px;
+
+$header-gnb-width:        560px;
+$header-col-margin:       10px;
+$header-col-padding:      15px;
+$main-service-bg:         rgba(80, 80, 80, .8);
+
+
+//== Footer
+//
+//##
+
+$footer-margin-top:       21px;
+$footer-margin-bot:       31px;
+
+$footer-img-width:        103px;
+$footer-img-top-pos:      5px;
+$footer-img-left-pos:     15px;
+$footer-img-gap:          32px;
+
+$footer-font-size:        $font-size-xm;
+$footer-text-color:       #grey;
+$footer-line-height:      15pt;
+
+
+//== Service
+//
+//##
+
+$service-base-border:     $main-default-border;
+$service-base-shadow:     0 0 15px 2px #000000;
+$service-category-bg:     rgba(255, 255, 255, .6);
+
+$service-title-font-size: 35pt;
+
+$service-padding-vertical:      26px;
+$service-padding-horizontal:    22px;
+
+$service-lnb-padding:     14px 0 26px 16px;
+$service-lnb-radius:      14px;
+$service-lnb-item-gap:    6px;
+
+//** border-width 값
+$service-lnb-arrow-size:  5px 11px 5px 0;
+$service-lnb-arrow-top:   14px;
+$service-lnb-arrow-right: -1px;

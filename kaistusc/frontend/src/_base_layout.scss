@@ -1,0 +1,50 @@
+//
+// Base layout
+// --------------------------------------------------
+
+
+//== 태그 기본옵션
+//
+//##
+
+img {
+  max-width: 100%;
+}
+
+
+//== 기본 mixin
+//
+//##
+
+@mixin reset-effect() {
+  text-decoration: none;
+  color: inherit;
+  background-color: transparent;
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+    background-color: transparent;
+  }
+}
+
+@mixin full-jumbotron($color) {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  border-radius: 0;
+  background-color: $color;
+}
+
+
+//== 기본 class
+//
+//##
+
+.page-item {
+  margin: 0 auto;
+  max-width: $main-max-width;
+}
+
+.spot {
+  @include full-jumbotron($body-black-bg);
+}
