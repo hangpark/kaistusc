@@ -1,0 +1,22 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Byte-complied / optimized / DLL files
+**/__pycache__/
+**/*.py[cod]
+
+# Django migrations
+**/migrations/
+
+# Swap files
+**/*.swp
+
+# NPM files
+**/node_modules/
+**/bower_components/
+**/dist/
