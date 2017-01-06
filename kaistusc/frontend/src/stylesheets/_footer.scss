@@ -31,7 +31,7 @@
     line-height: $footer-line-height;
   }
   a {
-    @include reset-effect();
+    @include disable-effect();
   }
   .div-line {
     margin: 0 4px;

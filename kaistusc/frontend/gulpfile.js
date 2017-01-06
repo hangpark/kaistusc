@@ -16,7 +16,8 @@ var bootstrap = bower + '/bootstrap-sass/assets';
 var js = {
 	'in': [
 		jquery + '/jquery.js',
-		bootstrap + '/javascripts/bootstrap.js'
+		bootstrap + '/javascripts/bootstrap.js',
+        src + '/javascripts/**/*'
 	],
 	'out': dist + '/js'
 };
@@ -27,7 +28,7 @@ var fonts = {
 };
 
 var scss = {
-	'in': src + '/main.scss',
+	'in': src + '/stylesheets/main.scss',
 	'out': dist + '/css',
 	'opts': {
 		errLogToConsole: true,

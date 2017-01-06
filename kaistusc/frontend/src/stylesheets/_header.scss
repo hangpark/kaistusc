@@ -19,7 +19,7 @@
 
 //== Navigation bar
 //
-//## Bootstrap의 navbar를 수정
+//## Bootstrap의 navbar customizing
 
 .navbar {
   margin-bottom: 0;
@@ -107,7 +107,7 @@
   text-align: center;
   font-weight: bold;
   a {
-    @include reset-effect();
+    @include disable-effect();
   }
 }
 
@@ -117,15 +117,11 @@
   font-size: $font-size-small;
   list-style-type: none;
   .list-group-item {
-    @include reset-effect();
+    @include disable-effect($body-bg);
     display: list-item;
     margin: $header-col-margin 0;
     padding: 0;
     border: 0;
     border-radius: 0;
-    color: $body-bg;
-    &:hover {
-      color: $body-bg;
-    }
   }
 }

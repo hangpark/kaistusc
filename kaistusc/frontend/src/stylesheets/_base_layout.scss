@@ -1,0 +1,105 @@
+//
+// Base layout
+// --------------------------------------------------
+
+
+//== 태그 기본옵션
+//
+//##
+
+html,
+body {
+  height: 100%;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+//== 기본 mixin
+//
+//##
+
+@mixin disable-effect($color: $text-color) {
+  text-decoration: none;
+  color: $color;
+  background-color: transparent;
+  &:hover {
+    text-decoration: none;
+    color: $color;
+    background-color: transparent;
+  }
+}
+
+@mixin full-jumbotron($color) {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  border-radius: 0;
+  background-color: $color;
+}
+
+
+//== 기본 class
+//
+//##
+
+.page-item {
+  margin: 0 auto;
+  max-width: $main-max-width;
+}
+
+.spot {
+  @include full-jumbotron($body-black-bg);
+}
+
+
+//== Side navigation toggling
+//
+//##
+
+#side-nav-wrapper {
+  position: fixed;
+  margin-left: -$side-nav-width;
+  width: $side-nav-width;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: $body-black-bg;
+  z-index: $side-nav-zindex;
+  transition: all $basic-anim-time ease;
+}
+
+#page-content-wrapper {
+  position: absolute;
+  width: 100%;
+}
+
+#wrapper {
+  position: relative;
+  padding-left: 0;
+  height: 100%;
+  overflow-x: hidden;
+  transition: all $basic-anim-time ease;
+  &.toggled {
+    padding-left: $side-nav-width;
+    overflow-y: hidden;
+    #page-content-wrapper {
+      margin-right: -$side-nav-width;
+    }
+  }
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: $side-nav-overlay;
+  z-index: $side-nav-zindex - 1;
+}

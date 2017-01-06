@@ -19,6 +19,12 @@ $font-size-sm:            10pt;
 $font-size-xm:            9pt;
 
 
+//== Animation
+//
+//##
+
+$basic-anim-time:         .5s;
+
 //== Base layout
 //
 //##
@@ -39,6 +45,15 @@ $main-high-zindex:        100;
 
 //** 페이지 구성요소 구분선
 $main-default-border:     #9f9f9f;
+
+
+//== Side navigation
+//
+//##
+
+$side-nav-width:          220px;
+$side-nav-zindex:         $main-high-zindex * 2;
+$side-nav-overlay:        rgba(0, 0, 0, .7);
 
 
 //== Header

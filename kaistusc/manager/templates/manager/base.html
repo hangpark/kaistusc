@@ -19,8 +19,16 @@
   {% block javascript %}{% endblock %}
 </head>
 <body>
-  {% include 'manager/header.html' %}
-  {% block main_area %}{% endblock %}
-  {% include 'manager/footer.html' %}
+  <div id="wrapper">
+    <div id="overlay"></div>
+    <div id="side-nav-wrapper">
+      {% include 'manager/side_nav.html' %}
+    </div>
+    <div id="page-content-wrapper">
+      {% include 'manager/header.html' %}
+      {% block main_area %}{% endblock %}
+      {% include 'manager/footer.html' %}
+    </div>
+  </div>
 </body>
 </html>
