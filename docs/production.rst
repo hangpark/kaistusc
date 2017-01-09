@@ -8,9 +8,11 @@ KAIST-USC 프로젝트는 Docker_ 를 이용하여 손쉽게 배포할 수 있�
 
 .. code-block:: bash
 
-    $ sudo apt-get install docker
+    $ sudo wget -qO- https://get.docker.com/ | sh
+    $ sudo docker rm `sudo docker ps -aq`
+    $ sudo docker rmi hello-world
 
-Ubuntu 기준 위 명령어를 통해 docker를 설치합니다. 다른 OS의 경우 이곳__ 을 참고하세요.
+Linux 기준 위 명령어를 통해 docker를 설치합니다. 다른 OS의 경우 이곳__ 을 참고하세요.
 
 프로젝트 소스를 다운받지 않았다면 아래 명령어를 통해 받아주세요.
 
