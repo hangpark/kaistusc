@@ -4,5 +4,5 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class ManagerConfig(AppConfig):
-    name = 'manager'
+    name = 'apps.manager'
     verbose_name = _("사이트 관리도구")

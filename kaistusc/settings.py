@@ -14,8 +14,6 @@ import os
 
 import pymysql
 
-# Private setting values are ignored by GIT by adding private_settings.py into .gitignore
-from kaistusc import private_settings
 
 pymysql.install_as_MySQLdb()
 
@@ -44,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'manager',
+    'apps.manager',
 ]
 
 MIDDLEWARE = [
@@ -137,8 +135,7 @@ LOCALE_PATHS = [
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR, "frontend/dist"),
+    os.path.join(BASE_DIR, "static/dist"),
 )
 
 STATIC_ROOT = '/var/www/static'

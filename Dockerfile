@@ -17,7 +17,7 @@ RUN apt-get update \
 
 # Configure Nginx
 WORKDIR /etc/nginx/sites-available
-ADD conf/kaistusc kaistusc
+ADD nginx.conf kaistusc
 WORKDIR /etc/nginx/sites-enabled
 RUN rm default \
   && ln -s ../sites-available/kaistusc ./kaistusc \
@@ -37,21 +37,25 @@ RUN virtualenv --python=python3 venv \
 ADD ./ ./
 
 # Compile frontend
-WORKDIR /app/kaistusc/kaistusc/frontend
 RUN npm install \
   && node_modules/bower/bin/bower install --allow-root \
   && node_modules/gulp/bin/gulp.js
 
 # Collect static files
 WORKDIR /app/kaistusc
-RUN /bin/bash -c "source venv/bin/activate && python kaistusc/manage.py collectstatic --noinput"
+RUN /bin/bash -c "source venv/bin/activate && python manage.py collectstatic --noinput"
+
+# Compile document
+WORKDIR /app/kaistusc/docs
+RUN /bin/bash -c "source ../venv/bin/activate && make html"
 
 # Configure production mode
-RUN sed -i "s/DEBUG = True/DEBUG = False/g" kaistusc/kaistusc/settings.py
+WORKDIR /app/kaistusc
+RUN sed -i "s/DEBUG = True/DEBUG = False/g" kaistusc/settings.py
 
 # Expose ports
 EXPOSE 80 443
 
 # Run server
-RUN chmod +x conf/entrypoint.sh
-ENTRYPOINT conf/entrypoint.sh
+RUN chmod +x /app/kaistusc/docker-entrypoint.sh
+ENTRYPOINT /app/kaistusc/docker-entrypoint.sh

@@ -6,8 +6,8 @@ var minifycss = require('gulp-minify-css');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
 
-var src = './src';
-var dist = './dist';
+var src = './static/src';
+var dist = './static/dist';
 var bower = './bower_components';
 
 var jquery = bower + '/jquery/dist';

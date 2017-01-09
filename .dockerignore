@@ -21,3 +21,6 @@ Dockerfile
 **/node_modules/
 **/bower_components/
 **/dist/
+
+# Sphinx build files
+docs/_*/
