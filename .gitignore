@@ -16,3 +16,6 @@ private_settings.py
 node_modules/
 bower_components/
 dist/
+
+# Sphinx build files
+docs/_*/
