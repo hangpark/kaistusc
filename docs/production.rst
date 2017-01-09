@@ -12,6 +12,12 @@ KAIST-USC 프로젝트는 Docker_ 를 이용하여 손쉽게 배포할 수 있�
 
 Ubuntu 기준 위 명령어를 통해 docker를 설치합니다. 다른 OS의 경우 이곳__ 을 참고하세요.
 
+프로젝트 소스를 다운받지 않았다면 아래 명령어를 통해 받아주세요.
+
+.. code-block:: bash
+
+    $ git clone https://github.com/HangPark/KAIST-USC.git
+
 Docker로 DB 서버 구축
 ---------------------
 
@@ -26,7 +32,7 @@ KAIST-USC는 기본적으로 MySQL_ 을 사용합니다. 다른 DBMS의 경우 s
 .. code-block:: bash
 
     $ sudo docker run --name kaistusc-db \
-    > -v {{ project_path }}/conf/my.cnf:/etc/my.cnf \
+    > -v {{ project_path }}/mysql.cnf:/etc/my.cnf \
     > -v {{ data_store_dir }}:/var/lib/mysql \
     > -e MYSQL_USER={{ mysql_user }} \
     > -e MYSQL_PASSWORD={{ mysql_password }} \
@@ -92,7 +98,7 @@ Docker 컨테이너 관리
 
     $ sudo docker exec -it kaistusc bash -c \
     > "source /app/kaistusc/venv/bin/activate \
-    > && python /app/kaistusc/kaistusc/manage.py createsuperuser"
+    > && python /app/kaistusc/manage.py createsuperuser"
 
 이후 django admin 페이지(:file:`/admin`)에 접속해 위에서 생성한 관리자 계정으로 로그인하시면 사이트에 관련된 설정을 하실 수 있습니다.
 
