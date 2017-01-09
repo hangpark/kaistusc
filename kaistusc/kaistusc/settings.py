@@ -82,7 +82,16 @@ WSGI_APPLICATION = 'kaistusc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = private_settings.DATABASES
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'kaistusc',
+        'USER': os.getenv('DB_ENV_MYSQL_USER'),
+        'PASSWORD': os.getenv('DB_ENV_MYSQL_PASSWORD'),
+        'HOST': os.getenv('MYSQL_HOST') or 'db',
+        'PORT': '3306'
+    }
+}
 
 
 # Password validation
@@ -132,11 +141,11 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "frontend/dist"),
 )
 
-STATIC_ROOT = private_settings.STATIC_ROOT
+STATIC_ROOT = '/var/www/static'
 
 MEDIA_URL = '/files/'
 
-MEDIA_ROOT = private_settings.MEDIA_ROOT
+MEDIA_ROOT = '/var/www/media'
 
 
 # Session Management

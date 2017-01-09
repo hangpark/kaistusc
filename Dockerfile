@@ -46,6 +46,9 @@ RUN npm install \
 WORKDIR /app/kaistusc
 RUN /bin/bash -c "source venv/bin/activate && python kaistusc/manage.py collectstatic --noinput"
 
+# Configure production mode
+RUN sed -i "s/DEBUG = True/DEBUG = False/g" kaistusc/kaistusc/settings.py
+
 # Expose ports
 EXPOSE 80 443
 
