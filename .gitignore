@@ -16,3 +16,6 @@ static/dist/
 
 # Sphinx build files
 docs/_*/
+
+# Virtualenv
+venv/
