@@ -1,4 +1,3 @@
-{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>KAIST 학부 총학생회</title>
 
-  <link href="{% static 'css/main.css' %}" rel="stylesheet">
+  <link href="{{ static('css/main.css') }}" rel="stylesheet">
   {% block stylesheet %}{% endblock %}
 
   <!--[if lt IE 9]>
@@ -15,19 +14,19 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 
-  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{{ static('js/main.js') }}"></script>
   {% block javascript %}{% endblock %}
 </head>
 <body>
   <div id="wrapper">
     <div id="overlay"></div>
     <div id="side-nav-wrapper">
-      {% include 'manager/side_nav.html' %}
+      {% include 'manager/side_nav.jinja' %}
     </div>
     <div id="page-content-wrapper">
-      {% include 'manager/header.html' %}
+      {% include 'manager/header.jinja' %}
       {% block main_area %}{% endblock %}
-      {% include 'manager/footer.html' %}
+      {% include 'manager/footer.jinja' %}
     </div>
   </div>
 </body>

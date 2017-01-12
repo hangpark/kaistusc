@@ -1,12 +1,10 @@
-{% extends 'manager/base.html' %}
-
-{% load staticfiles %}
+{% extends 'manager/base.jinja' %}
 
 {% block main_area %}
 <div id="container" class="spot">
   <div id="main" class="page-item container-fluid">
     <div id="main-header" class="row hidden-xs">
-      <img src="{% static 'manager/images/header_wall.png' %}">
+      <img src="{{ static('manager/images/header_wall.png') }}">
       <div class="main-header-container">
         <div class="main-header-item col-sm-2">
           <span>[메뉴명]</span>

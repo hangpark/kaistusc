@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+import django_jinja.builtins
 import pymysql
 
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_jinja',
     'apps.manager',
 ]
 
@@ -59,6 +61,14 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'kaistusc.urls'
 
 TEMPLATES = [
+    {
+        'BACKEND': 'django_jinja.backend.Jinja2',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'match_extension': '.jinja',
+            'extensions': django_jinja.builtins.DEFAULT_EXTENSIONS
+        },
+    },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
