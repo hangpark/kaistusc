@@ -36,8 +36,6 @@ class NavigatorMixin(object):
     사이트 네비게이터를 생성하는 Mixin.
     """
 
-    service_name = None
-
     def get_context_data(self, **kwargs):
         kwargs['navigator'] = []
         categories = Category.objects.all()
