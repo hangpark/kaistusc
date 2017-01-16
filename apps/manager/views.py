@@ -19,6 +19,7 @@ class PermissionRequiredServiceMixin(object):
         service = Service.objects.filter(name=self.service_name).first()
         if not service:
             return False
+        self.service = service
         return service.is_accessible(request.user)
 
     def handle_no_permission(self):
@@ -37,12 +38,16 @@ class NavigatorMixin(object):
     """
 
     def get_context_data(self, **kwargs):
-        kwargs['navigator'] = []
+        context = super(NavigatorMixin, self).get_context_data(**kwargs)
+        context['navigator'] = []
         categories = Category.objects.all()
         for category in categories:
-            kwargs['navigator'].append(Service.objects.filter(
-                category=category).accessible_for(self.request.user))
-        return super(NavigatorMixin, self).get_context_data(**kwargs)
+            context['navigator'].append({
+                'category': category,
+                'services': Service.objects.filter(
+                    category=category).accessible_for(self.request.user),
+            })
+        return context
 
 
 class BaseServiceView(PermissionRequiredServiceMixin,
@@ -53,4 +58,8 @@ class BaseServiceView(PermissionRequiredServiceMixin,
     본 view를 상속받아 구체적인 서비스를 구현하며,
     TemplateView를 기본 구조로 하고 있다.
     """
-    pass
+
+    def get_context_data(self, **kwargs):
+        context = super(BaseServiceView, self).get_context_data(**kwargs)
+        context['service'] = self.service
+        return context

@@ -1,24 +1,25 @@
 {% extends 'manager/base.jinja' %}
 
 {% block main_area %}
+{% set category=service.category %}
 <div id="container" class="spot">
   <div id="main" class="page-item container-fluid">
     <div id="main-header" class="row hidden-xs">
       <img src="{{ static('manager/images/header_wall.png') }}">
       <div class="main-header-container">
         <div class="main-header-item col-sm-2">
-          <span>[메뉴명]</span>
+          <span>{{ category.name }}</span>
         </div>
       </div>
     </div>
     <div id="main-content" class="row">
       <nav id="lnb" class="hidden-xs col-sm-2 list-group">
-        <a class="list-group-item" href="#"><span class="lnb-arrow"></span>[서비스 #1]</a>
-        <a class="list-group-item lnb-selected" href="#"><span class="lnb-arrow"></span>[서비스 #2]</a>
-        <a class="list-group-item" href="#"><span class="lnb-arrow"></span>[서비스 #3]</a>
+      {% for item in category.service_set.all() %}
+        <a class="list-group-item {% if item == service %}lnb-selected{% endif %}" href="{{ item.get_absolute_url() }}"><span class="lnb-arrow"></span>{{ item.name }}</a>
+      {% endfor %}
       </nav>
       <article id="main-body" class="col-xs-12 col-sm-10">
-        [컨텐츠 영역]<br/>
+        {% block content %}{% endblock %}
       </article>
     </div>
   </div>

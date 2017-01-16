@@ -8,33 +8,23 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#"><img src="{{ static('manager/images/title_top.png') }}" alt="KAIST 학부 총학생회"></a>
+    <a class="navbar-brand" href="#"><img src="{{ static('manager/images/title_top.png') }}" alt="{{ _('KAIST 학부 총학생회') }}"></a>
   </div>
   <div id="gnb" class="container-fluid dropdown collapse navbar-collapse">
     <div id="gnb-menu-container" class="row dropdown-toggle" data-toggle="dropdown">
-      <div class="gnb-menu col-xs-3"><a href="#">[메뉴 #1]</a></div>
-      <div class="gnb-menu col-xs-3"><a href="#">[메뉴 #2]</a></div>
-      <div class="gnb-menu col-xs-3"><a href="#">[메뉴 #3]</a></div>
-      <div class="gnb-menu col-xs-3"><a href="#">[메뉴 #4]</a></div>
+    {% for item in navigator[:4] %}
+      <div class="gnb-menu col-xs-3"><a href="{{ item.category.get_absolute_url() }}">{{ item.category }}</a></div>
+    {% endfor %}
     </div>
     <div id="gnb-svc-wrapper" class="dropdown-menu">
       <div id="gnb-svc-container" class="row">
+      {% for item in navigator[:4] %}
         <ul class="gnb-svc-col col-sm-3 list-group">
-          <a href="#" class="list-group-item">{{ _('[서비스 #1]') }}</a>
-          <a href="#" class="list-group-item">[서비스 #2]</a>
+        {% for service in item.services %} 
+          <a href="{{ service.get_absolute_url() }}" class="list-group-item">{{ service.name }}</a>
+        {% endfor %}
         </ul>
-        <ul class="gnb-svc-col col-sm-3 list-group">
-          <a href="#" class="list-group-item">[서비스 #3]</a>
-        </ul>
-        <ul class="gnb-svc-col col-sm-3 list-group">
-          <a href="#" class="list-group-item">[서비스 #4]</a>
-          <a href="#" class="list-group-item">[서비스 #5]</a>
-          <a href="#" class="list-group-item">[서비스 #6]</a>
-        </ul>
-        <ul class="gnb-svc-col col-sm-3 list-group">
-          <a href="#" class="list-group-item">[서비스 #7]</a>
-          <a href="#" class="list-group-item">[서비스 #8]</a>
-        </ul>
+      {% endfor %}
       </div>
     </div>
   </div>

@@ -31,6 +31,12 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        s = self.service_set.first()
+        if s:
+            return s.get_absolute_url()
+        return '/'
+
 
 class ServiceQuerySet(models.QuerySet):
     """
@@ -116,6 +122,9 @@ class Service(models.Model):
 
     def __str__(self):
         return self.category.name + "/" + self.name
+
+    def get_absolute_url(self):
+        return self.url
 
     def is_accessible(self, user):
         """
