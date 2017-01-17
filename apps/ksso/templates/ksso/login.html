@@ -1,0 +1,17 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Portal SSO System SATH Token 이 없을 경우 통합 로그인 창으로 이동 -->
+    {% if not token %}
+    <script type="text/javascript">
+      window.location = 'https://ksso.kaist.ac.kr/iamps/requestLogin.do';
+    </script>
+    {% endif %}
+  </head>
+  <body>
+
+  </body>
+</html>
