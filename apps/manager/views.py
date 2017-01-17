@@ -16,7 +16,7 @@ class PermissionRequiredServiceMixin(object):
     service_name = None
 
     def has_permission(self, request):
-        service = Service.objects.filter(name=self.service_name).first()
+        service = Service.objects.filter(name_ko=self.service_name).first()
         if not service:
             return False
         self.service = service
