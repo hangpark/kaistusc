@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr']
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -127,6 +128,11 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'Asia/Seoul'
+
+LANGUAGES = (
+    ('ko', 'Korean'),
+    ('en', 'English'),
+)
 
 USE_I18N = True
 
