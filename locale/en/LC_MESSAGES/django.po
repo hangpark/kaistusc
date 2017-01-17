@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-17 02:16+0900\n"
+"POT-Creation-Date: 2017-01-18 04:18+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,5 +109,15 @@ msgstr "KAIST Undergraduate Student Council"
 
 #: apps/manager/templates/manager/footer.jinja:6
 msgid ""
-"34141 대전광역시 유성구 대학로 291 KAIST N13-1 장영신 학생회관 301호 총학생회실"
-msgstr "301 N13-1, KAIST, 291 Daehak-ro, Yuseong-gu, Daejeon 34141, Republic of Korea"
+"34141 대전광역시 유성구 대학로 291 KAIST N13-1 장영신 학생회관 301호 총학생회"
+"실"
+msgstr ""
+"301 N13-1, KAIST, 291 Daehak-ro, Yuseong-gu, Daejeon 34141, Republic of Korea"
+
+#: apps/manager/templates/manager/header.jinja:4
+msgid "lang=en"
+msgstr "lang=ko"
+
+#: apps/manager/templates/manager/header.jinja:4
+msgid "View in English"
+msgstr "한국어로 보기"
