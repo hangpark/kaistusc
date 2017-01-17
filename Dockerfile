@@ -26,24 +26,28 @@ RUN rm default \
 # Configure uWSGI
 RUN mkdir -p /tmp/uwsgi
 
-# Set python virtual environment
-RUN mkdir -p /app/kaistusc
+# Download frontend dependencies
 WORKDIR /app/kaistusc
+ADD package.json package.json
+ADD bower.json bower.json
+RUN npm install \
+  && node_modules/bower/bin/bower install --allow-root
+
+# Set python virtual environment
+WORKDIR /app/kaistusc
+RUN mkdir -p /app/kaistusc
 ADD requirements.txt requirements.txt
 RUN virtualenv --python=python3 venv \
   && /bin/bash -c "source venv/bin/activate && pip install -r requirements.txt"
 
-# Add project
+# Add whole project
+WORKDIR /app/kaistusc
 ADD ./ ./
 
-# Compile frontend
-RUN npm install \
-  && node_modules/bower/bin/bower install --allow-root \
-  && node_modules/gulp/bin/gulp.js
-
-# Collect static files
+# Compile and collect static files
 WORKDIR /app/kaistusc
-RUN /bin/bash -c "source venv/bin/activate && python manage.py collectstatic --noinput"
+RUN node_modules/gulp/bin/gulp.js \
+  && /bin/bash -c "source venv/bin/activate && python manage.py collectstatic --noinput"
 
 # Compile document
 WORKDIR /app/kaistusc/docs
