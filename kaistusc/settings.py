@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_jinja',
     'apps.manager',
+    'apps.board',
 ]
 
 MIDDLEWARE = [
