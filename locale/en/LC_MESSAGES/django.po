@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-20 03:40+0900\n"
+"POT-Creation-Date: 2017-01-20 03:47+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,115 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: apps/ksso/models.py:27
+msgid "유저 인스턴스"
+msgstr "User instance"
+
+#: apps/ksso/models.py:30
+msgid "KAIST UID"
+msgstr ""
+
+#: apps/ksso/models.py:34 apps/ksso/templates/ksso/signup.jinja:11
+msgid "이름"
+msgstr "Name"
+
+#: apps/ksso/models.py:38
+msgid "과정"
+msgstr "Course"
+
+#: apps/ksso/models.py:42 apps/ksso/templates/ksso/signup.jinja:14
+msgid "학번"
+msgstr "Student ID number"
+
+#: apps/ksso/models.py:46 apps/ksso/templates/ksso/signup.jinja:15
+msgid "학적상태"
+msgstr "Register status"
+
+#: apps/ksso/models.py:50 apps/ksso/templates/ksso/signup.jinja:16
+msgid "생년월일"
+msgstr "Date of birth"
+
+#: apps/ksso/models.py:54 apps/ksso/templates/ksso/signup.jinja:17
+msgid "성별"
+msgstr "Sex"
+
+#: apps/ksso/models.py:58 apps/ksso/templates/ksso/signup.jinja:18
+msgid "학과"
+msgstr "Department"
+
+#: apps/ksso/models.py:62 apps/ksso/templates/ksso/signup.jinja:19
+msgid "메일주소"
+msgstr "Mail"
+
+#: apps/ksso/models.py:66 apps/ksso/templates/ksso/signup.jinja:20
+msgid "전화번호"
+msgstr "Phone"
+
+#: apps/ksso/models.py:70
+msgid "정보제공 동의여부"
+msgstr "Is agreed with provision of information?"
+
+#: apps/ksso/models.py:72
+msgid ""
+"정보제공에 반대하면 계정삭제 처리가 되나, 아직 동의여부를 선택하지 않은 최초"
+"가입자의 경우 의사표현 시까지 정보가 임시저장됩니다. 이 특수경우에는 정보를 "
+"활용하지 않아야 합니다."
+msgstr ""
+"Account is deleted if an user did not agree with provision of information,"
+"but information of first-time visitor who did not make a decision whether "
+"agrees or disagrees with provision of information will be saved temporarily "
+"until he/she makes a decision. In this special case, his/her personal "
+"information should not be used for any purpose."
+
+#: apps/ksso/templates/ksso/signup.jinja:7
+msgid "정보제공 동의절차"
+msgstr "Agreement on Provision of Personal Information"
+
+#: apps/ksso/templates/ksso/signup.jinja:12
+msgid "고유번호(UID)"
+msgstr "UID"
+
+#: apps/ksso/templates/ksso/signup.jinja:13
+msgid "학위과정"
+msgstr "Course"
+
+#: apps/ksso/templates/ksso/signup.jinja:22
+msgid ""
+"본 홈페이지는 총학생회가 학교당국에 적법한 절차를 통해 사용을 허가받은 "
+"<strong>KAIST Single Auth Service 3.0</strong>을 이용하여 사용자 관리를 하고 "
+"있습니다. 이 과정에서 학교당국이 제공하는 개인정보가 총학생회 DB 서버에 저장"
+"이 되게 됩니다."
+msgstr ""
+"This site manages accounts by using <strong>KAIST Single Auth Service 3.0"
+"</strong> which the university allows USC to use. In this process, your "
+"personal information provided by the university is saved in USC DB server."
+
+#: apps/ksso/templates/ksso/signup.jinja:23
+msgid ""
+"학내 구성원의 개인정보자기결정권 보장을 위하여 총학생회는 학교당국과의 협의와"
+"는 별개로 개인정보 저장사실을 실사용자에게 고지하고 그 동의를 구하는 절차입니"
+"다."
+msgstr ""
+"Purpose of this agreement is to notice and ask for assent of saving your "
+"personal information in USC DB server on the sidelines of the approval of "
+"the university to protect your own personal information control right."
+
+#: apps/ksso/templates/ksso/signup.jinja:24
+msgid ""
+"동의 이후 총학생회 공식소통창구를 통하여 정보파기를 요청할 수 있습니다. 동의"
+"를 하지 않을 시 본 홈페이지에 로그인 하실 수 없습니다."
+msgstr ""
+"You can request the destruction of your infromation to USC. You can not log "
+"in if you don't agree on this page."
+
+#: apps/ksso/templates/ksso/signup.jinja:27
+msgid "동의함"
+msgstr "Agree"
+
+#: apps/ksso/templates/ksso/signup.jinja:28
+msgid "동의하지 않음"
+msgstr "Disagree"
 
 #: apps/manager/apps.py:8
 msgid "사이트 관리도구"

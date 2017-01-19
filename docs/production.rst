@@ -59,6 +59,9 @@ Nginx_ 와 uWSGI_ 를 이용하여 Django_ 를 서비스하는 웹서버를 dock
 
     $ sudo docker run --name kaistusc \
     > -v {{ cert_path }}:/etc/kaistusc \
+    > -e PORTAL_ADMIN_ID={{ portal_admin_id }} \
+    > -e PORTAL_ADMIN_PW={{ portal_admin_pw }} \
+    > -e PORTAL_PUBLIC_KEY={{ portal_public_key }} \
     > --link kaistusc-db:db \
     > -p 80:80 \
     > -p 443:443 \
@@ -75,6 +78,8 @@ Nginx_ 와 uWSGI_ 를 이용하여 Django_ 를 서비스하는 웹서버를 dock
 .. code-block:: bash
 
     $ openssl dhparam -out dhparam.pem 4096
+
+`PORTAL` 로 시작하는 세 개의 환경변수는 :dfn:`KAIST Single Auth Service 3.0` 을 설정하기 위한 인증정보입니다. `{{ portal_public_key }}` 의 경우 마지막 `==` 까지 입력해주셔야 합니다. KAIST 학교 당국으로부터 발급 받은 인증정보를 제대로 입력하셨다면, 배포환경에서 KAIST 포탈 계정으로 로그인할 수 있게 됩니다. 다만, 서비스가 등록된 서버의 443 포트에서만 허용되기 때문에 개발환경에서 테스트할 수 없을 가능성이 큽니다.
 
 Docker 컨테이너 관리
 --------------------
