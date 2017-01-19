@@ -2,6 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic import TemplateView
 
 from .models import Category, Service
+from apps.ksso.mixins import SignUpRequiredMixin
 
 
 class PermissionRequiredServiceMixin(object):
@@ -50,8 +51,8 @@ class NavigatorMixin(object):
         return context
 
 
-class BaseServiceView(PermissionRequiredServiceMixin,
-        NavigatorMixin, TemplateView):
+class BaseServiceView(SignUpRequiredMixin,
+        PermissionRequiredServiceMixin, NavigatorMixin, TemplateView):
     """
     기본 서비스 view.
 
