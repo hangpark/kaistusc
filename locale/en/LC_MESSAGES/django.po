@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-18 04:18+0900\n"
+"POT-Creation-Date: 2017-01-20 03:40+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,6 +81,12 @@ msgstr "Closed"
 msgid "서비스 이용권한"
 msgstr "Permission for service"
 
+#: apps/manager/models.py:108
+msgid ""
+"접근허가 그룹 이외의 옵션으로 설정할 경우 서비스별 접근허가 그룹 설정이 적용"
+"되지 않습니다."
+msgstr "'Users in permitted group' option below would not be applied if 'Permission for service' is not set by 'Users in permitted group'."
+
 #: apps/manager/models.py:120 apps/manager/models.py:157
 msgid "서비스"
 msgstr "Service"
@@ -115,9 +121,11 @@ msgstr ""
 "301 N13-1, KAIST, 291 Daehak-ro, Yuseong-gu, Daejeon 34141, Republic of Korea"
 
 #: apps/manager/templates/manager/header.jinja:4
+#: apps/manager/templates/manager/side_nav.jinja:4
 msgid "lang=en"
 msgstr "lang=ko"
 
 #: apps/manager/templates/manager/header.jinja:4
+#: apps/manager/templates/manager/side_nav.jinja:4
 msgid "View in English"
 msgstr "한국어로 보기"
