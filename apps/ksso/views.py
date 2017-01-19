@@ -17,17 +17,19 @@ class LoginView(TemplateView):
         self.token = self.request.COOKIES.get('SATHTOKEN', False)
         if self.token:
             self.user = PortalController(self.token).retrieve_user()
-            response.delete_cookie('SATHTOKEN', '/', '.kaist.ac.kr')
             if self.user:
                 login(request, self.user)
                 self.next = self.request.COOKIES.get(
                         'REDIRECT_URL_TOKEN', settings.AUTH_REDIRECT_URL)
-                if not self.user.portal_info.is_signed_up:
-                    return redirect('ksso:signup')
-                response = redirect(self.next)
+                if self.user.portal_info.is_signed_up:
+                    response = redirect(self.next)
+                else:
+                    response = redirect('ksso:signup')
+                    response['Location'] += '?next=%s' % (self.next,)
             else:
                 response = redirect(settings.AUTH_REDIRECT_URL)
             response.delete_cookie('REDIRECT_URL_TOKEN')
+            response.delete_cookie('SATHTOKEN', '/', '.kaist.ac.kr')
             return response
         self.next = self.request.GET.get('next', settings.AUTH_REDIRECT_URL)
         return super(LoginView, self).dispatch(request, *args, **kwargs)
@@ -57,17 +59,13 @@ class AgreeView(View):
     """
 
     def dispatch(self, request, *args, **kwargs):
-        self.next = self.request.COOKIES.get(
-            'REDIRECT_URL_TOKEN', settings.AUTH_REDIRECT_URL)
-        response = redirect(self.next)
-        response.delete_cookie('REDIRECT_URL_TOKEN')
         try:
             portal_info = request.user.portal_info
             portal_info.is_signed_up = True
             portal_info.save()
         except:
             pass
-        return response
+        return redirect(request.GET.get('next', settings.AUTH_REDIRECT_URL))
         
 
 class DisagreeView(View):
@@ -77,8 +75,6 @@ class DisagreeView(View):
     """
 
     def dispatch(self, request, *args, **kwargs):
-        response = redirect('main')
-        response.delete_cookie('REDIRECT_URL_TOKEN')
         try:
             if not request.user.portal_info.is_signed_up:
                 user = request.user
@@ -86,4 +82,4 @@ class DisagreeView(View):
                 user.delete()
         except:
             pass
-        return response
+        return redirect('main')
