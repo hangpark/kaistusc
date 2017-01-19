@@ -73,6 +73,7 @@ class PortalInfo(models.Model):
 
     # Custom Manager
     objects = PortalInfoManager()
+    all_objects = models.Manager()
 
     def __str__(self):
         return self.ku_kname

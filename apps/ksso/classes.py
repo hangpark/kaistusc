@@ -27,7 +27,7 @@ class PortalController():
             # KAIST 단일서비스 인증정보가 저장되어 있는 경우
             # XML 정보를 바탕으로 database를 갱신합니다.
             try:
-                self.portal_info = PortalInfo.objects.get(
+                self.portal_info = PortalInfo.all_objects.get(
                         kaist_uid=self.kaist_uid)
                 self.update_portal_info()
 
