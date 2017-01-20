@@ -1,20 +1,22 @@
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import AccessMixin
 from django.views.generic import TemplateView
 
-from .models import Category, Service
 from apps.ksso.mixins import SignUpRequiredMixin
 
+from .models import Category, Service
 
-class PermissionRequiredServiceMixin(object):
+
+class PermissionRequiredServiceMixin(AccessMixin):
     """
     View를 요청한 유저가 대응 서비스에 대한 접속권한이 없는 경우
-    PermissionDenied Exception을 발생시키는 mixin.
+    401 에러를 발생시키는 mixin.
 
-    PermissionDenied Exception이 발생되면 401 에러가 나오며, DEBUG 모드가
-    아닐 때 template을 customizing 할 수 있다.
+    401 에러에 대해서 DEBUG 모드가 아닐 때 template을 customizing
+    할 수 있다.
     """
 
     service_name = None
+    raise_exception = True
 
     def has_permission(self, request):
         service = Service.objects.filter(name_ko=self.service_name).first()
@@ -22,9 +24,6 @@ class PermissionRequiredServiceMixin(object):
             return False
         self.service = service
         return service.is_accessible(request.user)
-
-    def handle_no_permission(self):
-        raise PermissionDenied
 
     def dispatch(self, request, *args, **kwargs):
         if not self.has_permission(request):
