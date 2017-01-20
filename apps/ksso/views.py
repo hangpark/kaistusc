@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from django.contrib.auth import login, logout
+from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, View
 
@@ -51,6 +52,21 @@ class LogoutView(View):
 class SignUpView(NavigatorMixin, TemplateView):
 
     template_name = 'ksso/signup.jinja'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect_to_login(request.path)
+        return super(SignUpView, self).dispatch(request, *args, **kwargs)
+
+    def is_signed_up(self, request):
+        return not (request.user.is_authenticated()
+                and hasattr(request.user, 'portal_info')
+                and not request.user.portal_info.is_signed_up)
+
+    def get_context_data(self, **kwargs):
+        context = super(SignUpView, self).get_context_data(**kwargs)
+        context['is_signed_up'] = self.is_signed_up(self.request)
+        return context
 
 
 class AgreeView(View):

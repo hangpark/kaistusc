@@ -167,3 +167,8 @@ MEDIA_ROOT = '/var/www/media'
 # Session Management
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+# Authentication
+
+LOGIN_URL = '/user/login/'

@@ -1,5 +1,7 @@
 {% extends 'manager/base.jinja' %}
 
+{% from 'ksso/macros.jinja' import name %}
+
 {% block main_area %}
 <div id="container" class="spot">
   <div id="main" class="page-item container-fluid" style="padding-bottom: 14px;">
@@ -23,9 +25,12 @@
     <p>{{ _('학내 구성원의 개인정보자기결정권 보장을 위하여 총학생회는 학교당국과의 협의와는 별개로 개인정보 저장사실을 실사용자에게 고지하고 그 동의를 구하는 절차입니다.') }}</p>
     <p>{{ _('동의 이후 총학생회 공식소통창구를 통하여 정보파기를 요청할 수 있습니다. 동의를 하지 않을 시 본 홈페이지에 로그인 하실 수 없습니다.') }}</p>
     <hr />
+    {% if is_signed_up %}
+    <p class="lead text-center"><strong>{{ _('이미 동의하셨습니다.') }}</strong></p>
+    {% endif %}
     <p class="text-center">
-    <a href="/user/signup/agree" class="btn btn-primary">{{ _('동의함') }}</a>
-    <a href="/user/signup/disagree" class="btn btn-danger">{{ _('동의하지 않음') }}</a>
+    <a href="/user/signup/agree" class="btn btn-primary {% if is_signed_up %}disabled{% endif %}">{{ _('동의함') }}</a>
+    <a href="/user/signup/disagree" class="btn btn-danger {% if is_signed_up %}disabled{% endif %}">{{ _('동의하지 않음') }}</a>
     </p>
   </div>
 </div>
