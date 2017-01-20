@@ -19,9 +19,14 @@ from django.views.generic import TemplateView
 from apps.manager.views import BaseServiceView
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^user/', include('apps.ksso.urls')),
+    # Main page
+    url(r'^$', TemplateView.as_view(template_name='manager/main.jinja'), name='main'),
 
+    # App redirections
+    url(r'^admin/', admin.site.urls),
+    url(r'^user/', include('apps.ksso.urls', namespace='ksso')),
+
+    # Custom static pages
     url(r'^test/', BaseServiceView.as_view(
         service_name='테스트',
         template_name='manager/app_base.jinja')),

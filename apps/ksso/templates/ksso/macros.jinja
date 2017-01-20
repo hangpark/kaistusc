@@ -1,0 +1,11 @@
+{% macro name(user) -%}
+	{% if user.is_authenticated() -%}
+		{% if user.portal_info is undefined -%}
+			{{ user }}
+		{%- else -%}
+			{{ user.portal_info }}
+		{%- endif %}
+	{%- else -%}
+		{{ _('(익명)') }}
+	{%- endif %}
+{%- endmacro %}
