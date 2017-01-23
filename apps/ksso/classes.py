@@ -1,3 +1,4 @@
+from . import settings
 from .models import PortalInfo
 
 

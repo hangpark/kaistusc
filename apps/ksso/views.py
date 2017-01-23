@@ -5,6 +5,8 @@ from django.views.generic import TemplateView, View
 
 from apps.manager.views import NavigatorMixin
 
+from . import settings
+
 
 class LoginView(TemplateView):
 
