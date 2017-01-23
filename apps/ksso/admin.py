@@ -10,12 +10,38 @@ from .models import PortalInfo
 
 class PortalInfoInline(admin.StackedInline):
     """
-    유저 모델 인스턴스 수정 시 포탈 계정정보 동시 수정을 위한 인라인
+    유저 모델 인스턴스 수정 시 포탈 계정정보 출력을 위한 인라인
     """
 
     model = PortalInfo
+
     verbose_name = _('포탈 계정정보')
+
     verbose_name_plural = _('포탈 계정정보(들)')
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'kaist_uid',
+                'ku_kname',
+                'ku_acad_prog',
+                'ku_std_no',
+                'ku_psft_user_status_kor',
+                'ku_born_date',
+                'ku_sex',
+                'ou',
+                'mail',
+                'mobile',
+                'is_signed_up',
+            ),
+        }),
+    )
+
+    def get_readonly_fields(self, request, obj=None):
+        return list(set(
+            [field.name for field in self.opts.local_fields] +
+            [field.name for field in self.opts.local_many_to_many]
+        ))
 
 
 class CustomUserAdmin(UserAdmin):
