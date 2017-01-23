@@ -1,8 +1,8 @@
 from django.conf import settings
-
-from django.utils.cache import patch_vary_headers
 from django.utils import translation
+from django.utils.cache import patch_vary_headers
 from django.utils.deprecation import MiddlewareMixin
+
 
 class SessionBasedLocaleMiddleware(MiddlewareMixin):
     """

@@ -1,11 +1,8 @@
-# -*- coding:utf-8 -*-
-
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, View
 
-from . import settings
 from apps.manager.views import NavigatorMixin
 
 
