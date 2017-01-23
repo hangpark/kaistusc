@@ -16,27 +16,33 @@ class ServiceTestCase(TestCase):
         self.svc_all = Service.objects.create(
             name='Service for all users',
             category=self.cat,
-            permission = PERMISSION_ALL_USERS
+            max_permission_anon=PERMISSION_ACCESSIBLE,
+            max_permission_auth=PERMISSION_NONE
         )
         self.svc_log = Service.objects.create(
             name='Service for logged in users',
             category=self.cat,
-            permission = PERMISSION_LOGGED_IN_USERS
+            max_permission_anon=PERMISSION_NONE,
+            max_permission_auth=PERMISSION_WRITABLE
         )
         self.svc_grp1 = Service.objects.create(
             name='Service for accessible groups #1',
             category=self.cat,
-            permission = PERMISSION_ACCESSIBLE_GROUPS
+            max_permission_anon=PERMISSION_NONE,
+            max_permission_auth=PERMISSION_NONE
         )
         self.svc_grp2 = Service.objects.create(
             name='Service for accessible groups #2',
             category=self.cat,
-            permission = PERMISSION_ACCESSIBLE_GROUPS
+            max_permission_anon=PERMISSION_NONE,
+            max_permission_auth=PERMISSION_NONE
         )
         self.svc_cls = Service.objects.create(
             name='Service closed',
             category=self.cat,
-            permission = PERMISSION_CLOSED
+            max_permission_anon=PERMISSION_WRITABLE,
+            max_permission_auth=PERMISSION_DELETABLE,
+            is_closed=True
         )
 
         # 유저 생성
@@ -76,15 +82,20 @@ class ServiceTestCase(TestCase):
 
         # 그룹에게 서비스 접근권한을 부여한다.
         GroupServicePermission.objects.create(
-                group=self.grp2, service=self.svc_all)
+                group=self.grp2, service=self.svc_all,
+                permission=PERMISSION_ACCESSIBLE)
         GroupServicePermission.objects.create(
-                group=self.grp2, service=self.svc_log)
+                group=self.grp2, service=self.svc_log,
+                permission=PERMISSION_READABLE)
         GroupServicePermission.objects.create(
-                group=self.grp1, service=self.svc_grp1)
+                group=self.grp1, service=self.svc_grp1,
+                permission=PERMISSION_COMMENTABLE)
         GroupServicePermission.objects.create(
-                group=self.grp2, service=self.svc_grp2)
+                group=self.grp2, service=self.svc_grp2,
+                permission=PERMISSION_ACCESSIBLE)
         GroupServicePermission.objects.create(
-                group=self.grp2, service=self.svc_cls)
+                group=self.grp2, service=self.svc_cls,
+                permission=PERMISSION_ACCESSIBLE)
 
         # 각 유저의 이용가능 서비스를 구한다.
         qs = Service.objects.order_by('pk')
@@ -112,7 +123,7 @@ class ServiceTestCase(TestCase):
         services = [
             self.svc_all, self.svc_log, self.svc_grp1,
             self.svc_grp2, self.svc_cls]
-        res_accessible = [(repr(user), repr(srv), srv.is_accessible(user))
+        res_accessible = [(repr(user), repr(srv), srv.is_permitted(user))
             for user in users for srv in services]
         
         # 유저-서비스 이용가능여부 결과 테스트

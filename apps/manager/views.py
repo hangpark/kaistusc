@@ -20,7 +20,7 @@ class PermissionRequiredServiceMixin(object):
         if not service:
             return False
         self.service = service
-        return service.is_accessible(request.user)
+        return service.is_permitted(request.user)
 
     def handle_no_permission(self):
         raise PermissionDenied
