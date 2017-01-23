@@ -26,7 +26,7 @@ class CustomUserAdmin(UserAdmin):
     inlines = [PortalInfoInline] + UserAdmin.inlines
 
     fieldsets = (
-        (None, {'fields': ('username',)}),
+        (None, {'fields': ('username', 'password')}),
         (_('Permissions'), {'fields': (('is_staff', 'is_superuser'), 'groups')}),
     )
     
