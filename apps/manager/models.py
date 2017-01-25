@@ -3,15 +3,9 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
-# Basic service permissions
-PERMISSION_NONE = 0
-PERMISSION_ACCESSIBLE = 1
-PERMISSION_READABLE = 2
-PERMISSION_COMMENTABLE = 3
-PERMISSION_WRITABLE = 4
-PERMISSION_EDITABLE = 5
-PERMISSION_DELETABLE = 6
+from .permissions import *
 
+# Basic service permissions
 PERMISSION_CHOICES = (
     (PERMISSION_NONE, _("권한없음")),
     (PERMISSION_ACCESSIBLE, _("접근권한")),
