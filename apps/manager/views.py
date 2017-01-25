@@ -4,6 +4,24 @@ from django.views.generic import TemplateView
 from apps.ksso.mixins import SignUpRequiredMixin
 
 from .models import Category, Service
+from .permissions import *
+
+
+class PermissionContextMixin(object):
+    """
+    템플릿에서 퍼미션 변수들을 사용할 수 있도록 컨텍스트에 이를 넘기는 mixin.
+    """
+
+    def get_context_data(self, **kwargs):
+        context = super(PermissionContextMixin, self).get_context_data(**kwargs)
+        context['PERMISSION_NONE'] = PERMISSION_NONE
+        context['PERMISSION_ACCESSIBLE'] = PERMISSION_ACCESSIBLE
+        context['PERMISSION_READABLE'] = PERMISSION_READABLE
+        context['PERMISSION_COMMENTABLE'] = PERMISSION_COMMENTABLE
+        context['PERMISSION_WRITABLE'] = PERMISSION_WRITABLE
+        context['PERMISSION_EDITABLE'] = PERMISSION_EDITABLE
+        context['PERMISSION_DELETABLE'] = PERMISSION_DELETABLE
+        return context
 
 
 class PermissionRequiredServiceMixin(AccessMixin):
@@ -23,7 +41,7 @@ class PermissionRequiredServiceMixin(AccessMixin):
         if not service:
             return False
         self.service = service
-        return service.is_accessible(request.user)
+        return service.is_permitted(request.user)
 
     def dispatch(self, request, *args, **kwargs):
         if not self.has_permission(request):
@@ -50,8 +68,8 @@ class NavigatorMixin(object):
         return context
 
 
-class BaseServiceView(SignUpRequiredMixin,
-        PermissionRequiredServiceMixin, NavigatorMixin, TemplateView):
+class BaseServiceView(PermissionContextMixin, PermissionRequiredServiceMixin,
+        NavigatorMixin, TemplateView):
     """
     기본 서비스 view.
 

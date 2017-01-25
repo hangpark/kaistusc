@@ -1,0 +1,5 @@
+{% macro make_tag(board, tag) -%}
+{% if tag -%}
+  <div class="tag-item bg-{{ tag.id % 10 }}"><a href="{{ board.get_absolute_url() }}/{{ tag.slug }}/">{{ tag.abbr }}</a></div>
+{%- endif %}
+{%- endmacro %}

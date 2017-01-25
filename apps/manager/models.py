@@ -2,11 +2,18 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
-# Service access permissions
-PERMISSION_ALL_USERS = 'ALL'
-PERMISSION_LOGGED_IN_USERS = 'LOG'
-PERMISSION_ACCESSIBLE_GROUPS = 'GRP'
-PERMISSION_CLOSED = 'CLS'
+from .permissions import *
+
+# Basic service permissions
+PERMISSION_CHOICES = (
+    (PERMISSION_NONE, _("권한없음")),
+    (PERMISSION_ACCESSIBLE, _("접근권한")),
+    (PERMISSION_READABLE, _("읽기권한 (혹은 이에 준하는 특수권한)")),
+    (PERMISSION_COMMENTABLE, _("댓글권한 (혹은 이에 준하는 특수권한)")),
+    (PERMISSION_WRITABLE, _("쓰기권한 (혹은 이에 준하는 특수권한)")),
+    (PERMISSION_EDITABLE, _("수정권한 (혹은 이에 준하는 특수권한)")),
+    (PERMISSION_DELETABLE, _("삭제권한 (혹은 이에 준하는 특수권한)")),
+)
 
 
 class Category(models.Model):
@@ -51,12 +58,13 @@ class ServiceQuerySet(models.QuerySet):
             return self
 
         # 일반 유저의 경우 조건에 따라 서비스 필터링
-        q = Q(permission=PERMISSION_ALL_USERS)
+        q = Q(max_permission_anon__gte=PERMISSION_ACCESSIBLE)
         if user.is_authenticated():
-            q |= Q(permission=PERMISSION_LOGGED_IN_USERS)
-        q |= Q(permission=PERMISSION_ACCESSIBLE_GROUPS,
+            q |= Q(max_permission_auth__gte=PERMISSION_ACCESSIBLE)
+        q |= Q(
+            groupservicepermission__permission__gte=PERMISSION_ACCESSIBLE,
             groupservicepermission__group__in=user.groups.all())
-        q &= ~Q(permission=PERMISSION_CLOSED)
+        q &= Q(is_closed=False)
         return self.filter(q).distinct()
 
 
@@ -95,27 +103,33 @@ class Service(models.Model):
         default=1,
         help_text=_("같은 카테고리 내 서비스 간의 노출순서"))
 
-    PERMISSION_CHOICES = (
-        (PERMISSION_ALL_USERS, _("모든 유저")),
-        (PERMISSION_LOGGED_IN_USERS, _("로그인 한 유저")),
-        (PERMISSION_ACCESSIBLE_GROUPS, _("접근허가 그룹")),
-        (PERMISSION_CLOSED, _("비공개")),
-    )
-    permission = models.CharField(
-        _("서비스 이용권한"),
-        max_length=3, choices=PERMISSION_CHOICES, default='ALL',
-        help_text=_("접근허가 그룹 이외의 옵션으로 설정할 경우 서비스별 접근허가 그룹 설정이 적용되지 않습니다."))
+    description = models.TextField(
+        _("서비스 설명"),
+        blank=True)
 
-    accessible_groups = models.ManyToManyField(
+    is_closed = models.BooleanField(
+        _("서비스 중지여부"),
+        default=False,
+        help_text=_("설정 시 관리자를 제외한 모든 유저의 접속이 불가능합니다."))
+
+    max_permission_anon = models.IntegerField(
+        _("비로그인 유저의 최대 권한"),
+        choices=PERMISSION_CHOICES, default=PERMISSION_NONE)
+
+    max_permission_auth = models.IntegerField(
+        _("로그인 유저의 최대 권한"),
+        choices=PERMISSION_CHOICES, default=PERMISSION_READABLE)
+
+    permitted_groups = models.ManyToManyField(
         'auth.Group',
-        through='GroupServicePermission', related_name='accessible_services',
-        verbose_name=_("접근허가 그룹"))
+        through='GroupServicePermission', related_name='permitted_services',
+        verbose_name=_("그룹 권한"))
 
     # Custom Manager
     objects = ServiceManager()
 
     class Meta:
-        ordering = ['category', 'permission', 'level']
+        ordering = ['category', 'level']
         verbose_name = _('서비스')
         verbose_name_plural = _('서비스(들)')
 
@@ -125,24 +139,26 @@ class Service(models.Model):
     def get_absolute_url(self):
         return self.url
 
-    def is_accessible(self, user):
+    def is_permitted(self, user, permission=PERMISSION_ACCESSIBLE):
         """
         주어진 유저가 접근할 수 있는 서비스인지 확인하는 함수.
         """
+
         if user.is_superuser:
             return True
-        if self.permission == PERMISSION_ALL_USERS:
+        if self.is_closed:
+            return False
+        if permission <= self.max_permission_anon:
             return True
-        if self.permission == PERMISSION_LOGGED_IN_USERS:
+        if permission <= self.max_permission_auth:
             return user.is_authenticated()
-        if self.permission == PERMISSION_ACCESSIBLE_GROUPS:
-            return (user.groups.all() & self.accessible_groups.all()).exists()
-        return False
+        return (user.groups.all() & self.permitted_groups.filter(
+            groupservicepermission__permission__gte=permission)).exists()
 
 
 class GroupServicePermission(models.Model):
     """
-    특정 그룹에 특정 서비스에 대한 접근권한을 부여하는 모델.
+    특정 그룹에 특정 서비스에 대한 특정 권한을 부여하는 모델.
     """
 
     group = models.ForeignKey(
@@ -155,10 +171,14 @@ class GroupServicePermission(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("서비스"))
 
+    permission = models.IntegerField(
+        _("권한"),
+        choices=PERMISSION_CHOICES, default=PERMISSION_ACCESSIBLE)
+
     class Meta:
-        ordering = ['service', 'group']
-        verbose_name = _('그룹별 서비스 접근권한')
-        verbose_name_plural = _('그룹별 서비스 접근권한(들)')
+        ordering = ['service', 'permission', 'group']
+        verbose_name = _('그룹별 서비스 이용권한')
+        verbose_name_plural = _('그룹별 서비스 이용권한(들)')
 
     def __str__(self):
-        return "%s - %s" % (self.service, self.group)
+        return "%s - %s - %s" % (self.service, self.permission, self.group)

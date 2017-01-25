@@ -1,0 +1,100 @@
+//
+// Board
+// --------------------------------------------------
+
+
+//== 기본 레이아웃
+//
+//##
+
+.tag-item {
+  padding: 1px;
+  width: 52px;
+  display: inline-block;
+  border: 1px solid #dcdcdd;
+  border-radius: 5px;
+  font-size: $font-size-xm;
+  font-weight: bold;
+  color: #fefefe;
+  text-align: center;
+}
+
+
+//== 게시판 헤더
+//
+//##
+
+#board-header, #board-tag-list {
+  margin-bottom: 8px;
+  position: relative;
+}
+
+#board-title {
+  margin-left: 10px;
+  font-size: 26pt;
+  font-weight: bold;
+}
+
+#board-tag-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 0;
+  font-size: $font-size-sm;
+  font-weight: bold;
+  color: #717071;
+}
+
+#board-tag-list li {
+  margin-left: 6px;
+  list-style: none;
+}
+
+
+//== 포스트 목록
+//
+//##
+
+#post-list {
+  border-top: solid 3px #717071;
+
+  thead {
+    border-bottom: solid 2px #9f9fa0;
+    font-size: 12pt;
+  }
+
+  tbody tr {
+    border-top: solid 1px #dcdcdd;
+    border-bottom: solid 1px #dcdcdd;
+    font-size: $font-size-sm;
+
+    &.notice .post-list-title{
+      font-weight: bold;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
+  .post-list-dom-width {
+    width: 55%;
+  }
+
+  .post-list-mobile {
+    margin-top: 4px;
+    font-size: $font-size-xxm;
+  }
+}
+
+
+//== 게시판 기능
+//
+//##
+
+#board-func .pagination {
+    margin-bottom: 0;
+}
+
+#search-form {
+  margin: $line-height-computed 0;
+}
