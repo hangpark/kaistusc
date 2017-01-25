@@ -16,6 +16,7 @@ class Board(Service):
         _("메인페이지 노출여부"),
         default=False)
 
+    objects = ServiceManager()
 
     def __str__(self):
         return self.name
@@ -69,6 +70,57 @@ class PostBase(models.Model):
     class Meta:
         ordering = ['-date']
 
+    def is_owned_by(self, user):
+        """
+        주어진 유저의 포스트인지 확인하는 함수.
+
+        익명 유저를 처리하기 위한 로직이 포함되어있다.
+        """
+
+        return user.is_authenticated() and self.author == user
+
+    def is_permitted(self, user, permission):
+        """
+        주어진 유저의 포스트 이용권한을 확인하는 함수.
+
+        게시글이나 댓글 등 `PostBase`를 상속확장하는 모델에서
+        `get_base_board()`와 `get_base_post()`를 정의하여 사용한다.
+        """
+
+        base_board = self.get_base_board()
+        base_post = self.get_base_post()
+        if user.is_superuser:
+            return True
+        if base_board and not base_board.is_permitted(user, PERMISSION_ACCESSIBLE):
+            return False
+        if self.is_deleted:
+            return False
+        if self.is_owned_by(user):
+            return True
+        if base_board:
+            res = base_board.is_permitted(user, permission)
+        else:
+            res = True
+        if base_post and permission <= PERMISSION_COMMENTABLE:
+            res &= not base_post.is_secret
+        return res
+
+    def get_base_board(self):
+        """
+        포스트가 속한 게시판이 있다면 이를 반환한다. 이 경우, 게시판의
+        이용권한이 상속된다.
+        """
+
+        pass
+
+    def get_base_post(self):
+        """
+        포스트들이 계층구조를 가질 때 최상위 포스트를 반환한다. 이 경우,
+        해당 포스트의 `is_secret` 값이 상속된다.
+        """
+
+        pass
+
 
 class Post(PostBase):
     """
@@ -102,6 +154,12 @@ class Post(PostBase):
     def get_absolute_url(self):
         return self.board.get_absolute_url() + "%d/" % self.id
 
+    def get_base_board(self):
+        return self.board
+
+    def get_base_post(self):
+        return self
+
 
 class Comment(PostBase):
     """
@@ -120,6 +178,12 @@ class Comment(PostBase):
 
     def get_absolute_url(self):
         return self.parent_post.get_absolute_url() + "#comment-id-%d" % self.id
+
+    def get_base_board(self):
+        return self.post.get_base_board()
+
+    def get_base_post(self):
+        return self.post
 
 
 def get_upload_path(instance, filename):
