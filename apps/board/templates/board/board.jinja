@@ -1,0 +1,20 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'board/macros.jinja' import make_tag %}
+
+{% block content %}
+<div id="board-header">
+  <h1 id="board-title" class="pull-left">{{ board.name }}</h1>
+  <div id="board-tag-btn" class="pull-right" data-toggle="collapse" href="#board-tag-list">태그별 검색<span class="caret"></span></div>
+</div>
+<div id="board-tag-list" class="collapse">
+  <ul class="pull-right">
+  {% for tag in tags %}
+    <li class="pull-left">{{ make_tag(board, tag) }}</li>
+  {% endfor %}
+  </ul>
+</div>
+
+{% include 'board/post_list.jinja' %}
+
+{% endblock %}
