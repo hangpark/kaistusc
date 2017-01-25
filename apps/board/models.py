@@ -3,7 +3,7 @@ import os
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.manager.models import Service
+from apps.manager.models import Service, ServiceManager
 from apps.manager.permissions import *
 from kaistusc.settings import MEDIA_URL
 
