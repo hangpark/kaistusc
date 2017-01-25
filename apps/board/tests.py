@@ -1,8 +1,9 @@
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.test import TestCase
 
-from .models import *
 from apps.manager.models import *
+
+from .models import *
 
 
 class BoardTestCase(TestCase):
