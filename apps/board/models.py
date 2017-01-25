@@ -3,7 +3,8 @@ import os
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.manager.models import *
+from apps.manager.models import Service
+from apps.manager.permissions import *
 from kaistusc.settings import MEDIA_URL
 
 
@@ -152,7 +153,7 @@ class Post(PostBase):
         return self.title
 
     def get_absolute_url(self):
-        return self.board.get_absolute_url() + "%d/" % self.id
+        return os.path.join(self.board.get_absolute_url(), str(self.id))
 
     def get_base_board(self):
         return self.board
