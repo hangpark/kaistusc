@@ -2,6 +2,8 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.shortcuts import render
 
+from apps.manager.models import Service
+from apps.manager.permissions import *
 from apps.manager.views import BaseServiceView
 
 from .models import Board, Post, Tag
@@ -15,7 +17,7 @@ class BoardView(BaseServiceView):
     """
 
     template_name = 'board/board.jinja'
-    
+
     def get_context_data(self, **kwargs):
         context = super(BoardView, self).get_context_data(**kwargs)
 
@@ -63,3 +65,26 @@ class BoardView(BaseServiceView):
             or (paginator.num_pages - 2) * (page > paginator.num_pages - 2)
             or page)
         return range(pivot - 2, pivot + 3)
+
+
+class PostView(BoardView):
+
+    template_name = 'board/post.jinja'
+    required_permission = PERMISSION_READABLE
+
+    def has_permission(self, request):
+        if not super(PostView, self).has_permission(request):
+            return False
+        post = Post.objects.filter(board=self.service.board, id=kwargs['post']).first()
+
+        if not post:
+            return False
+        self.post = post
+        return post.is_permitted(request.user, self.required_permission)
+
+    def get_context_data(self, **kwargs):
+        context = super(PostView, self).get_context_data(**kwargs)
+
+        # Store current post
+        context['post'] = self.post
+        return context

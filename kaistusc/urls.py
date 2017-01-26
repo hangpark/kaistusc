@@ -17,18 +17,19 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
+from apps.board.views import BoardView
 from apps.manager.views import BaseServiceView
 
 urlpatterns = [
     # Main page
     url(r'^$', TemplateView.as_view(template_name='manager/main.jinja'), name='main'),
 
-    # App redirections
+    # Basic app redirections
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('apps.ksso.urls', namespace='ksso')),
 
+    # Service redirections
+    url(r'^(?P<url>board/[a-z0-9]*[a-z]+[a-z0-9]*)/', include('apps.board.urls')),
+
     # Custom static pages
-    url(r'^test/', BaseServiceView.as_view(
-        service_name='테스트',
-        template_name='manager/app_base.jinja')),
 ]

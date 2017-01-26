@@ -96,7 +96,7 @@ class Service(models.Model):
     url = models.CharField(
         _("서비스 최상위 주소"),
         max_length=32, default='/',
-        help_text=_("도메인 하위 경로만 적어주세요."))
+        help_text=_("도메인 하위 경로만 적어주세요. aaa/bbb 형식을 지켜주세요."))
 
     level = models.IntegerField(
         _("노출순서"),

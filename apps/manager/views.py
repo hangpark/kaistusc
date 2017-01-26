@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import AccessMixin
+from django.http import Http404
 from django.views.generic import TemplateView
 
 from apps.ksso.mixins import SignUpRequiredMixin
@@ -27,24 +28,40 @@ class PermissionContextMixin(object):
 class PermissionRequiredServiceMixin(AccessMixin):
     """
     View를 요청한 유저가 대응 서비스에 대한 접속권한이 없는 경우
-    401 에러를 발생시키는 mixin.
+    403 에러를 발생시키는 mixin.
 
-    401 에러에 대해서 DEBUG 모드가 아닐 때 template을 customizing
-    할 수 있다.
+    서비스가 존재하지 않는 경우 404 에러를 발생시킨다. 403 에러와 404 에러에
+    대해서 DEBUG 모드가 아닐 때 template을 customizing 할 수 있다.
     """
 
     service_name = None
+    required_permission = PERMISSION_ACCESSIBLE
     raise_exception = True
 
-    def has_permission(self, request):
-        service = Service.objects.filter(name_ko=self.service_name).first()
+    def get_service(self, request, *args, **kwargs):
+        """
+        User request로부터 서비스를 얻어내는 함수.
+
+        기본적으로 요청 URL 정규표현식에 담긴 url 파라미터의 값과 서비스의
+        url을 비교하여 서비스를 특정한다. url 파라미터가 전달되지 않은 경우
+        service_name을 통해 서비스를 얻는다.
+
+        기타 방식으로 서비스가 특정되는 경우와 같은 특수상황에서는 본 함수를
+        커스터마이징 하여 적절한 로직을 구현할 수 있다.
+        """
+        if (kwargs.get('url', None)):
+            return Service.objects.filter(url=kwargs['url']).first()
+        return Service.objects.filter(name_ko=self.service_name).first()
+
+    def has_permission(self, request, *args, **kwargs):
+        service = self.get_service(request, *args, **kwargs)
         if not service:
-            return False
+            raise Http404
         self.service = service
-        return service.is_permitted(request.user)
+        return service.is_permitted(request.user, self.required_permission)
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.has_permission(request):
+        if not self.has_permission(request, *args, **kwargs):
             return self.handle_no_permission()
         return super(PermissionRequiredServiceMixin, self).dispatch(
             request, *args, **kwargs)
