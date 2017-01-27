@@ -16,6 +16,15 @@ img {
   max-width: 100%;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
 
 //== 기본 mixin
 //
@@ -52,6 +61,48 @@ img {
 
 .spot {
   @include full-jumbotron($body-black-bg);
+}
+
+.margin-left {
+  margin-left: 5px;
+}
+.margin-right {
+  margin-right: 5px;
+}
+.margin-both {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.bg-1 {
+  background-color: $color-1;
+}
+.bg-2 {
+  background-color: $color-2;
+}
+.bg-3 {
+  background-color: $color-3;
+}
+.bg-4 {
+  background-color: $color-4;
+}
+.bg-5 {
+  background-color: $color-5;
+}
+.bg-6 {
+  background-color: $color-6;
+}
+.bg-7 {
+  background-color: $color-7;
+}
+.bg-8 {
+  background-color: $color-8;
+}
+.bg-9 {
+  background-color: $color-9;
+}
+.bg-0 {
+  background-color: $color-0;
 }
 
 

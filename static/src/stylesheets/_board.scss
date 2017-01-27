@@ -82,7 +82,7 @@
 
   .post-list-mobile {
     margin-top: 4px;
-    font-size: $font-size-xxm;
+    font-size: $font-size-xm;
   }
 }
 
@@ -97,4 +97,59 @@
 
 #search-form {
   margin: $line-height-computed 0;
+}
+
+//== 포스트
+//
+//##
+
+#post-wrap {
+  margin-bottom: 28px;
+}
+
+#post-header {
+  margin-bottom: 20px;
+  padding: 10px 12px 7px 13px;
+  border-top: 3px solid #717071;
+  border-bottom: 2px solid #9f9fa0;
+  background-color: #f7f7f7;
+}
+
+#post-title {
+  font-size: 13pt;
+}
+
+#post-info {
+  margin-top: 18px;
+}
+
+#post-content {
+  padding: 0 10px 50px;
+  border-bottom: 1px solid #dcdcdd;
+}
+
+#comment-list .comment {
+  padding-top: 6px;
+  border-left: 14px solid #dcdcdd;
+  &:nth-child(even) {
+    border-left-color: #eeefef;
+  }
+  border-bottom: 1px solid #dcdcdd;
+  .comment-header {
+    margin: 0 12px 12px;
+  }
+  .comment-content {
+    padding: 0 10px 20px 25px;
+    p {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+#comment-form {
+  margin-top: 28px;
+}
+
+#post-func {
+  margin-top: 58px;
 }
