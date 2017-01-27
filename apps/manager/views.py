@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import AccessMixin
 from django.http import Http404
 from django.views.generic import TemplateView
+import os
 
 from apps.ksso.mixins import SignUpRequiredMixin
 
@@ -50,7 +51,8 @@ class PermissionRequiredServiceMixin(AccessMixin):
         커스터마이징 하여 적절한 로직을 구현할 수 있다.
         """
         if (kwargs.get('url', None)):
-            return Service.objects.filter(url=kwargs['url']).first()
+            url = os.path.join('/', kwargs['url'])
+            return Service.objects.filter(url=url).first()
         return Service.objects.filter(name_ko=self.service_name).first()
 
     def has_permission(self, request, *args, **kwargs):
