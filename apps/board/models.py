@@ -175,7 +175,7 @@ class Comment(PostBase):
         ordering = ['date']
 
     def __str__(self):
-        return _("'%s'의 댓글") % self.post
+        return _("'%s'의 댓글") % self.parent_post
 
     def get_absolute_url(self):
         return self.parent_post.get_absolute_url() + "#comment-id-%d" % self.id
