@@ -5,8 +5,9 @@ from django.shortcuts import render
 from apps.manager.models import Service
 from apps.manager.permissions import *
 from apps.manager.views import BaseServiceView
+from django.http import Http404
 
-from .models import Board, Post, Tag
+from .models import Board, Post, Tag, Comment
 
 
 class BoardView(BaseServiceView):
@@ -72,13 +73,13 @@ class PostView(BoardView):
     template_name = 'board/post.jinja'
     required_permission = PERMISSION_READABLE
 
-    def has_permission(self, request):
-        if not super(PostView, self).has_permission(request):
+    def has_permission(self, request, *args, **kwargs):
+        if not super(PostView, self).has_permission(request, *args, **kwargs):
             return False
         post = Post.objects.filter(board=self.service.board, id=kwargs['post']).first()
 
         if not post:
-            return False
+            raise Http404
         self.post = post
         return post.is_permitted(request.user, self.required_permission)
 
@@ -87,4 +88,8 @@ class PostView(BoardView):
 
         # Store current post
         context['post'] = self.post
+
+        # Store comments for current post
+        context['comments'] = Comment.objects.filter(parent_post=self.post)
+
         return context
