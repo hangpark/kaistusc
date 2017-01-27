@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-20 03:47+0900\n"
+"POT-Creation-Date: 2017-01-27 12:55+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,55 +17,229 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: apps/ksso/models.py:27
-msgid "유저 인스턴스"
-msgstr "User instance"
+#: apps/board/apps.py:7 apps/board/models.py:23
+msgid "게시판"
+msgstr "Board"
 
-#: apps/ksso/models.py:30
-msgid "KAIST UID"
-msgstr ""
+#: apps/board/models.py:17
+msgid "메인페이지 노출여부"
+msgstr "Shown in sitemap"
 
-#: apps/ksso/models.py:34 apps/ksso/templates/ksso/signup.jinja:11
+#: apps/board/models.py:24
+msgid "게시판(들)"
+msgstr "Boards"
+
+#: apps/board/models.py:36
+msgid "태그명"
+msgstr "Tag name"
+
+#: apps/board/models.py:40
+msgid "태그 축약어"
+msgstr "Tag name abbr"
+
+#: apps/board/models.py:42
+msgid "긴 태그명의 경우 태그명 대신 표시할 짧은 축약어입니다."
+msgstr "Display name for tags with long name instead of its original name."
+
+#: apps/board/models.py:45
+msgid "태그 슬러그"
+msgstr "Tag slug"
+
+#: apps/board/models.py:47
+msgid "URL 상 태그를 구분짓는 짧은 지시자입니다."
+msgstr "Short term to identify the tag in URL."
+
+#: apps/board/models.py:50 apps/board/models.py:149
+#: apps/board/templates/board/post_list.jinja:25
+msgid "태그"
+msgstr "Tag"
+
+#: apps/board/models.py:51
+msgid "태그(들)"
+msgstr "Tags"
+
+#: apps/board/models.py:65
+msgid "등록일시"
+msgstr "Datetime"
+
+#: apps/board/models.py:70 apps/board/templates/board/post_list.jinja:27
+msgid "작성자"
+msgstr "Author"
+
+#: apps/board/models.py:73
+msgid "내용"
+msgstr "Content"
+
+#: apps/board/models.py:76
+msgid "삭제여부"
+msgstr "Is deleted"
+
+#: apps/board/models.py:141
+msgid "등록 게시판"
+msgstr "Board"
+
+#: apps/board/models.py:144 apps/board/templates/board/post_list.jinja:26
+msgid "제목"
+msgstr "Title"
+
+#: apps/board/models.py:153
+msgid "비공개 여부"
+msgstr "Is secret"
+
+#: apps/board/models.py:157
+msgid "공지사항 여부"
+msgstr "Is notice"
+
+#: apps/board/models.py:161
+msgid "포스트"
+msgstr "Post"
+
+#: apps/board/models.py:162
+msgid "포스트(들)"
+msgstr "Posts"
+
+#: apps/board/models.py:184
+msgid "상위 게시글"
+msgstr "Parent post"
+
+#: apps/board/models.py:188
+msgid "댓글"
+msgstr "Comment"
+
+#: apps/board/models.py:189
+msgid "댓글(들)"
+msgstr "Comments"
+
+#: apps/board/models.py:193
+#, python-format
+msgid "'%s'의 댓글"
+msgstr "Comment of '%s'"
+
+#: apps/board/models.py:216
+msgid "연결된 포스트"
+msgstr "Related post"
+
+#: apps/board/models.py:219 apps/board/models.py:223
+msgid "첨부파일"
+msgstr "Attached file"
+
+#: apps/board/models.py:224
+msgid "첨부파일(들)"
+msgstr "Attached files"
+
+#: apps/board/templates/board/board.jinja:8
+msgid "태그별 검색"
+msgstr "Filter by tags"
+
+#: apps/board/templates/board/post.jinja:11
+msgid "조회수"
+msgstr "Hits"
+
+#: apps/board/templates/board/post.jinja:25
+msgid "등록"
+msgstr "Submit"
+
+#: apps/board/templates/board/post.jinja:30
+msgid "수정"
+msgstr "Edit"
+
+#: apps/board/templates/board/post.jinja:31
+msgid "삭제"
+msgstr "Delete"
+
+#: apps/board/templates/board/post_list.jinja:28
+msgid "작성일"
+msgstr "Date"
+
+#: apps/board/templates/board/post_list.jinja:29
+msgid "조회"
+msgstr "Hits"
+
+#: apps/board/templates/board/post_list.jinja:59
+msgid "검색"
+msgstr "Search"
+
+#: apps/board/templates/board/post_list.jinja:61
+msgid "글쓰기"
+msgstr "Write"
+
+#: apps/ksso/admin.py:32
+msgid "포탈 계정정보"
+msgstr "Portal account info"
+
+#: apps/ksso/admin.py:34
+msgid "포탈 계정정보(들)"
+msgstr "Portal account infos"
+
+#: apps/ksso/admin.py:70
+msgid "권한들"
+msgstr "Permissions"
+
+#: apps/ksso/admin.py:107 apps/ksso/models.py:32
+#: apps/ksso/templates/ksso/signup.jinja:13
 msgid "이름"
 msgstr "Name"
 
-#: apps/ksso/models.py:38
-msgid "과정"
-msgstr "Course"
-
-#: apps/ksso/models.py:42 apps/ksso/templates/ksso/signup.jinja:14
+#: apps/ksso/admin.py:112 apps/ksso/models.py:40
+#: apps/ksso/templates/ksso/signup.jinja:16
 msgid "학번"
 msgstr "Student ID number"
 
-#: apps/ksso/models.py:46 apps/ksso/templates/ksso/signup.jinja:15
-msgid "학적상태"
-msgstr "Register status"
+#: apps/ksso/admin.py:117 apps/ksso/models.py:36
+msgid "과정"
+msgstr "Course"
 
-#: apps/ksso/models.py:50 apps/ksso/templates/ksso/signup.jinja:16
-msgid "생년월일"
-msgstr "Date of birth"
-
-#: apps/ksso/models.py:54 apps/ksso/templates/ksso/signup.jinja:17
-msgid "성별"
-msgstr "Sex"
-
-#: apps/ksso/models.py:58 apps/ksso/templates/ksso/signup.jinja:18
+#: apps/ksso/admin.py:122 apps/ksso/models.py:56
+#: apps/ksso/templates/ksso/signup.jinja:20
 msgid "학과"
 msgstr "Department"
 
-#: apps/ksso/models.py:62 apps/ksso/templates/ksso/signup.jinja:19
-msgid "메일주소"
-msgstr "Mail"
+#: apps/ksso/admin.py:127 apps/ksso/models.py:44
+#: apps/ksso/templates/ksso/signup.jinja:17
+msgid "학적상태"
+msgstr "Register status"
 
-#: apps/ksso/models.py:66 apps/ksso/templates/ksso/signup.jinja:20
+#: apps/ksso/admin.py:132 apps/ksso/models.py:52
+#: apps/ksso/templates/ksso/signup.jinja:19
+msgid "성별"
+msgstr "Sex"
+
+#: apps/ksso/admin.py:137 apps/ksso/models.py:48
+#: apps/ksso/templates/ksso/signup.jinja:18
+msgid "생년월일"
+msgstr "Date of birth"
+
+#: apps/ksso/admin.py:142 apps/ksso/models.py:64
+#: apps/ksso/templates/ksso/signup.jinja:22
 msgid "전화번호"
 msgstr "Phone"
 
-#: apps/ksso/models.py:70
+#: apps/ksso/admin.py:147 apps/ksso/models.py:60
+#: apps/ksso/templates/ksso/signup.jinja:21
+msgid "메일주소"
+msgstr "Mail"
+
+#: apps/ksso/admin.py:175
+msgid "그룹멤버"
+msgstr "Group member"
+
+#: apps/ksso/admin.py:179
+msgid "유저(들)"
+msgstr "Users"
+
+#: apps/ksso/models.py:25
+msgid "유저 인스턴스"
+msgstr "User instance"
+
+#: apps/ksso/models.py:28
+msgid "KAIST UID"
+msgstr ""
+
+#: apps/ksso/models.py:68
 msgid "정보제공 동의여부"
 msgstr "Is agreed with provision of information?"
 
-#: apps/ksso/models.py:72
+#: apps/ksso/models.py:70
 msgid ""
 "정보제공에 반대하면 계정삭제 처리가 되나, 아직 동의여부를 선택하지 않은 최초"
 "가입자의 경우 의사표현 시까지 정보가 임시저장됩니다. 이 특수경우에는 정보를 "
@@ -77,30 +251,34 @@ msgstr ""
 "until he/she makes a decision. In this special case, his/her personal "
 "information should not be used for any purpose."
 
-#: apps/ksso/templates/ksso/signup.jinja:7
+#: apps/ksso/templates/ksso/macros.jinja:9
+msgid "(익명)"
+msgstr "(Anonymous)"
+
+#: apps/ksso/templates/ksso/signup.jinja:9
 msgid "정보제공 동의절차"
 msgstr "Agreement on Provision of Personal Information"
 
-#: apps/ksso/templates/ksso/signup.jinja:12
+#: apps/ksso/templates/ksso/signup.jinja:14
 msgid "고유번호(UID)"
 msgstr "UID"
 
-#: apps/ksso/templates/ksso/signup.jinja:13
+#: apps/ksso/templates/ksso/signup.jinja:15
 msgid "학위과정"
 msgstr "Course"
 
-#: apps/ksso/templates/ksso/signup.jinja:22
+#: apps/ksso/templates/ksso/signup.jinja:24
 msgid ""
 "본 홈페이지는 총학생회가 학교당국에 적법한 절차를 통해 사용을 허가받은 "
 "<strong>KAIST Single Auth Service 3.0</strong>을 이용하여 사용자 관리를 하고 "
 "있습니다. 이 과정에서 학교당국이 제공하는 개인정보가 총학생회 DB 서버에 저장"
 "이 되게 됩니다."
 msgstr ""
-"This site manages accounts by using <strong>KAIST Single Auth Service 3.0"
-"</strong> which the university allows USC to use. In this process, your "
+"This site manages accounts by using <strong>KAIST Single Auth Service 3.0</"
+"strong> which the university allows USC to use. In this process, your "
 "personal information provided by the university is saved in USC DB server."
 
-#: apps/ksso/templates/ksso/signup.jinja:23
+#: apps/ksso/templates/ksso/signup.jinja:25
 msgid ""
 "학내 구성원의 개인정보자기결정권 보장을 위하여 총학생회는 학교당국과의 협의와"
 "는 별개로 개인정보 저장사실을 실사용자에게 고지하고 그 동의를 구하는 절차입니"
@@ -110,7 +288,7 @@ msgstr ""
 "personal information in USC DB server on the sidelines of the approval of "
 "the university to protect your own personal information control right."
 
-#: apps/ksso/templates/ksso/signup.jinja:24
+#: apps/ksso/templates/ksso/signup.jinja:26
 msgid ""
 "동의 이후 총학생회 공식소통창구를 통하여 정보파기를 요청할 수 있습니다. 동의"
 "를 하지 않을 시 본 홈페이지에 로그인 하실 수 없습니다."
@@ -118,107 +296,142 @@ msgstr ""
 "You can request the destruction of your infromation to USC. You can not log "
 "in if you don't agree on this page."
 
-#: apps/ksso/templates/ksso/signup.jinja:27
+#: apps/ksso/templates/ksso/signup.jinja:29
+msgid "이미 동의하셨습니다."
+msgstr "You agreed already."
+
+#: apps/ksso/templates/ksso/signup.jinja:32
 msgid "동의함"
 msgstr "Agree"
 
-#: apps/ksso/templates/ksso/signup.jinja:28
+#: apps/ksso/templates/ksso/signup.jinja:33
 msgid "동의하지 않음"
 msgstr "Disagree"
 
-#: apps/manager/apps.py:8
+#: apps/manager/apps.py:7
 msgid "사이트 관리도구"
 msgstr "Site Management"
 
-#: apps/manager/models.py:19
+#: apps/manager/models.py:9
+msgid "권한없음"
+msgstr "Has no permission"
+
+#: apps/manager/models.py:10
+msgid "접근권한"
+msgstr "Can access"
+
+#: apps/manager/models.py:11
+msgid "읽기권한 (혹은 이에 준하는 특수권한)"
+msgstr "Can read"
+
+#: apps/manager/models.py:12
+msgid "댓글권한 (혹은 이에 준하는 특수권한)"
+msgstr "Can comment"
+
+#: apps/manager/models.py:13
+msgid "쓰기권한 (혹은 이에 준하는 특수권한)"
+msgstr "Can write"
+
+#: apps/manager/models.py:14
+msgid "수정권한 (혹은 이에 준하는 특수권한)"
+msgstr "Can edit"
+
+#: apps/manager/models.py:15
+msgid "삭제권한 (혹은 이에 준하는 특수권한)"
+msgstr "Can delete"
+
+#: apps/manager/models.py:25
 msgid "카테고리명"
 msgstr "Category name"
 
-#: apps/manager/models.py:23
+#: apps/manager/models.py:29
 msgid "사이트맵 노출여부"
 msgstr "Shown in sitemap"
 
-#: apps/manager/models.py:28
+#: apps/manager/models.py:34
 msgid "카테고리"
 msgstr "Category"
 
-#: apps/manager/models.py:29
+#: apps/manager/models.py:35
 msgid "카테고리(들)"
 msgstr "Categories"
 
-#: apps/manager/models.py:82
+#: apps/manager/models.py:89
 msgid "서비스명"
 msgstr "Service name"
 
-#: apps/manager/models.py:87
+#: apps/manager/models.py:94
 msgid "서비스가 속한 카테고리"
 msgstr "Category of service"
 
-#: apps/manager/models.py:90
+#: apps/manager/models.py:97
 msgid "서비스 최상위 주소"
 msgstr "URL of service"
 
-#: apps/manager/models.py:92
-msgid "도메인 하위 경로만 적어주세요."
-msgstr "Please write down the path without domain."
+#: apps/manager/models.py:99
+msgid "도메인 하위 경로만 적어주세요. /aaa/bbb 형식을 지켜주세요."
+msgstr ""
+"Please write down the path without domain. Follow the format like /aaa/bbb."
 
-#: apps/manager/models.py:95
+#: apps/manager/models.py:102
 msgid "노출순서"
 msgstr "Display order"
 
-#: apps/manager/models.py:97
+#: apps/manager/models.py:104
 msgid "같은 카테고리 내 서비스 간의 노출순서"
 msgstr "Ordering for services of same category"
 
-#: apps/manager/models.py:100
-msgid "모든 유저"
-msgstr "All Users"
+#: apps/manager/models.py:107
+msgid "서비스 설명"
+msgstr "Service description"
 
-#: apps/manager/models.py:101
-msgid "로그인 한 유저"
-msgstr "Logged-in Users"
+#: apps/manager/models.py:111
+msgid "서비스 중지여부"
+msgstr "Is closed"
 
-#: apps/manager/models.py:102 apps/manager/models.py:113
-msgid "접근허가 그룹"
-msgstr "Users in permitted group"
+#: apps/manager/models.py:113
+msgid "설정 시 관리자를 제외한 모든 유저의 접속이 불가능합니다."
+msgstr "Every users except admins cannot access if checked."
 
-#: apps/manager/models.py:103
-msgid "비공개"
-msgstr "Closed"
+#: apps/manager/models.py:116
+msgid "비로그인 유저의 최대 권한"
+msgstr "Maximum permission for not logged-in users"
 
-#: apps/manager/models.py:106
-msgid "서비스 이용권한"
-msgstr "Permission for service"
+#: apps/manager/models.py:120
+msgid "로그인 유저의 최대 권한"
+msgstr "Maximum permission for logged-in users"
 
-#: apps/manager/models.py:108
-msgid ""
-"접근허가 그룹 이외의 옵션으로 설정할 경우 서비스별 접근허가 그룹 설정이 적용"
-"되지 않습니다."
-msgstr "'Users in permitted group' option below would not be applied if 'Permission for service' is not set by 'Users in permitted group'."
+#: apps/manager/models.py:126
+msgid "그룹별 권한"
+msgstr "Group's permissions"
 
-#: apps/manager/models.py:120 apps/manager/models.py:157
+#: apps/manager/models.py:133 apps/manager/models.py:172
 msgid "서비스"
 msgstr "Service"
 
-#: apps/manager/models.py:121
+#: apps/manager/models.py:134
 msgid "서비스(들)"
 msgstr "Services"
 
-#: apps/manager/models.py:152
+#: apps/manager/models.py:167
 msgid "그룹"
 msgstr "Group"
 
-#: apps/manager/models.py:161
-msgid "그룹별 서비스 접근권한"
+#: apps/manager/models.py:175
+msgid "권한"
+msgstr "Permission"
+
+#: apps/manager/models.py:180
+msgid "그룹별 서비스 이용권한"
 msgstr "Group-Service Permission"
 
-#: apps/manager/models.py:162
-msgid "그룹별 서비스 접근권한(들)"
+#: apps/manager/models.py:181
+msgid "그룹별 서비스 이용권한(들)"
 msgstr "Group-Service Permissions"
 
 #: apps/manager/templates/manager/base.jinja:7
 #: apps/manager/templates/manager/footer.jinja:4
-#: apps/manager/templates/manager/header.jinja:11
+#: apps/manager/templates/manager/header.jinja:17
 msgid "KAIST 학부 총학생회"
 msgstr "KAIST Undergraduate Student Council"
 
@@ -229,12 +442,14 @@ msgid ""
 msgstr ""
 "301 N13-1, KAIST, 291 Daehak-ro, Yuseong-gu, Daejeon 34141, Republic of Korea"
 
-#: apps/manager/templates/manager/header.jinja:4
-#: apps/manager/templates/manager/side_nav.jinja:4
+#: apps/manager/templates/manager/header.jinja:7
+#: apps/manager/templates/manager/header.jinja:9
+#: apps/manager/templates/manager/side_nav.jinja:10
 msgid "lang=en"
 msgstr "lang=ko"
 
-#: apps/manager/templates/manager/header.jinja:4
-#: apps/manager/templates/manager/side_nav.jinja:4
+#: apps/manager/templates/manager/header.jinja:7
+#: apps/manager/templates/manager/header.jinja:9
+#: apps/manager/templates/manager/side_nav.jinja:10
 msgid "View in English"
 msgstr "한국어로 보기"

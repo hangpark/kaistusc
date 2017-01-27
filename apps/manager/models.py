@@ -123,7 +123,7 @@ class Service(models.Model):
     permitted_groups = models.ManyToManyField(
         'auth.Group',
         through='GroupServicePermission', related_name='permitted_services',
-        verbose_name=_("그룹 권한"))
+        verbose_name=_("그룹별 권한"))
 
     # Custom Manager
     objects = ServiceManager()

@@ -67,7 +67,7 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        (_('Permissions'), {'fields': (('is_staff', 'is_superuser'), 'groups')}),
+        (_('권한들'), {'fields': (('is_staff', 'is_superuser'), 'groups')}),
     )
     
     list_display = (

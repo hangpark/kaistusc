@@ -19,6 +19,10 @@ class Board(Service):
 
     objects = ServiceManager()
 
+    class Meta:
+        verbose_name = _('게시판')
+        verbose_name_plural = _('게시판(들)')
+
     def __str__(self):
         return self.name
 
@@ -41,6 +45,10 @@ class Tag(models.Model):
         _("태그 슬러그"),
         max_length=8, unique=True,
         help_text=_("URL 상 태그를 구분짓는 짧은 지시자입니다."))
+
+    class Meta:
+        verbose_name = _('태그')
+        verbose_name_plural = _('태그(들)')
 
     def __str__(self):
         return self.name
@@ -149,6 +157,10 @@ class Post(PostBase):
         _("공지사항 여부"),
         default=False)
 
+    class Meta:
+        verbose_name = _('포스트')
+        verbose_name_plural = _('포스트(들)')
+
     def __str__(self):
         return self.title
 
@@ -173,6 +185,9 @@ class Comment(PostBase):
 
     class Meta:
         ordering = ['date']
+        verbose_name = _('댓글')
+        verbose_name_plural = _('댓글(들)')
+
 
     def __str__(self):
         return _("'%s'의 댓글") % self.parent_post
@@ -203,6 +218,10 @@ class AttachedFile(models.Model):
     file = models.FileField(
         _("첨부파일"),
         upload_to=get_upload_path)
+
+    class Meta:
+        verbose_name = _('첨부파일')
+        verbose_name_plural = _('첨부파일(들)')
 
     def __str__(self):
         return os.path.basename(self.file.name)
