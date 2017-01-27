@@ -1,12 +1,11 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.shortcuts import render
-
 from apps.manager.models import Service
 from apps.manager.permissions import *
 from apps.manager.views import BaseServiceView
-from django.http import Http404
-
+from django.http import Http404, HttpResponseRedirect
+from .forms import PostForm
 from .models import Board, Post, Tag, Comment
 
 
@@ -69,6 +68,9 @@ class BoardView(BaseServiceView):
 
 
 class PostView(BoardView):
+    """
+    특정 포스트 내용을 보는 view.
+    """
 
     template_name = 'board/post.jinja'
     required_permission = PERMISSION_READABLE
@@ -90,6 +92,34 @@ class PostView(BoardView):
         context['post'] = self.post
 
         # Store comments for current post
-        context['comments'] = Comment.objects.filter(parent_post=self.post)
+        context['comments'] = self.post.comment_set.all()
+
+        # Store attached files for current post
+        context['files'] = self.post.attachedfile_set.all()
 
         return context
+
+
+class PostWriteView(BoardView):
+    """
+    새로운 포스트를 등록하는 view.
+    """
+
+    template_name = 'board/post_write.jinja'
+    required_permission = PERMISSION_WRITABLE
+
+    def get_context_data(self, **kwargs):
+        context = super(PostWriteView, self).get_context_data(**kwargs)
+        context['form'] = PostForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(
+                board=self.service.board,
+                author=request.user)
+            return HttpResponseRedirect(post.get_absolute_url())
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
