@@ -1,13 +1,13 @@
 {% from 'board/macros.jinja' import make_tag %}
 
 {% macro post_info(post, class='') -%}
-  <tr class="{{ class }}">
+  <tr class="{{ class }}" onclick="location.href='{{ post.get_absolute_url() }}';">
     <td class="hidden-xs text-center">{{ make_tag(board, post.tag) }}</td>
     <td>
     {%- if post.tag -%}
       <span class="visible-xs-inline margin-right">{{ make_tag(board, post.tag) }}</span>
     {%- endif -%}
-      <span class="post-list-title"><a href="{{ post.get_absolute_url() }}">{{ post.title }}</a></span>
+      <span class="post-list-title">{{ post.title }}</span>
       <div class="post-list-mobile visible-xs-block">
         {{ post.author }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d') }}
         <span class="pull-right">0</span>
