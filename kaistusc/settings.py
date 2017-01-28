@@ -146,6 +146,8 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, "locale"),
 ]
 
+MODELTRANSLATION_FALLBACK_LANGUAGES = ('ko', 'en')
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
