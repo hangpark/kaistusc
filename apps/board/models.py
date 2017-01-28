@@ -14,7 +14,7 @@ class Board(Service):
     """
 
     is_main = models.BooleanField(
-        _("메인페이지 노출여부"),
+        _("메인페이지 노출"),
         default=False)
 
     objects = ServiceManager()
@@ -73,7 +73,7 @@ class PostBase(models.Model):
         _("내용"))
 
     is_deleted = models.BooleanField(
-        _("삭제여부"),
+        _("삭제글"),
         default=False)
 
     class Meta:
@@ -150,11 +150,11 @@ class Post(PostBase):
         null=True, blank=True)
 
     is_secret = models.BooleanField(
-        _("비공개 여부"),
+        _("비밀글"),
         default=False)
 
     is_notice = models.BooleanField(
-        _("공지사항 여부"),
+        _("공지글"),
         default=False)
 
     class Meta:
@@ -181,7 +181,7 @@ class Comment(PostBase):
 
     parent_post = models.ForeignKey(
         Post,
-        verbose_name=_("상위 게시글"))
+        verbose_name=_("상위 포스트"))
 
     class Meta:
         ordering = ['date']
