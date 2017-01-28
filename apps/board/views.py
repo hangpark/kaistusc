@@ -82,20 +82,20 @@ class PostView(BoardView):
 
         if not post:
             raise Http404
-        self.post = post
+        self.post_ = post
         return post.is_permitted(request.user, self.required_permission)
 
     def get_context_data(self, **kwargs):
         context = super(PostView, self).get_context_data(**kwargs)
 
         # Store current post
-        context['post'] = self.post
+        context['post'] = self.post_
 
         # Store comments for current post
-        context['comments'] = self.post.comment_set.all()
+        context['comments'] = self.post_.comment_set.all()
 
         # Store attached files for current post
-        context['files'] = self.post.attachedfile_set.all()
+        context['files'] = self.post_.attachedfile_set.all()
 
         return context
 
@@ -114,11 +114,35 @@ class PostWriteView(BoardView):
         return context
 
     def post(self, request, *args, **kwargs):
-        form = PostForm(request.POST, request.FILES)
+        post = Post(author=request.user, board=self.service.board)
+        form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            post = form.save(
-                board=self.service.board,
-                author=request.user)
+            form.save(request.POST, request.FILES)
+            return HttpResponseRedirect(post.get_absolute_url())
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
+
+
+class PostEditView(PostView):
+    """
+    특정 포스트를 수정하는 view.
+    """
+
+    template_name = 'board/post_edit.jinja'
+    required_permission = PERMISSION_EDITABLE
+
+    def get_context_data(self, **kwargs):
+        context = super(PostEditView, self).get_context_data(**kwargs)
+        post = self.post_
+        context['form'] = PostForm(instance=post)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        post = self.post_
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())
         context = self.get_context_data(**kwargs)
         context['form'] = form
