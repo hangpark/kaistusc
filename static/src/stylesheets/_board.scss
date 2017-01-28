@@ -128,6 +128,15 @@
   border-bottom: 1px solid #dcdcdd;
 }
 
+#attached-file {
+  padding: 10px 10px 5px;
+  border-bottom: 1px solid #dcdcdd;
+  font-size: 10pt;
+  p {
+    margin-bottom: 5px;
+  }
+}
+
 #comment-list .comment {
   padding-top: 6px;
   border-left: 14px solid #dcdcdd;

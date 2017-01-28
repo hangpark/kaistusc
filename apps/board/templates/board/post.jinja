@@ -20,6 +20,15 @@
   {% endfor %}
   </div>
 
+  {% if files %}
+  <div id="attached-file">
+    <p><b>{{ _('첨부파일') }}</b></p>
+  {% for file in files %}
+    <p><a href="{{ file.get_absolute_url() }}">{{ file }} ({{ file.get_file_size()|filesizeformat }})</a></p>
+  {% endfor %}
+  </div>
+  {% endif %}
+
   <div id="comment-form" class="input-group">
     <textarea class="form-control custom-control" rows="6" style="resize: none;"></textarea>
     <span class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
