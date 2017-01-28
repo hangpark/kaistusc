@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-28 17:19+0900\n"
+"POT-Creation-Date: 2017-01-29 08:07+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,8 +50,8 @@ msgid "URL 상 태그를 구분짓는 짧은 지시자입니다."
 msgstr "Short term to identify the tag in URL."
 
 #: apps/board/models.py:52 apps/board/models.py:151
-#: apps/board/templates/board/post_form.jinja:64
-#: apps/board/templates/board/post_list.jinja:25
+#: apps/board/templates/board/post_form.jinja:103
+#: apps/board/templates/board/post_list.jinja:28
 msgid "태그"
 msgstr "Tag"
 
@@ -63,7 +63,7 @@ msgstr "Tags"
 msgid "등록일시"
 msgstr "Datetime"
 
-#: apps/board/models.py:72 apps/board/templates/board/post_list.jinja:27
+#: apps/board/models.py:72 apps/board/templates/board/post_list.jinja:30
 msgid "작성자"
 msgstr "Author"
 
@@ -79,7 +79,7 @@ msgstr "Deleted"
 msgid "등록 게시판"
 msgstr "Board"
 
-#: apps/board/models.py:146 apps/board/templates/board/post_list.jinja:26
+#: apps/board/models.py:146 apps/board/templates/board/post_list.jinja:29
 msgid "제목"
 msgstr "Title"
 
@@ -121,7 +121,7 @@ msgid "연결된 포스트"
 msgstr "Related post"
 
 #: apps/board/models.py:221 apps/board/models.py:225
-#: apps/board/templates/board/post.jinja:25
+#: apps/board/templates/board/post.jinja:30
 msgid "첨부파일"
 msgstr "Attached file"
 
@@ -133,45 +133,68 @@ msgstr "Attached files"
 msgid "태그별 검색"
 msgstr "Filter by tags"
 
-#: apps/board/templates/board/post.jinja:11
+#: apps/board/templates/board/post.jinja:16
 msgid "조회수"
 msgstr "Hits"
 
-#: apps/board/templates/board/post.jinja:34
-#: apps/board/templates/board/post_form.jinja:71
+#: apps/board/templates/board/post.jinja:39
+#: apps/board/templates/board/post_form.jinja:110
 msgid "등록"
 msgstr "Submit"
 
-#: apps/board/templates/board/post.jinja:39
+#: apps/board/templates/board/post.jinja:44
 msgid "수정"
 msgstr "Edit"
 
-#: apps/board/templates/board/post.jinja:40
+#: apps/board/templates/board/post.jinja:45
 msgid "삭제"
 msgstr "Delete"
 
-#: apps/board/templates/board/post_form.jinja:13
-#: apps/board/templates/board/post_form.jinja:41
+#: apps/board/templates/board/post_form.jinja:26
+#: apps/board/templates/board/post_form.jinja:80
 msgid "삭제하기"
 msgstr "Delete"
 
-#: apps/board/templates/board/post_form.jinja:47
+#: apps/board/templates/board/post_form.jinja:63
+msgid "한국어"
+msgstr "Korean"
+
+#: apps/board/templates/board/post_form.jinja:66
+msgid "영어"
+msgstr "English"
+
+#: apps/board/templates/board/post_form.jinja:72
+msgid ""
+"다국어 지원 기능입니다. 번역을 하지 않은 언어 입력란은 빈칸으로 놔두시길 바랍"
+"니다."
+msgstr ""
+"Internalization tool. Please leave input field blank if you won't translate."
+
+#: apps/board/templates/board/post_form.jinja:73
+msgid ""
+"최소한 제목은 번역해주시길 바랍니다. 글 작성 이후 수정을 통해 추가 번역이 가"
+"능합니다."
+msgstr ""
+"Please translate the title at least. You can translate after submitting by "
+"editting the post."
+
+#: apps/board/templates/board/post_form.jinja:86
 msgid "더 첨부하기"
 msgstr "Add More"
 
-#: apps/board/templates/board/post_list.jinja:28
+#: apps/board/templates/board/post_list.jinja:31
 msgid "작성일"
 msgstr "Date"
 
-#: apps/board/templates/board/post_list.jinja:29
+#: apps/board/templates/board/post_list.jinja:32
 msgid "조회"
 msgstr "Hits"
 
-#: apps/board/templates/board/post_list.jinja:59
+#: apps/board/templates/board/post_list.jinja:62
 msgid "검색"
 msgstr "Search"
 
-#: apps/board/templates/board/post_list.jinja:61
+#: apps/board/templates/board/post_list.jinja:64
 msgid "글쓰기"
 msgstr "Write"
 
