@@ -7,6 +7,9 @@
     {%- if post.tag -%}
       <span class="visible-xs-inline margin-right">{{ make_tag(board, post.tag) }}</span>
     {%- endif -%}
+    {%- if post.content_en and post.content_ko -%}
+      <span class="glyphicon glyphicon-globe margin-right"></span>
+    {%- endif -%}
       <span class="post-list-title">{{ post.title }}</span>
       <div class="post-list-mobile visible-xs-block">
         {{ post.author }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d') }}

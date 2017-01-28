@@ -5,7 +5,12 @@
 {% block content %}
 <div id="post-wrap">
   <div id="post-header" class="clearfix">
-    <div id="post-title">{{ post.title }}</div>
+    <div id="post-title">
+    {%- if post.content_en and post.content_ko -%}
+      <span class="glyphicon glyphicon-globe margin-right"></span>
+    {%- endif -%}
+      {{ post.title }}
+    </div>
     <div id="post-info">
       <div class="pull-left">{{ post.author }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d %H:%M:%S') }}</div>
       <div class="pull-right">{{ _('조회수') }}<span class="margin-both">|</span>0</div>
