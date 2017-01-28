@@ -1,6 +1,8 @@
 import os
 
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from apps.manager.models import Service, ServiceManager
@@ -230,4 +232,13 @@ class AttachedFile(models.Model):
         return os.path.join(MEDIA_URL, self.file.name)
 
     def get_file_size(self):
-        return self.file.size
+        try:
+            return self.file.size
+        except:
+            return 0
+
+
+@receiver(post_delete, sender=AttachedFile)
+def delete_file(sender, instance, *args, **kwargs):
+    if os.path.isfile(instance.file.path):
+        os.remove(instance.file.path)
