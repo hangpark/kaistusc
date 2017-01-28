@@ -14,7 +14,7 @@ class PostForm(ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title', 'content', 'is_notice', 'is_secret', 'tag')
+        fields = ('title_ko', 'title_en', 'content_ko', 'content_en', 'is_notice', 'is_secret', 'tag')
 
     def save(self, POST, FILES):
         post = super(PostForm, self).save()

@@ -5,6 +5,19 @@
 {% block javascript %}
 <script type="text/javascript">
   $().ready(function() {
+    $("#post-lang-func button.post-lang").click(function() {
+      var lang = $(this).attr('post-lang');
+      $(".post-form-lang").hide();
+      $("#post-form-lang-" + lang).show();
+
+      var $btns = $("#post-lang-func button.post-lang");
+      $btns.removeClass("btn-primary");
+      $btns.removeClass("active");
+      $btns.addClass("btn-default");
+      $(this).addClass("btn-primary");
+      $(this).addClass("active");
+      $(this).removeClass("btn-default");
+    });
     $(".prev-file-del").click(function() {
       $(this).parent().remove();
     });
@@ -25,14 +38,40 @@
 {% endblock %}
 
 {% block content %}
-<form id="post-form" method="post" enctype="multipart/form-data">
+<form id="post-form" method="post" enctype="multipart/form-data" novalidate>
   {% csrf_token %}
-  {% call(field) form_group(form.title) %}
-  <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
-  {% endcall %}
-  {% call(field) form_group(form.content) %}
-    <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=20 class="form-control" style="resize: none;" required>{{ field.value() or '' }}</textarea>
-  {% endcall %}
+  <div id="post-form-lang-ko" class="post-form-lang">
+    {% call(field) form_group(form.title_ko) %}
+    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
+    {% endcall %}
+    {% call(field) form_group(form.content_ko) %}
+      <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=18 class="form-control" style="resize: none;" required>{{ field.value() or '' }}</textarea>
+    {% endcall %}
+  </div>
+  <div id="post-form-lang-en" class="post-form-lang" style="display: none;">
+    {% call(field) form_group(form.title_en) %}
+    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
+    {% endcall %}
+    {% call(field) form_group(form.content_en) %}
+      <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=18 class="form-control" style="resize: none;" required>{{ field.value() or '' }}</textarea>
+    {% endcall %}
+  </div>
+  <div id="post-lang-func" class="row">
+    <div class="col-sm-3">
+      <div class="btn-group btn-group-justified">
+        <div class="btn-group">
+          <button type="button" post-lang="ko" class="post-lang btn btn-primary active">한국어</button>
+        </div>
+        <div class="btn-group">
+          <button type="button" post-lang="en" class="post-lang btn btn-default">영어</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="help-block">
+    {{ _('다국어 지원 기능입니다. 번역을 하지 않은 언어 입력란은 빈칸으로 놔두시길 바랍니다.') }}<br />
+    {{ _('최소한 제목은 번역해주시길 바랍니다. 글 작성 이후 수정을 통해 추가 번역이 가능합니다.') }}
+  </p>
   <div id="file-func">
   {% for file in files %}
     <div class="prev-file">
