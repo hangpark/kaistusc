@@ -3,3 +3,15 @@
   <div class="tag-item bg-{{ tag.id % 10 }}"><a href="{{ board.get_absolute_url() }}/{{ tag.slug }}/">{{ tag.abbr }}</a></div>
 {%- endif %}
 {%- endmacro %}
+
+{% macro form_group(field, label=False) -%}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+{% if label %}
+  <label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+{% endif %}
+{% for error in field.errors %}
+  <label class="control-label" for="{{ field.id_for_label }}">{{ error }}</label>
+{% endfor %}
+  {{ caller(field) }}
+</div>
+{%- endmacro %}

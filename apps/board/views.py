@@ -105,7 +105,7 @@ class PostWriteView(BoardView):
     새로운 포스트를 등록하는 view.
     """
 
-    template_name = 'board/post_write.jinja'
+    template_name = 'board/post_form.jinja'
     required_permission = PERMISSION_WRITABLE
 
     def get_context_data(self, **kwargs):
@@ -129,7 +129,7 @@ class PostEditView(PostView):
     특정 포스트를 수정하는 view.
     """
 
-    template_name = 'board/post_edit.jinja'
+    template_name = 'board/post_form.jinja'
     required_permission = PERMISSION_EDITABLE
 
     def get_context_data(self, **kwargs):

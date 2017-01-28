@@ -228,3 +228,6 @@ class AttachedFile(models.Model):
 
     def get_absolute_url(self):
         return os.path.join(MEDIA_URL, self.file.name)
+
+    def get_file_size(self):
+        return self.file.size

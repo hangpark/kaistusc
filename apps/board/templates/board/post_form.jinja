@@ -1,0 +1,75 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'board/macros.jinja' import form_group %}
+
+{% block javascript %}
+<script type="text/javascript">
+  $().ready(function() {
+    $(".prev-file-del").click(function() {
+      $(this).parent().remove();
+    });
+    $(document).on('click', ".file-more", function() {
+      $("#attach-file-wrap").children(":last").clone().appendTo($("#attach-file-wrap"));
+      $(this).html("{{ _('삭제하기') }}");
+      $(this).removeClass("file-more");
+      $(this).addClass("file-del");
+    });
+    $(document).on('click', ".file-del", function() {
+      var e = $(this).parent();
+      if (e.is(":first-child") && !e.next().length)
+        e.clone().appendTo("#attach-file-wrap");
+      e.remove();
+    });
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<form id="post-form" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% call(field) form_group(form.title) %}
+  <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
+  {% endcall %}
+  {% call(field) form_group(form.content) %}
+    <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=20 class="form-control" style="resize: none;" required>{{ field.value() or '' }}</textarea>
+  {% endcall %}
+  <div id="file-func">
+  {% for file in files %}
+    <div class="prev-file">
+      <input type="hidden" name="prev_files" value="{{ file.id }}">
+      <div class="prev-file-name">{{ file }}</div>
+      <span class="prev-file-del">{{ _('삭제하기') }}</span>
+    </div>
+  {% endfor %}
+    <div id="attach-file-wrap">
+      <div class="attach-file">
+        <input type="file" name="files">
+        <span class="file-more">{{ _('더 첨부하기') }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="form-inline">
+    {% call(field) form_group(form.is_notice) %}
+      <label class="checkbox-inline">
+        <input type="checkbox" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{% if field.value() %} checked{% endif %}> {{ field.label }}
+      </label>
+    {% endcall %}
+    {% call(field) form_group(form.is_secret) %}
+      <label class="checkbox-inline">
+        <input type="checkbox" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{% if field.value() %} checked{% endif %}> {{ field.label }}
+      </label>
+    {% endcall %}
+    {% call(field) form_group(form.tag) %}
+      <select id="{{ field.id_for_label }}" class="form-control" name="tag">
+        <option value{% if not form.initial.tag %} selected="selected"{% endif %} >---- {{ _('태그') }} ----</option>
+      {% for choice in field.field.queryset %}
+        <option value="{{ choice.id }}"{% if choice.id == form.initial.tag %} selected="selected"{% endif %}>{{ choice }}</option>
+      {% endfor %}
+      </select>
+    {% endcall %}
+    <div class="pull-right">
+      <button type="submit" class="btn btn-primary">{{ _('등록') }}</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

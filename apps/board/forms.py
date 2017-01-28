@@ -19,10 +19,10 @@ class PostForm(ModelForm):
     def save(self, POST, FILES):
         post = super(PostForm, self).save()
 
-        saved_files = POST.getlist('saved_files')
+        prev_files = POST.getlist('prev_files')
         original_files = post.attachedfile_set.all()
         for f in original_files:
-            if str(f.id) not in saved_files:
+            if str(f.id) not in prev_files:
                 f.delete()
 
         files = FILES.getlist('files')

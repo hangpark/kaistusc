@@ -162,3 +162,38 @@
 #post-func {
   margin-top: 58px;
 }
+
+
+//== 포스트 폼
+//
+//##
+
+#file-func {
+  margin: 24px 0;
+  .prev-file,
+  .attach-file {
+    margin: 8px 0;
+  }
+  .prev-file-name,
+  .attach-file input {
+    display: inline-block;
+    width: 340px;
+    border: 1px solid #bbb;
+  }
+  .prev-file-name {
+    padding: 2px 4px;
+  }
+  .file-more,
+  .file-del,
+  .prev-file-del {
+    margin-left: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+#post-form .form-inline .form-group {
+  @media (min-width: $screen-sm-min) {
+    margin-right: 12px;
+  }
+}
