@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-27 12:55+0900\n"
+"POT-Creation-Date: 2017-01-28 17:19+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,113 +17,115 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: apps/board/apps.py:7 apps/board/models.py:23
+#: apps/board/apps.py:7 apps/board/models.py:25
 msgid "게시판"
 msgstr "Board"
 
-#: apps/board/models.py:17
-msgid "메인페이지 노출여부"
+#: apps/board/models.py:19
+msgid "메인페이지 노출"
 msgstr "Shown in sitemap"
 
-#: apps/board/models.py:24
+#: apps/board/models.py:26
 msgid "게시판(들)"
 msgstr "Boards"
 
-#: apps/board/models.py:36
+#: apps/board/models.py:38
 msgid "태그명"
 msgstr "Tag name"
 
-#: apps/board/models.py:40
+#: apps/board/models.py:42
 msgid "태그 축약어"
 msgstr "Tag name abbr"
 
-#: apps/board/models.py:42
+#: apps/board/models.py:44
 msgid "긴 태그명의 경우 태그명 대신 표시할 짧은 축약어입니다."
 msgstr "Display name for tags with long name instead of its original name."
 
-#: apps/board/models.py:45
+#: apps/board/models.py:47
 msgid "태그 슬러그"
 msgstr "Tag slug"
 
-#: apps/board/models.py:47
+#: apps/board/models.py:49
 msgid "URL 상 태그를 구분짓는 짧은 지시자입니다."
 msgstr "Short term to identify the tag in URL."
 
-#: apps/board/models.py:50 apps/board/models.py:149
+#: apps/board/models.py:52 apps/board/models.py:151
+#: apps/board/templates/board/post_form.jinja:64
 #: apps/board/templates/board/post_list.jinja:25
 msgid "태그"
 msgstr "Tag"
 
-#: apps/board/models.py:51
+#: apps/board/models.py:53
 msgid "태그(들)"
 msgstr "Tags"
 
-#: apps/board/models.py:65
+#: apps/board/models.py:67
 msgid "등록일시"
 msgstr "Datetime"
 
-#: apps/board/models.py:70 apps/board/templates/board/post_list.jinja:27
+#: apps/board/models.py:72 apps/board/templates/board/post_list.jinja:27
 msgid "작성자"
 msgstr "Author"
 
-#: apps/board/models.py:73
+#: apps/board/models.py:75
 msgid "내용"
 msgstr "Content"
 
-#: apps/board/models.py:76
-msgid "삭제여부"
-msgstr "Is deleted"
+#: apps/board/models.py:78
+msgid "삭제글"
+msgstr "Deleted"
 
-#: apps/board/models.py:141
+#: apps/board/models.py:143
 msgid "등록 게시판"
 msgstr "Board"
 
-#: apps/board/models.py:144 apps/board/templates/board/post_list.jinja:26
+#: apps/board/models.py:146 apps/board/templates/board/post_list.jinja:26
 msgid "제목"
 msgstr "Title"
 
-#: apps/board/models.py:153
-msgid "비공개 여부"
-msgstr "Is secret"
+#: apps/board/models.py:155
+msgid "비밀글"
+msgstr "Secret"
 
-#: apps/board/models.py:157
-msgid "공지사항 여부"
-msgstr "Is notice"
+#: apps/board/models.py:159
+msgid "공지글"
+msgstr "Notice"
 
-#: apps/board/models.py:161
+#: apps/board/models.py:163
 msgid "포스트"
 msgstr "Post"
 
-#: apps/board/models.py:162
+#: apps/board/models.py:164
 msgid "포스트(들)"
 msgstr "Posts"
 
-#: apps/board/models.py:184
-msgid "상위 게시글"
-msgstr "Parent post"
+#: apps/board/models.py:186
+msgid "상위 포스트"
+msgstr "Related post"
 
-#: apps/board/models.py:188
+#: apps/board/models.py:190
 msgid "댓글"
 msgstr "Comment"
 
-#: apps/board/models.py:189
+#: apps/board/models.py:191
 msgid "댓글(들)"
 msgstr "Comments"
 
-#: apps/board/models.py:193
+#: apps/board/models.py:195
 #, python-format
 msgid "'%s'의 댓글"
 msgstr "Comment of '%s'"
 
-#: apps/board/models.py:216
+#: apps/board/models.py:218
 msgid "연결된 포스트"
 msgstr "Related post"
 
-#: apps/board/models.py:219 apps/board/models.py:223
+#: apps/board/models.py:221 apps/board/models.py:225
+#: apps/board/templates/board/post.jinja:25
 msgid "첨부파일"
 msgstr "Attached file"
 
-#: apps/board/models.py:224
+#: apps/board/models.py:226
 msgid "첨부파일(들)"
 msgstr "Attached files"
 
@@ -135,17 +137,27 @@ msgstr "Filter by tags"
 msgid "조회수"
 msgstr "Hits"
 
-#: apps/board/templates/board/post.jinja:25
+#: apps/board/templates/board/post.jinja:34
+#: apps/board/templates/board/post_form.jinja:71
 msgid "등록"
 msgstr "Submit"
 
-#: apps/board/templates/board/post.jinja:30
+#: apps/board/templates/board/post.jinja:39
 msgid "수정"
 msgstr "Edit"
 
-#: apps/board/templates/board/post.jinja:31
+#: apps/board/templates/board/post.jinja:40
 msgid "삭제"
 msgstr "Delete"
+
+#: apps/board/templates/board/post_form.jinja:13
+#: apps/board/templates/board/post_form.jinja:41
+msgid "삭제하기"
+msgstr "Delete"
+
+#: apps/board/templates/board/post_form.jinja:47
+msgid "더 첨부하기"
+msgstr "Add More"
 
 #: apps/board/templates/board/post_list.jinja:28
 msgid "작성일"
