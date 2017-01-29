@@ -147,3 +147,15 @@ class PostEditView(PostView):
         context = self.get_context_data(**kwargs)
         context['form'] = form
         return self.render_to_response(context)
+
+
+class PostDeleteView(PostView):
+
+    template_name = None
+    required_permission = PERMISSION_DELETABLE
+
+    def post(self, request, *args, **kwargs):
+        post = self.post_
+        post.is_deleted = True
+        post.save()
+        return HttpResponseRedirect(post.board.get_absolute_url())
