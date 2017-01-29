@@ -4,7 +4,7 @@ from django.shortcuts import render
 from apps.manager.models import Service
 from apps.manager.permissions import *
 from apps.manager.views import BaseServiceView
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from .forms import PostForm
 from .models import Board, Post, Tag, Comment
 
@@ -159,3 +159,40 @@ class PostDeleteView(PostView):
         post.is_deleted = True
         post.save()
         return HttpResponseRedirect(post.board.get_absolute_url())
+
+
+class CommentWriteView(PostView):
+
+    template_name = 'board/comment.jinja'
+    required_permission = PERMISSION_COMMENTABLE
+
+    def post(self, request, *args, **kwargs):
+        comment = Comment.objects.create(
+            author=request.user,
+            content=request.POST.get('content'),
+            parent_post=self.post_)
+        return self.render_to_response({'comment': comment})
+
+
+class CommentDeleteView(PostView):
+
+    template_name = None
+    required_permission = PERMISSION_DELETABLE
+
+    def has_permission(self, request, *args, **kwargs):
+        if not super(CommentDeleteView, self).has_permission(request, *args, **kwargs):
+            return False
+        comment = Comment.objects.filter(
+            parent_post__board=self.service.board,
+            parent_post__id=kwargs['post'],
+            id=kwargs['comment']).first()
+
+        if not comment:
+            raise Http404
+        self.comment = comment
+        return comment.is_permitted(request.user, self.required_permission)
+
+    def post(self, request, *args, **kwargs):
+        self.comment.is_deleted = True
+        self.comment.save()
+        return HttpResponse()

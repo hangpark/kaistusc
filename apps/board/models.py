@@ -195,13 +195,13 @@ class Comment(PostBase):
         return _("'%s'의 댓글") % self.parent_post
 
     def get_absolute_url(self):
-        return self.parent_post.get_absolute_url() + "#comment-id-%d" % self.id
+        return os.path.join(self.parent_post.get_absolute_url(), "comment", str(self.id))
 
     def get_base_board(self):
-        return self.post.get_base_board()
+        return self.parent_post.get_base_board()
 
     def get_base_post(self):
-        return self.post
+        return self.parent_post
 
 
 def get_upload_path(instance, filename):

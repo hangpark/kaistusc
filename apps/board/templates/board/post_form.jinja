@@ -2,41 +2,6 @@
 
 {% from 'board/macros.jinja' import form_group %}
 
-{% block javascript %}
-<script type="text/javascript">
-  $().ready(function() {
-    $("#post-lang-func button.post-lang").click(function() {
-      var lang = $(this).attr('post-lang');
-      $(".post-form-lang").hide();
-      $("#post-form-lang-" + lang).show();
-
-      var $btns = $("#post-lang-func button.post-lang");
-      $btns.removeClass("btn-primary");
-      $btns.removeClass("active");
-      $btns.addClass("btn-default");
-      $(this).addClass("btn-primary");
-      $(this).addClass("active");
-      $(this).removeClass("btn-default");
-    });
-    $(".prev-file-del").click(function() {
-      $(this).parent().remove();
-    });
-    $(document).on('click', ".file-more", function() {
-      $("#attach-file-wrap").children(":last").clone().appendTo($("#attach-file-wrap"));
-      $(this).html("{{ _('삭제하기') }}");
-      $(this).removeClass("file-more");
-      $(this).addClass("file-del");
-    });
-    $(document).on('click', ".file-del", function() {
-      var e = $(this).parent();
-      if (e.is(":first-child") && !e.next().length)
-        e.clone().appendTo("#attach-file-wrap");
-      e.remove();
-    });
-  });
-</script>
-{% endblock %}
-
 {% block content %}
 <form id="post-form" method="post" enctype="multipart/form-data" novalidate>
   {% csrf_token %}
@@ -87,6 +52,7 @@
       </div>
     </div>
   </div>
+  <div id="file-del-desc" style="display: none;">{{ _('삭제하기') }}</div>
   <div class="form-inline">
     {% if board.is_permitted(request.user, PERMISSION_EDITABLE) %}
     {% call(field) form_group(form.is_notice) %}
