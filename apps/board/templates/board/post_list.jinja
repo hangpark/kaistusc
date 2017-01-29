@@ -10,7 +10,20 @@
     {%- if post.content_en and post.content_ko -%}
       <span class="glyphicon glyphicon-globe margin-right"></span>
     {%- endif -%}
-      <span class="post-list-title">{{ post.title }}</span>
+      <span class="post-list-title">
+      {%- if post.is_deleted -%}
+        {{ _('삭제되었습니다.') }}
+      {%- elif post.is_secret -%}
+        <span class="glyphicon glyphicon-lock margin-right"></span>
+      {%- if post.is_permitted(request.user, PERMISSION_READABLE) -%}
+        {{ post.title }}
+      {%- else -%}
+        {{ _('비밀글입니다.') }}
+      {%- endif -%}
+      {%- else -%}
+        {{ post.title }}
+      {%- endif -%}
+      </span>
       <div class="post-list-mobile visible-xs-block">
         {{ post.author }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d') }}
         <span class="pull-right">0</span>

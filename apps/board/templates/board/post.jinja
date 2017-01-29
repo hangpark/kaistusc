@@ -9,10 +9,13 @@
     {%- if post.content_en and post.content_ko -%}
       <span class="glyphicon glyphicon-globe margin-right"></span>
     {%- endif -%}
+    {%- if post.is_secret -%}
+      <span class="glyphicon glyphicon-lock margin-right"></span>
+    {%- endif -%}
       {{ post.title }}
     </div>
     <div id="post-info">
-      <div class="pull-left">{{ post.author }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+      <div class="pull-left">{% if post.tag %}<span class="margin-right">{{ make_tag(board, post.tag) }}</span>{% endif %}{{ post.author }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d %H:%M:%S') }}</div>
       <div class="pull-right">{{ _('조회수') }}<span class="margin-both">|</span>0</div>
     </div>
   </div>
@@ -34,21 +37,28 @@
   </div>
   {% endif %}
 
+  {% if post.is_permitted(request.user, PERMISSION_COMMENTABLE) %}
   <div id="comment-form" class="input-group">
     <textarea class="form-control custom-control" rows="6" style="resize: none;"></textarea>
     <span class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
   </div>
+  {% endif %}
 
+  {% if post.is_permitted(request.user, PERMISSION_EDITABLE) -%}
   <div id="post-func">
     <div class="pull-right">
       <a href="{{ post.get_absolute_url() }}/edit/" class="btn btn-sm btn-default">{{ _('수정') }}</a>
+      {% if post.is_permitted(request.user, PERMISSION_DELETABLE) -%}
       <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#delete-modal">{{ _('삭제') }}</a>
+      {%- endif %}
     </div>
   </div>
+  {% endif %}
 </div>
 
 {% include 'board/post_list.jinja' %}
 
+{% if post.is_permitted(request.user, PERMISSION_DELETABLE) %}
 <div id="delete-modal" class="modal fade" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -67,4 +77,5 @@
     </div>
   </div>
 </div>
+{% endif %}
 {% endblock %}

@@ -88,11 +88,13 @@
     </div>
   </div>
   <div class="form-inline">
+    {% if board.is_permitted(request.user, PERMISSION_EDITABLE) %}
     {% call(field) form_group(form.is_notice) %}
       <label class="checkbox-inline">
         <input type="checkbox" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{% if field.value() %} checked{% endif %}> {{ field.label }}
       </label>
     {% endcall %}
+    {% endif %}
     {% call(field) form_group(form.is_secret) %}
       <label class="checkbox-inline">
         <input type="checkbox" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{% if field.value() %} checked{% endif %}> {{ field.label }}
