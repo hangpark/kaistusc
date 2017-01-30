@@ -76,8 +76,11 @@ class PostView(BoardView):
     required_permission = PERMISSION_READABLE
 
     def has_permission(self, request, *args, **kwargs):
+        required_permission = self.required_permission
+        self.required_permission = PERMISSION_ACCESSIBLE
         if not super(PostView, self).has_permission(request, *args, **kwargs):
             return False
+        self.required_permission = required_permission
         post = Post.objects.filter(board=self.service.board, id=kwargs['post']).first()
 
         if not post:
