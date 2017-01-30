@@ -78,6 +78,10 @@ class PostBase(models.Model):
         _("삭제글"),
         default=False)
 
+    is_secret = models.BooleanField(
+        _("비밀글"),
+        default=False)
+
     class Meta:
         ordering = ['-date']
 
@@ -95,42 +99,34 @@ class PostBase(models.Model):
         주어진 유저의 포스트 이용권한을 확인하는 함수.
 
         게시글이나 댓글 등 `PostBase`를 상속확장하는 모델에서
-        `get_base_board()`와 `get_base_post()`를 정의하여 사용한다.
+        `pre_permitted()`와 `post_permitted()`를 정의하여 사용한다.
         """
 
-        base_board = self.get_base_board()
-        base_post = self.get_base_post()
         if user.is_superuser:
             return True
-        if base_board and not base_board.is_permitted(user, PERMISSION_ACCESSIBLE):
+        if not self.pre_permitted(user, permission):
             return False
         if self.is_deleted:
             return False
         if self.is_owned_by(user):
             return True
-        if base_board:
-            res = base_board.is_permitted(user, permission)
-        else:
-            res = True
-        if base_post and permission <= PERMISSION_COMMENTABLE:
-            res &= not base_post.is_secret
-        return res
+        if self.is_secret:
+            return False
+        return self.post_permitted(user, permission)
 
-    def get_base_board(self):
+    def pre_permitted(self, user, permission):
         """
-        포스트가 속한 게시판이 있다면 이를 반환한다. 이 경우, 게시판의
-        이용권한이 상속된다.
+        포스트 이용권한 확인 이전 필수적으로 있어야 하는 권한을 체크한다.
         """
 
-        pass
+        return True
 
-    def get_base_post(self):
+    def post_permitted(self, user, permission):
         """
-        포스트들이 계층구조를 가질 때 최상위 포스트를 반환한다. 이 경우,
-        해당 포스트의 `is_secret` 값이 상속된다.
+        포스트 이용권한 확인 후 계층관계에 있는 객체의 이용권한을 체크한다.
         """
 
-        pass
+        return True
 
 
 class Post(PostBase):
@@ -151,10 +147,6 @@ class Post(PostBase):
         verbose_name=_("태그"),
         null=True, blank=True)
 
-    is_secret = models.BooleanField(
-        _("비밀글"),
-        default=False)
-
     is_notice = models.BooleanField(
         _("공지글"),
         default=False)
@@ -169,11 +161,11 @@ class Post(PostBase):
     def get_absolute_url(self):
         return os.path.join(self.board.get_absolute_url(), str(self.id))
 
-    def get_base_board(self):
-        return self.board
+    def pre_permitted(self, user, permission):
+        return self.board.is_permitted(user, PERMISSION_ACCESSIBLE)
 
-    def get_base_post(self):
-        return self
+    def post_permitted(self, user, permission):
+        return self.board.is_permitted(user, permission)
 
 
 class Comment(PostBase):
@@ -197,11 +189,11 @@ class Comment(PostBase):
     def get_absolute_url(self):
         return os.path.join(self.parent_post.get_absolute_url(), "comment", str(self.id))
 
-    def get_base_board(self):
-        return self.parent_post.get_base_board()
+    def pre_permitted(self, user, permission):
+        return self.parent_post.is_permitted(user, PERMISSION_READABLE)
 
-    def get_base_post(self):
-        return self.parent_post
+    def post_permitted(self, user, permission):
+        return self.parent_post.board.is_permitted(user, permission)
 
 
 def get_upload_path(instance, filename):
