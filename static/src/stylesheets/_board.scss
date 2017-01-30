@@ -17,6 +17,7 @@
   font-weight: bold;
   color: #fefefe;
   text-align: center;
+  cursor: pointer;
 }
 
 
@@ -66,6 +67,7 @@
     border-top: solid 1px #dcdcdd;
     border-bottom: solid 1px #dcdcdd;
     font-size: $font-size-sm;
+    cursor: pointer;
 
     &.notice .post-list-title{
       font-weight: bold;
