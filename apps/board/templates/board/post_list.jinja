@@ -1,3 +1,4 @@
+{% from 'ksso/macros.jinja' import name %}
 {% from 'board/macros.jinja' import make_tag %}
 
 {% macro post_info(post, class='') -%}
@@ -25,11 +26,11 @@
       {%- endif -%}
       </span>
       <div class="post-list-mobile visible-xs-block">
-        {{ post.author }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d') }}
+        {{ name(post.author) }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d') }}
         <span class="pull-right">0</span>
       </div>
     </td>
-    <td class="hidden-xs text-center">{{ post.author }}</td>
+    <td class="hidden-xs text-center">{{ name(post.author) }}</td>
     <td class="hidden-xs text-center">{{ post.date.strftime('%Y-%m-%d') }}</td>
     <td class="hidden-xs text-center">0</td>
   </tr>

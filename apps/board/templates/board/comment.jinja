@@ -1,7 +1,9 @@
+{% from 'ksso/macros.jinja' import name %}
+
 <div id="comment-id-{{ comment.id }}" class="comment">
   <div class="comment-header clearfix">
     <div class="pull-left">
-      {{ comment.author }}<span class="margin-both">|</span>{{ comment.date.strftime('%Y-%m-%d %H:%M:%S') }}
+      {{ name(comment.author) }}<span class="margin-both">|</span>{{ comment.date.strftime('%Y-%m-%d %H:%M:%S') }}
     </div>
     {% if comment.is_permitted(request.user, PERMISSION_DELETABLE) %}
     <form action="{{ comment.get_absolute_url() }}/delete/" class="pull-right">{% csrf_token %}

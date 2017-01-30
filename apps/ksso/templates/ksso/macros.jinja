@@ -1,5 +1,5 @@
 {% macro name(user) -%}
-	{% if user.is_authenticated() -%}
+	{% if user and user.is_authenticated() -%}
 		{% if user.portal_info is undefined -%}
 			{{ user }}
 		{%- else -%}
