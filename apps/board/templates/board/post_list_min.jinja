@@ -1,0 +1,41 @@
+{% from 'board/macros.jinja' import make_tag %}
+
+{% macro post_info_min(post) -%}
+  <tr onclick="location.href='{{ post.get_absolute_url() }}';">
+    <td class="text-left">
+    {%- if post.tag -%}
+      <span class="margin-right">{{ make_tag(board, post.tag) }}</span>
+    {%- endif -%}
+    {%- if post.content_en and post.content_ko -%}
+      <span class="glyphicon glyphicon-globe margin-right"></span>
+    {%- endif -%}
+      <span class="post-list-title">
+      {%- if post.is_deleted -%}
+        {{ _('삭제되었습니다.') }}
+      {%- elif post.is_secret -%}
+        <span class="glyphicon glyphicon-lock margin-right"></span>
+      {%- if post.is_permitted(request.user, PERMISSION_READABLE) -%}
+        {{ post.title }}
+      {%- else -%}
+        {{ _('비밀글입니다.') }}
+      {%- endif -%}
+      {%- else -%}
+        {{ post.title }}
+      {%- endif -%}
+      </span>
+    </td>
+    <td class="text-right">{{ post.date.strftime('%Y-%m-%d') }}</td>
+  </tr>
+{%- endmacro -%}
+
+<table class="main-board table table-hover">
+  <caption class="clearfix">
+    <div class="pull-left"><a href="{{ board.get_absolute_url() }}">{{ board.name }}</a></div>
+    <button class="pull-right btn btn-sm btn-default" onclick="location.href='{{ board.get_absolute_url() }}';">More</button>
+  </caption>
+  <tbody>
+    {% for post in board.post_set.all()[:5] %}
+    {{ post_info_min(post) }}
+    {% endfor %}
+  </tbody>
+</table>

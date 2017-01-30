@@ -37,8 +37,10 @@
   </div>
   <div id="main-page" class="page-item container-fluid">
     <div class="row">
-      <div class="col-sm-6">
-        <p class="lead text-center"><b>--- 게시판 미리보기 준비 중... ---</b></p>
+      <div id="main-board-list" class="col-sm-6">
+        {% for board in boards %}
+        {% include 'board/post_list_min.jinja' %}
+        {% endfor %}
       </div>
       <div class="col-sm-6">
         <div id="fb-root"></div>

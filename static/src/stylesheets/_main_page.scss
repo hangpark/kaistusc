@@ -63,3 +63,21 @@
     margin-bottom: 6px;
   }
 }
+
+#main-board-list .main-board { 
+  margin-bottom: 32px;
+  caption {
+    margin-bottom: 8px;
+    border-bottom: 1px solid #666666;
+    font-size: 16pt;
+    font-weight: bold;
+    color: #333333;
+  }
+  tr {
+    cursor: pointer;
+  }
+  td {
+    padding: 4px 8px;
+    border: 0;
+  }
+}
