@@ -57,6 +57,9 @@ RUN /bin/bash -c "source ../venv/bin/activate && make html"
 WORKDIR /app/kaistusc
 RUN sed -i "s/DEBUG = True/DEBUG = False/g" kaistusc/settings.py
 
+# Configure server encoding
+ENV LANG C.UTF-8
+
 # Expose ports
 EXPOSE 80 443
 
