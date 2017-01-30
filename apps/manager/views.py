@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 import os
 
 from apps.ksso.mixins import SignUpRequiredMixin
+from apps.board.models import Board
 
 from .models import Category, Service
 from .permissions import *
@@ -102,4 +103,20 @@ class BaseServiceView(PermissionContextMixin, PermissionRequiredServiceMixin,
     def get_context_data(self, **kwargs):
         context = super(BaseServiceView, self).get_context_data(**kwargs)
         context['service'] = self.service
+        return context
+
+
+class MainPageView(NavigatorMixin, TemplateView):
+    """
+    메인 페이지 view.
+
+    유저가 접근 가능한 공개게시판의 글을 확인한다.
+    """
+
+    template_name = 'manager/main.jinja'
+
+    def get_context_data(self, **kwargs):
+        context = super(MainPageView, self).get_context_data(**kwargs)
+        context['boards'] = Board.objects.accessible_for(
+            self.request.user).filter(is_main=True)
         return context

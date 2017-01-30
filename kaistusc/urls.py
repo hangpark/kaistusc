@@ -18,11 +18,11 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from apps.board.views import BoardView
-from apps.manager.views import BaseServiceView
+from apps.manager.views import BaseServiceView, MainPageView
 
 urlpatterns = [
     # Main page
-    url(r'^$', TemplateView.as_view(template_name='manager/main.jinja'), name='main'),
+    url(r'^$', MainPageView.as_view(), name='main'),
 
     # Basic app redirections
     url(r'^admin/', admin.site.urls),
