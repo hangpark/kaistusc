@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-29 08:07+0900\n"
+"POT-Creation-Date: 2017-01-30 18:20+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,9 +49,9 @@ msgstr "Tag slug"
 msgid "URL 상 태그를 구분짓는 짧은 지시자입니다."
 msgstr "Short term to identify the tag in URL."
 
-#: apps/board/models.py:52 apps/board/models.py:151
-#: apps/board/templates/board/post_form.jinja:103
-#: apps/board/templates/board/post_list.jinja:28
+#: apps/board/models.py:52 apps/board/models.py:146
+#: apps/board/templates/board/post_form.jinja:71
+#: apps/board/templates/board/post_list.jinja:42
 msgid "태그"
 msgstr "Tag"
 
@@ -63,69 +63,69 @@ msgstr "Tags"
 msgid "등록일시"
 msgstr "Datetime"
 
-#: apps/board/models.py:72 apps/board/templates/board/post_list.jinja:30
+#: apps/board/models.py:72 apps/board/templates/board/post_list.jinja:44
 msgid "작성자"
 msgstr "Author"
 
-#: apps/board/models.py:75
+#: apps/board/models.py:76
 msgid "내용"
 msgstr "Content"
 
-#: apps/board/models.py:78
+#: apps/board/models.py:79
 msgid "삭제글"
 msgstr "Deleted"
 
-#: apps/board/models.py:143
-msgid "등록 게시판"
-msgstr "Board"
-
-#: apps/board/models.py:146 apps/board/templates/board/post_list.jinja:29
-msgid "제목"
-msgstr "Title"
-
-#: apps/board/models.py:155
+#: apps/board/models.py:83
 msgid "비밀글"
 msgstr "Secret"
 
-#: apps/board/models.py:159
+#: apps/board/models.py:138
+msgid "등록 게시판"
+msgstr "Board"
+
+#: apps/board/models.py:141 apps/board/templates/board/post_list.jinja:43
+msgid "제목"
+msgstr "Title"
+
+#: apps/board/models.py:150
 msgid "공지글"
 msgstr "Notice"
 
-#: apps/board/models.py:163
+#: apps/board/models.py:154
 msgid "포스트"
 msgstr "Post"
 
-#: apps/board/models.py:164
+#: apps/board/models.py:155
 msgid "포스트(들)"
 msgstr "Posts"
 
-#: apps/board/models.py:186
+#: apps/board/models.py:177
 msgid "상위 포스트"
 msgstr "Related post"
 
-#: apps/board/models.py:190
+#: apps/board/models.py:181
 msgid "댓글"
 msgstr "Comment"
 
-#: apps/board/models.py:191
+#: apps/board/models.py:182
 msgid "댓글(들)"
 msgstr "Comments"
 
-#: apps/board/models.py:195
+#: apps/board/models.py:186
 #, python-format
 msgid "'%s'의 댓글"
 msgstr "Comment of '%s'"
 
-#: apps/board/models.py:218
+#: apps/board/models.py:209
 msgid "연결된 포스트"
 msgstr "Related post"
 
-#: apps/board/models.py:221 apps/board/models.py:225
-#: apps/board/templates/board/post.jinja:30
+#: apps/board/models.py:212 apps/board/models.py:216
+#: apps/board/templates/board/post.jinja:36
 msgid "첨부파일"
 msgstr "Attached file"
 
-#: apps/board/models.py:226
+#: apps/board/models.py:217
 msgid "첨부파일(들)"
 msgstr "Attached files"
 
@@ -133,44 +133,64 @@ msgstr "Attached files"
 msgid "태그별 검색"
 msgstr "Filter by tags"
 
-#: apps/board/templates/board/post.jinja:16
+#: apps/board/templates/board/comment.jinja:18
+#: apps/board/templates/board/post.jinja:31
+#: apps/board/templates/board/post_list.jinja:16
+#: apps/board/templates/board/post_list_min.jinja:14
+msgid "삭제되었습니다."
+msgstr "Deleted."
+
+#: apps/board/templates/board/post.jinja:20
 msgid "조회수"
 msgstr "Hits"
 
-#: apps/board/templates/board/post.jinja:39
-#: apps/board/templates/board/post_form.jinja:110
+#: apps/board/templates/board/post.jinja:32
+msgid "댓글을 정말 삭제할까요?"
+msgstr "Do you really want to delete the comment?"
+
+#: apps/board/templates/board/post.jinja:46
+#: apps/board/templates/board/post_form.jinja:78
 msgid "등록"
 msgstr "Submit"
 
-#: apps/board/templates/board/post.jinja:44
+#: apps/board/templates/board/post.jinja:49
+msgid "댓글 내용을 입력해주세요."
+msgstr "Please write the comment."
+
+#: apps/board/templates/board/post.jinja:54
 msgid "수정"
 msgstr "Edit"
 
-#: apps/board/templates/board/post.jinja:45
+#: apps/board/templates/board/post.jinja:56
+#: apps/board/templates/board/post.jinja:71
+#: apps/board/templates/board/post.jinja:79
 msgid "삭제"
 msgstr "Delete"
 
-#: apps/board/templates/board/post_form.jinja:26
-#: apps/board/templates/board/post_form.jinja:80
-msgid "삭제하기"
-msgstr "Delete"
+#: apps/board/templates/board/post.jinja:74
+msgid "게시글을 정말 삭제할까요?"
+msgstr "Do you really want to delete the post?"
 
-#: apps/board/templates/board/post_form.jinja:63
+#: apps/board/templates/board/post.jinja:78
+msgid "취소"
+msgstr "Cancel"
+
+#: apps/board/templates/board/post_form.jinja:28
 msgid "한국어"
 msgstr "Korean"
 
-#: apps/board/templates/board/post_form.jinja:66
+#: apps/board/templates/board/post_form.jinja:31
 msgid "영어"
 msgstr "English"
 
-#: apps/board/templates/board/post_form.jinja:72
+#: apps/board/templates/board/post_form.jinja:37
 msgid ""
 "다국어 지원 기능입니다. 번역을 하지 않은 언어 입력란은 빈칸으로 놔두시길 바랍"
 "니다."
 msgstr ""
 "Internalization tool. Please leave input field blank if you won't translate."
 
-#: apps/board/templates/board/post_form.jinja:73
+#: apps/board/templates/board/post_form.jinja:38
 msgid ""
 "최소한 제목은 번역해주시길 바랍니다. 글 작성 이후 수정을 통해 추가 번역이 가"
 "능합니다."
@@ -178,23 +198,33 @@ msgstr ""
 "Please translate the title at least. You can translate after submitting by "
 "editting the post."
 
-#: apps/board/templates/board/post_form.jinja:86
+#: apps/board/templates/board/post_form.jinja:45
+#: apps/board/templates/board/post_form.jinja:55
+msgid "삭제하기"
+msgstr "Delete"
+
+#: apps/board/templates/board/post_form.jinja:51
 msgid "더 첨부하기"
 msgstr "Add More"
 
-#: apps/board/templates/board/post_list.jinja:31
+#: apps/board/templates/board/post_list.jinja:22
+#: apps/board/templates/board/post_list_min.jinja:20
+msgid "비밀글입니다."
+msgstr "Secret Post."
+
+#: apps/board/templates/board/post_list.jinja:45
 msgid "작성일"
 msgstr "Date"
 
-#: apps/board/templates/board/post_list.jinja:32
+#: apps/board/templates/board/post_list.jinja:46
 msgid "조회"
 msgstr "Hits"
 
-#: apps/board/templates/board/post_list.jinja:62
+#: apps/board/templates/board/post_list.jinja:76
 msgid "검색"
 msgstr "Search"
 
-#: apps/board/templates/board/post_list.jinja:64
+#: apps/board/templates/board/post_list.jinja:78
 msgid "글쓰기"
 msgstr "Write"
 
@@ -488,3 +518,35 @@ msgstr "lang=ko"
 #: apps/manager/templates/manager/side_nav.jinja:10
 msgid "View in English"
 msgstr "한국어로 보기"
+
+#: apps/manager/templates/manager/main.jinja:12
+msgid "총학생회 소개"
+msgstr "Introduction"
+
+#: apps/manager/templates/manager/main.jinja:13
+msgid "Introduction"
+msgstr "총학생회 소개"
+
+#: apps/manager/templates/manager/main.jinja:18
+msgid "공약 및 사업"
+msgstr "Works"
+
+#: apps/manager/templates/manager/main.jinja:19
+msgid "Works"
+msgstr "공약 및 사업"
+
+#: apps/manager/templates/manager/main.jinja:24
+msgid "건의사항"
+msgstr "Recomm."
+
+#: apps/manager/templates/manager/main.jinja:25
+msgid "Recomm."
+msgstr "건의사항"
+
+#: apps/manager/templates/manager/main.jinja:30
+msgid "상근업무"
+msgstr "Let's Work"
+
+#: apps/manager/templates/manager/main.jinja:31
+msgid "Let's Work!"
+msgstr "상근업무"
