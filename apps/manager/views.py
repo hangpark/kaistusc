@@ -14,8 +14,7 @@ class PermissionContextMixin(object):
     템플릿에서 퍼미션 변수들을 사용할 수 있도록 컨텍스트에 이를 넘기는 mixin.
     """
 
-    def get_context_data(self, **kwargs):
-        context = super(PermissionContextMixin, self).get_context_data(**kwargs)
+    def get_permission_context(self, context):
         context['PERMISSION_NONE'] = PERMISSION_NONE
         context['PERMISSION_ACCESSIBLE'] = PERMISSION_ACCESSIBLE
         context['PERMISSION_READABLE'] = PERMISSION_READABLE
@@ -24,6 +23,10 @@ class PermissionContextMixin(object):
         context['PERMISSION_EDITABLE'] = PERMISSION_EDITABLE
         context['PERMISSION_DELETABLE'] = PERMISSION_DELETABLE
         return context
+
+    def get_context_data(self, **kwargs):
+        context = super(PermissionContextMixin, self).get_context_data(**kwargs)
+        return self.get_permission_context(context)
 
 
 class PermissionRequiredServiceMixin(AccessMixin):

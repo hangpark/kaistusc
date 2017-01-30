@@ -114,7 +114,8 @@ class PostWriteView(BoardView):
         return context
 
     def post(self, request, *args, **kwargs):
-        post = Post(author=request.user, board=self.service.board)
+        user = request.user if request.user.is_authenticated() else None
+        post = Post(author=user, board=self.service.board)
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save(request.POST, request.FILES)
@@ -167,11 +168,13 @@ class CommentWriteView(PostView):
     required_permission = PERMISSION_COMMENTABLE
 
     def post(self, request, *args, **kwargs):
+        user = request.user if request.user.is_authenticated() else None
         comment = Comment.objects.create(
-            author=request.user,
+            author=user,
             content=request.POST.get('content'),
             parent_post=self.post_)
-        return self.render_to_response({'comment': comment})
+        context = {'comment': comment}
+        return self.render_to_response(self.get_permission_context(context))
 
 
 class CommentDeleteView(PostView):

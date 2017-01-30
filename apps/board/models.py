@@ -69,7 +69,8 @@ class PostBase(models.Model):
 
     author = models.ForeignKey(
         'auth.User',
-        verbose_name=_("작성자"))
+        verbose_name=_("작성자"),
+        null=True)
 
     content = models.TextField(
         _("내용"))
@@ -88,11 +89,9 @@ class PostBase(models.Model):
     def is_owned_by(self, user):
         """
         주어진 유저의 포스트인지 확인하는 함수.
-
-        익명 유저를 처리하기 위한 로직이 포함되어있다.
         """
 
-        return user.is_authenticated() and self.author == user
+        return self.author == user
 
     def is_permitted(self, user, permission):
         """
