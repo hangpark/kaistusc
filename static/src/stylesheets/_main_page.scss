@@ -36,10 +36,10 @@
 .fb-page span {
   width: 100% !important;
 }
-#gnb {
+#fnb {
   margin-top: 25px;
   margin-bottom: 18px;
-  .gnb-title {
+  .fnb-title {
     padding: 0;
     height: 54px;
     line-height: 54px;
@@ -47,11 +47,13 @@
     color: #333333;
     background-color: #dddddd;
   }
-  .gnb-content {
+  .fnb-content {
     padding: 0;
-    padding-left: 4px;
+    @media (min-width: $screen-sm-min) {
+      padding-left: 4px;
+    }
   }
-  .gnb-box {
+  .fnb-box {
     margin: 0;
     padding-left: 14px;
     background-color: #eeeeee;
@@ -59,7 +61,7 @@
     font-weight: bold;
     line-height: 24px;
   }
-  .gnb-first {
+  .fnb-first {
     margin-bottom: 6px;
   }
 }
