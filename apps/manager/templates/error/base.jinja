@@ -5,7 +5,13 @@
   <div id="main" class="page-item container-fluid">
     <div id="err" class="text-center">
       <p class="err-title"><span class="glyphicon glyphicon-alert margin-right"></span>{% block error_title %}{% endblock %}</p>
-      <p class="err-msg">{{ exception }} asdf{% block error_message %}{% endblock %}</p>
+      <p class="err-msg">
+      {%- if exception -%}
+        {{ exception }}
+      {%- else -%}
+        {% block error_message %}{% endblock %}
+      {%- endif -%}
+      </p>
       <div class="err-btn">{% block error_button %}{% endblock %}</div>
     </div>
   </div>
