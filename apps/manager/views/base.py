@@ -7,7 +7,7 @@ from apps.ksso.mixins import SignUpRequiredMixin
 from apps.board.models import Board
 
 from apps.manager.models import Category, Service
-from apps.manager.permissions import *
+from apps.manager.constants import *
 
 
 class PermissionContextMixin(object):
@@ -16,13 +16,13 @@ class PermissionContextMixin(object):
     """
 
     def get_permission_context(self, context):
-        context['PERMISSION_NONE'] = PERMISSION_NONE
-        context['PERMISSION_ACCESSIBLE'] = PERMISSION_ACCESSIBLE
-        context['PERMISSION_READABLE'] = PERMISSION_READABLE
-        context['PERMISSION_COMMENTABLE'] = PERMISSION_COMMENTABLE
-        context['PERMISSION_WRITABLE'] = PERMISSION_WRITABLE
-        context['PERMISSION_EDITABLE'] = PERMISSION_EDITABLE
-        context['PERMISSION_DELETABLE'] = PERMISSION_DELETABLE
+        context['PERM_NONE'] = PERM_NONE
+        context['PERM_ACCESS'] = PERM_ACCESS
+        context['PERM_READ'] = PERM_READ
+        context['PERM_COMMENT'] = PERM_COMMENT
+        context['PERM_WRITE'] = PERM_WRITE
+        context['PERM_EDIT'] = PERM_EDIT
+        context['PERM_DELETE'] = PERM_DELETE
         return context
 
     def get_context_data(self, **kwargs):
@@ -40,7 +40,7 @@ class PermissionRequiredServiceMixin(AccessMixin):
     """
 
     service_name = None
-    required_permission = PERMISSION_ACCESSIBLE
+    required_permission = PERM_ACCESS
     raise_exception = True
 
     def get_service(self, request, *args, **kwargs):

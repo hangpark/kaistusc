@@ -29,32 +29,32 @@ class BoardTestCase(TestCase):
         self.board_all = Board.objects.create(
             name='Board for all users',
             category=self.cat,
-            max_permission_anon=PERMISSION_ACCESSIBLE,
-            max_permission_auth=PERMISSION_NONE
+            max_permission_anon=PERM_ACCESS,
+            max_permission_auth=PERM_NONE
         )
         self.board_log = Board.objects.create(
             name='Board for logged in users',
             category=self.cat,
-            max_permission_anon=PERMISSION_NONE,
-            max_permission_auth=PERMISSION_WRITABLE
+            max_permission_anon=PERM_NONE,
+            max_permission_auth=PERM_WRITE
         )
         self.board_grp1 = Board.objects.create(
             name='Board for groups #1',
             category=self.cat,
-            max_permission_anon=PERMISSION_NONE,
-            max_permission_auth=PERMISSION_NONE
+            max_permission_anon=PERM_NONE,
+            max_permission_auth=PERM_NONE
         )
         self.board_grp2 = Board.objects.create(
             name='Board for groups #2',
             category=self.cat,
-            max_permission_anon=PERMISSION_NONE,
-            max_permission_auth=PERMISSION_NONE
+            max_permission_anon=PERM_NONE,
+            max_permission_auth=PERM_NONE
         )
         self.board_cls = Board.objects.create(
             name='Board closed',
             category=self.cat,
-            max_permission_anon=PERMISSION_WRITABLE,
-            max_permission_auth=PERMISSION_DELETABLE,
+            max_permission_anon=PERM_WRITE,
+            max_permission_auth=PERM_DELETE,
             is_closed=True
         )
 
@@ -93,27 +93,27 @@ class BoardTestCase(TestCase):
         GroupServicePermission.objects.create(
             group=self.grp1,
             service=self.board_grp1,
-            permission=PERMISSION_EDITABLE
+            permission=PERM_EDIT
         )
         GroupServicePermission.objects.create(
             group=self.grp1,
             service=self.board_grp2,
-            permission=PERMISSION_READABLE
+            permission=PERM_READ
         )
         GroupServicePermission.objects.create(
             group=self.grp2,
             service=self.board_grp2,
-            permission=PERMISSION_DELETABLE
+            permission=PERM_DELETE
         )
         GroupServicePermission.objects.create(
             group=self.grp1,
             service=self.board_cls,
-            permission=PERMISSION_READABLE
+            permission=PERM_READ
         )
         GroupServicePermission.objects.create(
             group=self.grp2,
             service=self.board_cls,
-            permission=PERMISSION_DELETABLE
+            permission=PERM_DELETE
         )
 
     def test_board_permission_for_various_types_of_user(self):
@@ -156,37 +156,37 @@ class BoardTestCase(TestCase):
             self.assertEqual(res, [
                 (e[0], e[1], exp_res[i]) for i, e in enumerate(temp_list)])
 
-        test_board_permission(PERMISSION_ACCESSIBLE, [
+        test_board_permission(PERM_ACCESS, [
             True, False, False, False, False,
             True, True, True, True, False,
             True, True, True, True, False,
             True, True, True, True, True])
 
-        test_board_permission(PERMISSION_READABLE, [
+        test_board_permission(PERM_READ, [
             False, False, False, False, False,
             False, True, True, True, False,
             False, True, True, True, False,
             True, True, True, True, True])
 
-        test_board_permission(PERMISSION_COMMENTABLE, [
-            False, False, False, False, False,
-            False, True, True, False, False,
-            False, True, True, True, False,
-            True, True, True, True, True])
-
-        test_board_permission(PERMISSION_WRITABLE, [
+        test_board_permission(PERM_COMMENT, [
             False, False, False, False, False,
             False, True, True, False, False,
             False, True, True, True, False,
             True, True, True, True, True])
 
-        test_board_permission(PERMISSION_EDITABLE, [
+        test_board_permission(PERM_WRITE, [
+            False, False, False, False, False,
+            False, True, True, False, False,
+            False, True, True, True, False,
+            True, True, True, True, True])
+
+        test_board_permission(PERM_EDIT, [
             False, False, False, False, False,
             False, False, True, False, False,
             False, False, True, True, False,
             True, True, True, True, True])
 
-        test_board_permission(PERMISSION_DELETABLE, [
+        test_board_permission(PERM_DELETE, [
             False, False, False, False, False,
             False, False, False, False, False,
             False, False, False, True, False,
@@ -222,25 +222,25 @@ class BoardTestCase(TestCase):
             self.assertEqual(res, [
                 (e[0], e[1], exp_res[i]) for i, e in enumerate(temp_list)])
 
-        test_post_permission(PERMISSION_READABLE, [
+        test_post_permission(PERM_READ, [
             False, False, False,
             True, False, False,
             True, True, False,
             True, True, True
         ])
-        test_post_permission(PERMISSION_COMMENTABLE, [
+        test_post_permission(PERM_COMMENT, [
             False, False, False,
             False, False, False,
             True, True, False,
             True, True, True
         ])
-        test_post_permission(PERMISSION_EDITABLE, [
+        test_post_permission(PERM_EDIT, [
             False, False, False,
             False, False, False,
             True, True, False,
             True, True, True
         ])
-        test_post_permission(PERMISSION_DELETABLE, [
+        test_post_permission(PERM_DELETE, [
             False, False, False,
             False, False, False,
             True, True, False,

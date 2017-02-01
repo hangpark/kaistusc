@@ -5,14 +5,14 @@
     <div class="pull-left">
       {{ name(comment.author) }}<span class="margin-both">|</span>{{ comment.date.strftime('%Y-%m-%d %H:%M:%S') }}
     </div>
-    {% if comment.is_permitted(request.user, PERMISSION_DELETABLE) %}
+    {% if comment.is_permitted(request.user, PERM_DELETE) %}
     <form action="{{ comment.get_absolute_url() }}/delete/" class="pull-right">{% csrf_token %}
       <i class="comment-remove fa fa-times"></i>
     </form>
     {% endif %}
   </div>
   <div class="comment-content">
-  {% if comment.is_permitted(request.user, PERMISSION_READABLE) %}
+  {% if comment.is_permitted(request.user, PERM_READ) %}
     {{ comment.content }}
   {% else %}
     {{ _("삭제되었습니다.") }}

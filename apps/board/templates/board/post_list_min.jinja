@@ -14,7 +14,7 @@
         {{ _('삭제되었습니다.') }}
       {%- elif post.is_secret -%}
       <i class="fa fa-lock"></i>
-      {% if post.is_permitted(request.user, PERMISSION_READABLE) -%}
+      {% if post.is_permitted(request.user, PERM_READ) -%}
         {{ post.title }}
       {%- else -%}
         {{ _('비밀글입니다.') }}

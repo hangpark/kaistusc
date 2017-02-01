@@ -54,7 +54,7 @@
   </div>
   <div id="file-del-desc" style="display: none;">{{ _('삭제하기') }}</div>
   <div class="form-inline">
-    {% if board.is_permitted(request.user, PERMISSION_EDITABLE) %}
+    {% if board.is_permitted(request.user, PERM_EDIT) %}
     {% call(field) form_group(form.is_notice) %}
       <label class="checkbox-inline">
         <input type="checkbox" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{% if field.value() %} checked{% endif %}> {{ field.label }}

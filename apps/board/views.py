@@ -2,7 +2,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.shortcuts import render
 from apps.manager.models import Service
-from apps.manager.permissions import *
+from apps.manager.constants import *
 from apps.manager.views import BaseServiceView
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from .forms import PostForm
@@ -73,7 +73,7 @@ class PostView(BoardView):
     """
 
     template_name = 'board/post.jinja'
-    required_permission = PERMISSION_READABLE
+    required_permission = PERM_READ
 
     def dispatch(self, request, *args, **kwargs):
         response = super(PostView, self).dispatch(request, *args, **kwargs)
@@ -82,7 +82,7 @@ class PostView(BoardView):
 
     def has_permission(self, request, *args, **kwargs):
         required_permission = self.required_permission
-        self.required_permission = PERMISSION_ACCESSIBLE
+        self.required_permission = PERM_ACCESS
         if not super(PostView, self).has_permission(request, *args, **kwargs):
             return False
         self.required_permission = required_permission
@@ -114,7 +114,7 @@ class PostWriteView(BoardView):
     """
 
     template_name = 'board/post_form.jinja'
-    required_permission = PERMISSION_WRITABLE
+    required_permission = PERM_WRITE
 
     def get_context_data(self, **kwargs):
         context = super(PostWriteView, self).get_context_data(**kwargs)
@@ -139,7 +139,7 @@ class PostEditView(PostView):
     """
 
     template_name = 'board/post_form.jinja'
-    required_permission = PERMISSION_EDITABLE
+    required_permission = PERM_EDIT
 
     def get_context_data(self, **kwargs):
         context = super(PostEditView, self).get_context_data(**kwargs)
@@ -161,7 +161,7 @@ class PostEditView(PostView):
 class PostDeleteView(PostView):
 
     template_name = None
-    required_permission = PERMISSION_DELETABLE
+    required_permission = PERM_DELETE
 
     def post(self, request, *args, **kwargs):
         post = self.post_
@@ -173,7 +173,7 @@ class PostDeleteView(PostView):
 class CommentWriteView(PostView):
 
     template_name = 'board/comment.jinja'
-    required_permission = PERMISSION_COMMENTABLE
+    required_permission = PERM_COMMENT
 
     def post(self, request, *args, **kwargs):
         user = request.user if request.user.is_authenticated() else None
@@ -188,7 +188,7 @@ class CommentWriteView(PostView):
 class CommentDeleteView(PostView):
 
     template_name = None
-    required_permission = PERMISSION_DELETABLE
+    required_permission = PERM_DELETE
 
     def has_permission(self, request, *args, **kwargs):
         if not super(CommentDeleteView, self).has_permission(request, *args, **kwargs):
@@ -211,7 +211,7 @@ class CommentDeleteView(PostView):
 
 class PostVoteView(PostView):
 
-    required_permission = PERMISSION_READABLE
+    required_permission = PERM_READ
 
     def has_permission(self, request, *args, **kwargs):
         if not super(PostVoteView, self).has_permission(request, *args, **kwargs):
