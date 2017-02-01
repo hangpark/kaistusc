@@ -2,17 +2,17 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
-from .permissions import *
+from .constants import *
 
 # Basic service permissions
 PERMISSION_CHOICES = (
-    (PERMISSION_NONE, _("권한없음")),
-    (PERMISSION_ACCESSIBLE, _("접근권한")),
-    (PERMISSION_READABLE, _("읽기권한 (혹은 이에 준하는 특수권한)")),
-    (PERMISSION_COMMENTABLE, _("댓글권한 (혹은 이에 준하는 특수권한)")),
-    (PERMISSION_WRITABLE, _("쓰기권한 (혹은 이에 준하는 특수권한)")),
-    (PERMISSION_EDITABLE, _("수정권한 (혹은 이에 준하는 특수권한)")),
-    (PERMISSION_DELETABLE, _("삭제권한 (혹은 이에 준하는 특수권한)")),
+    (PERM_NONE, _("권한없음")),
+    (PERM_ACCESS, _("접근권한")),
+    (PERM_READ, _("읽기권한 (혹은 이에 준하는 특수권한)")),
+    (PERM_COMMENT, _("댓글권한 (혹은 이에 준하는 특수권한)")),
+    (PERM_WRITE, _("쓰기권한 (혹은 이에 준하는 특수권한)")),
+    (PERM_EDIT, _("수정권한 (혹은 이에 준하는 특수권한)")),
+    (PERM_DELETE, _("삭제권한 (혹은 이에 준하는 특수권한)")),
 )
 
 
@@ -58,11 +58,11 @@ class ServiceQuerySet(models.QuerySet):
             return self
 
         # 일반 유저의 경우 조건에 따라 서비스 필터링
-        q = Q(max_permission_anon__gte=PERMISSION_ACCESSIBLE)
+        q = Q(max_permission_anon__gte=PERM_ACCESS)
         if user.is_authenticated():
-            q |= Q(max_permission_auth__gte=PERMISSION_ACCESSIBLE)
+            q |= Q(max_permission_auth__gte=PERM_ACCESS)
         q |= Q(
-            groupservicepermission__permission__gte=PERMISSION_ACCESSIBLE,
+            groupservicepermission__permission__gte=PERM_ACCESS,
             groupservicepermission__group__in=user.groups.all())
         q &= Q(is_closed=False)
         return self.filter(q).distinct()
@@ -114,11 +114,11 @@ class Service(models.Model):
 
     max_permission_anon = models.IntegerField(
         _("비로그인 유저의 최대 권한"),
-        choices=PERMISSION_CHOICES, default=PERMISSION_NONE)
+        choices=PERMISSION_CHOICES, default=PERM_NONE)
 
     max_permission_auth = models.IntegerField(
         _("로그인 유저의 최대 권한"),
-        choices=PERMISSION_CHOICES, default=PERMISSION_READABLE)
+        choices=PERMISSION_CHOICES, default=PERM_READ)
 
     permitted_groups = models.ManyToManyField(
         'auth.Group',
@@ -139,7 +139,7 @@ class Service(models.Model):
     def get_absolute_url(self):
         return self.url
 
-    def is_permitted(self, user, permission=PERMISSION_ACCESSIBLE):
+    def is_permitted(self, user, permission=PERM_ACCESS):
         """
         주어진 유저가 접근할 수 있는 서비스인지 확인하는 함수.
         """
@@ -173,7 +173,7 @@ class GroupServicePermission(models.Model):
 
     permission = models.IntegerField(
         _("권한"),
-        choices=PERMISSION_CHOICES, default=PERMISSION_ACCESSIBLE)
+        choices=PERMISSION_CHOICES, default=PERM_ACCESS)
 
     class Meta:
         ordering = ['service', 'permission', 'group']

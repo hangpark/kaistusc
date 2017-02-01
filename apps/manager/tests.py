@@ -2,6 +2,7 @@ from django.contrib.auth.models import AnonymousUser, Group, User
 from django.test import TestCase
 
 from .models import *
+from .constants import *
 
 
 class ServiceTestCase(TestCase):
@@ -15,32 +16,32 @@ class ServiceTestCase(TestCase):
         self.svc_all = Service.objects.create(
             name='Service for all users',
             category=self.cat,
-            max_permission_anon=PERMISSION_ACCESSIBLE,
-            max_permission_auth=PERMISSION_NONE
+            max_permission_anon=PERM_ACCESS,
+            max_permission_auth=PERM_NONE
         )
         self.svc_log = Service.objects.create(
             name='Service for logged in users',
             category=self.cat,
-            max_permission_anon=PERMISSION_NONE,
-            max_permission_auth=PERMISSION_WRITABLE
+            max_permission_anon=PERM_NONE,
+            max_permission_auth=PERM_WRITE
         )
         self.svc_grp1 = Service.objects.create(
             name='Service for accessible groups #1',
             category=self.cat,
-            max_permission_anon=PERMISSION_NONE,
-            max_permission_auth=PERMISSION_NONE
+            max_permission_anon=PERM_NONE,
+            max_permission_auth=PERM_NONE
         )
         self.svc_grp2 = Service.objects.create(
             name='Service for accessible groups #2',
             category=self.cat,
-            max_permission_anon=PERMISSION_NONE,
-            max_permission_auth=PERMISSION_NONE
+            max_permission_anon=PERM_NONE,
+            max_permission_auth=PERM_NONE
         )
         self.svc_cls = Service.objects.create(
             name='Service closed',
             category=self.cat,
-            max_permission_anon=PERMISSION_WRITABLE,
-            max_permission_auth=PERMISSION_DELETABLE,
+            max_permission_anon=PERM_WRITE,
+            max_permission_auth=PERM_DELETE,
             is_closed=True
         )
 
@@ -82,19 +83,19 @@ class ServiceTestCase(TestCase):
         # 그룹에게 서비스 접근권한을 부여한다.
         GroupServicePermission.objects.create(
                 group=self.grp2, service=self.svc_all,
-                permission=PERMISSION_ACCESSIBLE)
+                permission=PERM_ACCESS)
         GroupServicePermission.objects.create(
                 group=self.grp2, service=self.svc_log,
-                permission=PERMISSION_READABLE)
+                permission=PERM_READ)
         GroupServicePermission.objects.create(
                 group=self.grp1, service=self.svc_grp1,
-                permission=PERMISSION_COMMENTABLE)
+                permission=PERM_COMMENT)
         GroupServicePermission.objects.create(
                 group=self.grp2, service=self.svc_grp2,
-                permission=PERMISSION_ACCESSIBLE)
+                permission=PERM_ACCESS)
         GroupServicePermission.objects.create(
                 group=self.grp2, service=self.svc_cls,
-                permission=PERMISSION_ACCESSIBLE)
+                permission=PERM_ACCESS)
 
         # 각 유저의 이용가능 서비스를 구한다.
         qs = Service.objects.order_by('pk')

@@ -49,7 +49,7 @@
   </div>
   {% endif %}
 
-  {% if post.is_permitted(request.user, PERMISSION_COMMENTABLE) %}
+  {% if post.is_permitted(request.user, PERM_COMMENT) %}
   <form id="comment-form" class="input-group">{% csrf_token %}
     <textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
     <span id="btn-comment-form" class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
@@ -57,11 +57,11 @@
   {% endif %}
   <div id="comment-no-input" style="display: none;">{{ _('댓글 내용을 입력해주세요.') }}</div>
 
-  {% if post.is_permitted(request.user, PERMISSION_EDITABLE) -%}
+  {% if post.is_permitted(request.user, PERM_EDIT) -%}
   <div id="post-func">
     <div class="pull-right">
       <a href="{{ post.get_absolute_url() }}/edit/" class="btn btn-sm btn-default">{{ _('수정') }}</a>
-      {% if post.is_permitted(request.user, PERMISSION_DELETABLE) -%}
+      {% if post.is_permitted(request.user, PERM_DELETE) -%}
       <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#delete-modal">{{ _('삭제') }}</a>
       {%- endif %}
     </div>
@@ -71,7 +71,7 @@
 
 {% include 'board/post_list.jinja' %}
 
-{% if post.is_permitted(request.user, PERMISSION_DELETABLE) %}
+{% if post.is_permitted(request.user, PERM_DELETE) %}
 <div id="delete-modal" class="modal fade" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">

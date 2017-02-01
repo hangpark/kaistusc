@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from apps.manager.models import Service, ServiceManager
-from apps.manager.permissions import *
+from apps.manager.constants import *
 from kaistusc.settings import MEDIA_URL
 
 
@@ -230,7 +230,7 @@ class Post(PostBase):
         return os.path.join(self.board.get_absolute_url(), str(self.id))
 
     def pre_permitted(self, user, permission):
-        return self.board.is_permitted(user, PERMISSION_ACCESSIBLE)
+        return self.board.is_permitted(user, PERM_ACCESS)
 
     def post_permitted(self, user, permission):
         return self.board.is_permitted(user, permission)
@@ -258,7 +258,7 @@ class Comment(PostBase):
         return os.path.join(self.parent_post.get_absolute_url(), "comment", str(self.id))
 
     def pre_permitted(self, user, permission):
-        return self.parent_post.is_permitted(user, PERMISSION_READABLE)
+        return self.parent_post.is_permitted(user, PERM_READ)
 
     def post_permitted(self, user, permission):
         return self.parent_post.board.is_permitted(user, permission)
