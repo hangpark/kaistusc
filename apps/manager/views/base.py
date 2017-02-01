@@ -1,13 +1,11 @@
+import os
+
 from django.contrib.auth.mixins import AccessMixin
 from django.http import Http404
 from django.views.generic import TemplateView
-import os
 
-from apps.ksso.mixins import SignUpRequiredMixin
-from apps.board.models import Board
-
-from apps.manager.models import Category, Service
 from apps.manager.constants import *
+from apps.manager.models import Category, Service
 
 
 class PermissionContextMixin(object):
@@ -98,8 +96,8 @@ class PageView(NavigatorMixin, TemplateView):
     pass
 
 
-class ServiceView(PermissionContextMixin, PermissionRequiredServiceMixin,
-        PageView):
+class ServiceView(
+        PermissionContextMixin, PermissionRequiredServiceMixin, PageView):
     """
     기본 서비스 view.
 

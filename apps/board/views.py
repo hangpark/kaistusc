@@ -1,12 +1,12 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
-from django.shortcuts import render
-from apps.manager.models import Service
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+
 from apps.manager.constants import *
 from apps.manager.views import ServiceView
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+
 from .forms import PostForm
-from .models import Board, Post, Tag, Comment, PostActivity, ACTIVITY_VOTE
+from .models import ACTIVITY_VOTE, Comment, Post, Tag
 
 
 class BoardView(ServiceView):
@@ -50,7 +50,8 @@ class BoardView(ServiceView):
             posts = paginator.page(page_num)
 
         # Store page number list
-        context['pages'] = self._get_pagination_list(paginator)
+        context['pages'] = self._get_pagination_list(
+            page_num, paginator.num_pages)
 
         # Store post list
         context['posts'] = posts
@@ -58,12 +59,11 @@ class BoardView(ServiceView):
 
         return context
 
-    def _get_pagination_list(self, paginator):
-        if paginator.num_pages <= 5:
-            return range(1, paginator.num_pages + 1)
-        pivot = (3 * (page < 3)
-            or (paginator.num_pages - 2) * (page > paginator.num_pages - 2)
-            or page)
+    def _get_pagination_list(self, page, num_pages):
+        if num_pages <= 5:
+            return range(1, num_pages + 1)
+        pivot = (
+            3 * (page < 3) or (num_pages - 2) * (page > num_pages - 2) or page)
         return range(pivot - 2, pivot + 3)
 
 
@@ -86,7 +86,8 @@ class PostView(BoardView):
         if not super().has_permission(request, *args, **kwargs):
             return False
         self.required_permission = required_permission
-        post = Post.objects.filter(board=self.service.board, id=kwargs['post']).first()
+        post = Post.objects.filter(
+            board=self.service.board, id=kwargs['post']).first()
 
         if not post:
             raise Http404

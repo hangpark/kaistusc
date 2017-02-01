@@ -1,7 +1,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import Board, Tag, Post, Comment, AttachedFile
+from .models import AttachedFile, Board, Comment, Post, Tag
 
 
 class BoardAdmin(TranslationAdmin):

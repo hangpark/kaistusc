@@ -1,6 +1,8 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 
-from apps.board.views import *
+from apps.board.views import (BoardView, CommentDeleteView, CommentWriteView,
+                              PostDeleteView, PostEditView, PostView,
+                              PostVoteView, PostWriteView)
 
 urlpatterns = [
     url(r'^new/$',

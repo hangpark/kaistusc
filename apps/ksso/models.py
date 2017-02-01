@@ -66,7 +66,10 @@ class PortalInfo(models.Model):
     is_signed_up = models.BooleanField(
         _("정보제공 동의여부"),
         default=False,
-        help_text=_("정보제공에 반대하면 계정삭제 처리가 되나, 아직 동의여부를 선택하지 않은 최초가입자의 경우 의사표현 시까지 정보가 임시저장됩니다. 이 특수경우에는 정보를 활용하지 않아야 합니다."))
+        help_text=_(
+            "정보제공에 반대하면 계정삭제 처리가 되나, 아직 동의여부를 "
+            "선택하지 않은 최초가입자의 경우 의사표현 시까지 정보가 "
+            "임시저장됩니다. 이 특수경우에는 정보를 활용하지 않아야 합니다."))
 
     # Custom Manager
     objects = PortalInfoManager()

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.contrib.auth.admin import GroupAdmin, UserAdmin
+from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group, User
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
@@ -17,7 +17,7 @@ def portal_info_protection(func):
 
     def decorator(self, e):
         if not e.portal_info.is_signed_up:
-            raise ObjectDoesNotExists
+            raise ObjectDoesNotExist
         return func(self, e)
     return decorator
 
@@ -62,14 +62,14 @@ class CustomUserAdmin(UserAdmin):
     """
     유저 모델과 포탈 계정정보를 연동한 커스텀 어드민
     """
-    
+
     inlines = [PortalInfoInline] + UserAdmin.inlines
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('권한들'), {'fields': (('is_staff', 'is_superuser'), 'groups')}),
     )
-    
+
     list_display = (
         'portal_name',
         'portal_std_no',
@@ -173,11 +173,11 @@ class GroupAdminForm(forms.ModelForm):
 
     users = UserModelMultipleChoiceField(
         label=_('그룹멤버'),
-        queryset = User.objects.all(),
+        queryset=User.objects.all(),
         required=False,
         widget=FilteredSelectMultiple(
-            verbose_name = _('유저(들)'),
-            is_stacked = False
+            verbose_name=_('유저(들)'),
+            is_stacked=False
         ),
     )
 

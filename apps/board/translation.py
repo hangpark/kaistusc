@@ -1,6 +1,6 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import Board, Tag, BasePost, Post, Comment
+from .models import BasePost, Board, Comment, Post, Tag
 
 
 @register(Board)

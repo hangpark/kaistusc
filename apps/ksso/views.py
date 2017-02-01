@@ -20,7 +20,7 @@ class LoginView(TemplateView):
             if self.user:
                 login(request, self.user)
                 self.next = self.request.COOKIES.get(
-                        'REDIRECT_URL_TOKEN', settings.AUTH_REDIRECT_URL)
+                    'REDIRECT_URL_TOKEN', settings.AUTH_REDIRECT_URL)
                 if self.user.portal_info.is_signed_up:
                     response = redirect(self.next)
                 else:
@@ -57,9 +57,10 @@ class SignUpView(PageView):
         return super().dispatch(request, *args, **kwargs)
 
     def is_signed_up(self, request):
-        return not (request.user.is_authenticated()
-                and hasattr(request.user, 'portal_info')
-                and not request.user.portal_info.is_signed_up)
+        return not (
+            request.user.is_authenticated()
+            and hasattr(request.user, 'portal_info')
+            and not request.user.portal_info.is_signed_up)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,7 +81,7 @@ class AgreeView(View):
         except:
             pass
         return redirect(request.GET.get('next', settings.AUTH_REDIRECT_URL))
-        
+
 
 class DisagreeView(View):
     """

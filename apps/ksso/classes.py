@@ -26,7 +26,7 @@ class PortalController():
             # XML 정보를 바탕으로 database를 갱신합니다.
             try:
                 self.portal_info = PortalInfo.all_objects.get(
-                        kaist_uid=self.kaist_uid)
+                    kaist_uid=self.kaist_uid)
                 self.update_portal_info()
 
             # KAIST 단일서비스 인증정보가 저장되어 있지 않을 경우
@@ -50,13 +50,14 @@ class PortalController():
             self.portal_info.ku_kname = self.parser.attr('ku_kname')
             self.portal_info.ku_acad_prog = self.parser.attr('ku_acad_prog')
             self.portal_info.ku_std_no = self.parser.attr('ku_std_no')
-            self.portal_info.ku_psft_user_status_kor = self.parser.attr('ku_psft_user_status_kor')
+            self.portal_info.ku_psft_user_status_kor = self.parser.attr(
+                'ku_psft_user_status_kor')
             self.portal_info.ku_born_date = self.parser.attr('ku_born_date')
             self.portal_info.ku_sex = self.parser.attr('ku_sex')
             self.portal_info.ou = self.parser.attr('ou')
             self.portal_info.mail = self.parser.attr('mail')
             self.portal_info.mobile = self.parser.attr('mobile')
-            
+
             self.portal_info.save()
 
         def session(self):
@@ -113,11 +114,11 @@ class PortalController():
         # request header 를 만듭니다.
         def build_request_header(self):
             request_header = {
-                    'Content-type': 'text/xml;charset=\"utf-8\"',
-                    'Accept': 'text/xml',
-                    'Cache-Control': 'no-cache',
-                    'Pragma': 'no-cache',
-                    'Content-length': str(len(self.request_string))
+                'Content-type': 'text/xml;charset=\"utf-8\"',
+                'Accept': 'text/xml',
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache',
+                'Content-length': str(len(self.request_string))
             }
             return request_header
 
@@ -125,7 +126,7 @@ class PortalController():
         def connect(self):
             import requests
             response = requests.post(
-                    settings.PORTAL_TARGET_URL,
-                    data=self.request_string,
-                    headers=self.request_header)
+                settings.PORTAL_TARGET_URL,
+                data=self.request_string,
+                headers=self.request_header)
             return response

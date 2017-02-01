@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import *
+from .views import AgreeView, DisagreeView, LoginView, LogoutView, SignUpView
 
 urlpatterns = [
     url(r'^login/$', LoginView.as_view(), name='login'),

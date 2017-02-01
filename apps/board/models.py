@@ -5,14 +5,14 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
-from apps.manager.models import Service, ServiceManager
 from apps.manager.constants import *
+from apps.manager.models import Service, ServiceManager
 from kaistusc.settings import MEDIA_URL
-
 
 # Post Activities
 ACTIVITY_VIEW = 'VIEW'
 ACTIVITY_VOTE = 'VOTE'
+
 
 class Board(Service):
     """
@@ -59,7 +59,8 @@ class PostActivity(models.Model):
     def save(self, *args, **kwargs):
         if self.user:
             is_new = not PostActivity.objects.filter(
-                user=self.user, post=self.post, activity=self.activity).exists()
+                user=self.user, post=self.post,
+                activity=self.activity).exists()
         else:
             is_new = not PostActivity.objects.filter(
                 ip=self.ip, post=self.post, activity=self.activity).exists()
@@ -180,7 +181,8 @@ class BasePost(models.Model):
         return True
 
     def get_activity_count(self, activity):
-        return PostActivity.objects.filter(post=self, activity=activity).count()
+        return PostActivity.objects.filter(
+            post=self, activity=activity).count()
 
     def get_hits(self):
         return self.get_activity_count(ACTIVITY_VIEW)
@@ -250,12 +252,12 @@ class Comment(BasePost):
         verbose_name = _('댓글')
         verbose_name_plural = _('댓글(들)')
 
-
     def __str__(self):
         return _("'%s'의 댓글") % self.parent_post
 
     def get_absolute_url(self):
-        return os.path.join(self.parent_post.get_absolute_url(), "comment", str(self.id))
+        return os.path.join(
+            self.parent_post.get_absolute_url(), "comment", str(self.id))
 
     def pre_permitted(self, user, permission):
         return self.parent_post.is_permitted(user, PERM_READ)

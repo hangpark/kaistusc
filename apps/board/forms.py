@@ -1,8 +1,6 @@
-from django import forms
 from django.forms import ModelForm
-from django.utils.translation import ugettext_lazy as _
 
-from .models import Post, AttachedFile
+from .models import AttachedFile, Post
 
 
 class PostForm(ModelForm):
@@ -14,7 +12,9 @@ class PostForm(ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title_ko', 'title_en', 'content_ko', 'content_en', 'is_notice', 'is_secret', 'tag')
+        fields = (
+            'title_ko', 'title_en', 'content_ko', 'content_en',
+            'is_notice', 'is_secret', 'tag')
 
     def save(self, POST, FILES):
         post = super().save()
@@ -28,5 +28,5 @@ class PostForm(ModelForm):
         files = FILES.getlist('files')
         for f in files:
             AttachedFile.objects.create(post=post, file=f)
-        
+
         return post
