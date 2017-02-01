@@ -1,6 +1,6 @@
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import Board, Tag, PostBase, Post, Comment
+from .models import Board, Tag, BasePost, Post, Comment
 
 
 @register(Board)
@@ -13,8 +13,8 @@ class TagTranslationOptions(TranslationOptions):
     fields = ('name', 'abbr')
 
 
-@register(PostBase)
-class PostBaseTranslationOptions(TranslationOptions):
+@register(BasePost)
+class BasePostTranslationOptions(TranslationOptions):
     fields = ('content',)
 
 

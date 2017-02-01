@@ -45,7 +45,7 @@ class PostActivity(models.Model):
         max_length=40)
 
     post = models.ForeignKey(
-        'PostBase',
+        'BasePost',
         verbose_name=_("포스트"))
 
     ACTIVITY_CHOICES = (
@@ -95,7 +95,7 @@ class Tag(models.Model):
         return self.name
 
 
-class PostBase(models.Model):
+class BasePost(models.Model):
     """
     게시글, 댓글 등 포스트를 정의하는 모델.
 
@@ -149,7 +149,7 @@ class PostBase(models.Model):
         """
         주어진 유저의 포스트 이용권한을 확인하는 함수.
 
-        게시글이나 댓글 등 `PostBase`를 상속확장하는 모델에서
+        게시글이나 댓글 등 `BasePost`를 상속확장하는 모델에서
         `pre_permitted()`와 `post_permitted()`를 정의하여 사용한다.
         """
 
@@ -197,7 +197,7 @@ class PostBase(models.Model):
         self.assign_activity(request, ACTIVITY_VIEW)
 
 
-class Post(PostBase):
+class Post(BasePost):
     """
     게시글을 정의한 모델.
     """
@@ -236,7 +236,7 @@ class Post(PostBase):
         return self.board.is_permitted(user, permission)
 
 
-class Comment(PostBase):
+class Comment(BasePost):
     """
     댓글을 정의한 모델.
     """
@@ -274,7 +274,7 @@ class AttachedFile(models.Model):
     """
 
     post = models.ForeignKey(
-        PostBase,
+        BasePost,
         verbose_name=_("연결된 포스트"))
 
     file = models.FileField(

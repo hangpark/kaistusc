@@ -98,7 +98,7 @@ class PageView(NavigatorMixin, TemplateView):
     pass
 
 
-class BaseServiceView(PermissionContextMixin, PermissionRequiredServiceMixin,
+class ServiceView(PermissionContextMixin, PermissionRequiredServiceMixin,
         PageView):
     """
     기본 서비스 view.

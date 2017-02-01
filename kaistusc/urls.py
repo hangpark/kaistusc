@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from apps.board.views import BoardView
-from apps.manager.views import BaseServiceView, MainPageView, ErrorView
+from apps.manager.views import ServiceView, MainPageView, ErrorView
 
 handler400 = ErrorView.as_view(template_name='error/400.jinja', status_code=400)
 handler403 = ErrorView.as_view(template_name='error/403.jinja', status_code=403)

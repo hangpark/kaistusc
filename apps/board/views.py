@@ -3,13 +3,13 @@ from django.db.models import Q
 from django.shortcuts import render
 from apps.manager.models import Service
 from apps.manager.constants import *
-from apps.manager.views import BaseServiceView
+from apps.manager.views import ServiceView
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from .forms import PostForm
 from .models import Board, Post, Tag, Comment, PostActivity, ACTIVITY_VOTE
 
 
-class BoardView(BaseServiceView):
+class BoardView(ServiceView):
     """
     특정 게시판의 게시글 목록을 보여주는 view.
 
