@@ -3,7 +3,7 @@ from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, View
 
-from apps.manager.views import NavigatorMixin
+from apps.manager.views import PageView
 
 from . import settings
 
@@ -48,7 +48,7 @@ class LogoutView(View):
         return redirect(self.next)
 
 
-class SignUpView(NavigatorMixin, TemplateView):
+class SignUpView(PageView):
 
     template_name = 'ksso/signup.jinja'
 
