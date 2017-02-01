@@ -10,6 +10,10 @@ from apps.manager.permissions import *
 from kaistusc.settings import MEDIA_URL
 
 
+# Post Activities
+ACTIVITY_VIEW = 'VIEW'
+
+
 class Board(Service):
     """
     서비스를 확장하여 게시판을 정의하는 모델.
@@ -27,6 +31,39 @@ class Board(Service):
 
     def __str__(self):
         return self.name
+
+
+class PostActivity(models.Model):
+
+    user = models.ForeignKey(
+        'auth.User',
+        verbose_name=_("유저"),
+        null=True)
+
+    ip = models.CharField(
+        _("IP 주소"),
+        max_length=40)
+
+    post = models.ForeignKey(
+        'PostBase',
+        verbose_name=_("포스트"))
+
+    ACTIVITY_CHOICES = (
+        (ACTIVITY_VIEW, _("조회")),
+    )
+    activity = models.CharField(
+        _("활동구분"),
+        max_length=4, choices=ACTIVITY_CHOICES)
+
+    def save(self, *args, **kwargs):
+        if self.user:
+            is_new = not PostActivity.objects.filter(
+                user=self.user, post=self.post, activity=self.activity).exists()
+        else:
+            is_new = not PostActivity.objects.filter(
+                ip=self.ip, post=self.post, activity=self.activity).exists()
+        if is_new:
+            super(PostActivity, self).save(*args, **kwargs)
 
 
 class Tag(models.Model):
@@ -83,6 +120,11 @@ class PostBase(models.Model):
         _("비밀글"),
         default=False)
 
+    involved_users = models.ManyToManyField(
+        'auth.User',
+        through=PostActivity, related_name='involved_posts',
+        verbose_name=_("참여자"))
+
     class Meta:
         ordering = ['-date']
 
@@ -126,6 +168,23 @@ class PostBase(models.Model):
         """
 
         return True
+
+    def get_activity_count(self, activity):
+        return PostActivity.objects.filter(post=self, activity=activity).count()
+
+    def get_hits(self):
+        return self.get_activity_count(ACTIVITY_VIEW)
+
+    def assign_activity(self, request, activity):
+        PostActivity(
+            user=request.user if request.user.is_authenticated else None,
+            ip=request.META['REMOTE_ADDR'],
+            post=self,
+            activity=activity
+        ).save()
+
+    def assign_hits(self, request):
+        self.assign_activity(request, ACTIVITY_VIEW)
 
 
 class Post(PostBase):

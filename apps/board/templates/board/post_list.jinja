@@ -27,12 +27,12 @@
       </span>
       <div class="post-list-mobile visible-xs-block">
         {{ name(post.author) }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d') }}
-        <span class="pull-right">0</span>
+        <span class="pull-right">{{ post.get_hits() }}</span>
       </div>
     </td>
     <td class="hidden-xs text-center">{{ name(post.author) }}</td>
     <td class="hidden-xs text-center">{{ post.date.strftime('%Y-%m-%d') }}</td>
-    <td class="hidden-xs text-center">0</td>
+    <td class="hidden-xs text-center">{{ post.get_hits() }}</td>
   </tr>
 {%- endmacro -%}
 

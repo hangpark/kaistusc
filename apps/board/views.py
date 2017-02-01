@@ -6,7 +6,7 @@ from apps.manager.permissions import *
 from apps.manager.views import BaseServiceView
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from .forms import PostForm
-from .models import Board, Post, Tag, Comment
+from .models import Board, Post, Tag, Comment, PostActivity, ACTIVITY_VIEW
 
 
 class BoardView(BaseServiceView):
@@ -74,6 +74,11 @@ class PostView(BoardView):
 
     template_name = 'board/post.jinja'
     required_permission = PERMISSION_READABLE
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super(PostView, self).dispatch(request, *args, **kwargs)
+        self.post_.assign_hits(request)
+        return response
 
     def has_permission(self, request, *args, **kwargs):
         required_permission = self.required_permission
