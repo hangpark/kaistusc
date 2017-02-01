@@ -10,7 +10,7 @@ from . import settings
 
 class LoginView(TemplateView):
 
-    template_name = 'ksso/login.html'
+    template_name = 'ksso/login.jinja'
 
     def dispatch(self, request, *args, **kwargs):
         from .classes import PortalController
