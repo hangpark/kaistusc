@@ -126,8 +126,20 @@
 }
 
 #post-content {
-  padding: 0 10px 50px;
+  padding: 0 10px;
+}
+
+#post-vote {
+  padding: 50px 0;
   border-bottom: 1px solid #dcdcdd;
+}
+
+#post-up {
+  color: #cc5f5f;
+}
+
+#post-down {
+  color: #337ab7;
 }
 
 #attached-file {

@@ -23,6 +23,11 @@
 
   <div id="post-content">{{ post.content }}</div>
 
+  <div id="post-vote" class="text-center">
+    <button type="button" id="post-up" class="btn btn-default"><span class="glyphicon glyphicon-thumbs-up margin-right"></span><b>0명</b></button>
+    <button type="button" id="post-down" class="btn btn-default"><span class="glyphicon glyphicon-thumbs-down margin-right"></span><b>0명</b></button>
+  </div>
+
   <div id="comment-list">
   {% for comment in comments %}
     {% include 'board/comment.jinja' %}
