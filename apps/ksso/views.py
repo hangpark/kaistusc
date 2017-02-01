@@ -32,11 +32,10 @@ class LoginView(TemplateView):
             response.delete_cookie('SATHTOKEN', '/', '.kaist.ac.kr')
             return response
         self.next = self.request.GET.get('next', settings.AUTH_REDIRECT_URL)
-        return super(LoginView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def render_to_response(self, context, **response_kwargs):
-        response = super(LoginView, self).render_to_response(
-                context, **response_kwargs)
+        response = super().render_to_response(context, **response_kwargs)
         response.set_cookie('REDIRECT_URL_TOKEN', self.next)
         return response
 
@@ -55,7 +54,7 @@ class SignUpView(PageView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return redirect_to_login(request.path)
-        return super(SignUpView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def is_signed_up(self, request):
         return not (request.user.is_authenticated()
@@ -63,7 +62,7 @@ class SignUpView(PageView):
                 and not request.user.portal_info.is_signed_up)
 
     def get_context_data(self, **kwargs):
-        context = super(SignUpView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['is_signed_up'] = self.is_signed_up(self.request)
         return context
 

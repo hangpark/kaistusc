@@ -26,7 +26,7 @@ class PermissionContextMixin(object):
         return context
 
     def get_context_data(self, **kwargs):
-        context = super(PermissionContextMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         return self.get_permission_context(context)
 
 
@@ -69,8 +69,7 @@ class PermissionRequiredServiceMixin(AccessMixin):
     def dispatch(self, request, *args, **kwargs):
         if not self.has_permission(request, *args, **kwargs):
             return self.handle_no_permission()
-        return super(PermissionRequiredServiceMixin, self).dispatch(
-            request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class NavigatorMixin(object):
@@ -79,7 +78,7 @@ class NavigatorMixin(object):
     """
 
     def get_context_data(self, **kwargs):
-        context = super(NavigatorMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['navigator'] = []
         categories = Category.objects.all()
         for category in categories:
@@ -109,6 +108,6 @@ class BaseServiceView(PermissionContextMixin, PermissionRequiredServiceMixin,
     """
 
     def get_context_data(self, **kwargs):
-        context = super(BaseServiceView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['service'] = self.service
         return context

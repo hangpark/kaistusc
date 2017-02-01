@@ -14,4 +14,4 @@ class SignUpRequiredMixin(object):
             response = redirect('ksso:signup')
             response['Location'] += '?next=%s' % (request.path,)
             return response
-        return super(SignUpRequiredMixin, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)

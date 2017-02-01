@@ -19,7 +19,7 @@ class BoardView(BaseServiceView):
     template_name = 'board/board.jinja'
 
     def get_context_data(self, **kwargs):
-        context = super(BoardView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         # Store current board
         board = self.service.board
@@ -76,14 +76,14 @@ class PostView(BoardView):
     required_permission = PERM_READ
 
     def dispatch(self, request, *args, **kwargs):
-        response = super(PostView, self).dispatch(request, *args, **kwargs)
+        response = super().dispatch(request, *args, **kwargs)
         self.post_.assign_hits(request)
         return response
 
     def has_permission(self, request, *args, **kwargs):
         required_permission = self.required_permission
         self.required_permission = PERM_ACCESS
-        if not super(PostView, self).has_permission(request, *args, **kwargs):
+        if not super().has_permission(request, *args, **kwargs):
             return False
         self.required_permission = required_permission
         post = Post.objects.filter(board=self.service.board, id=kwargs['post']).first()
@@ -94,7 +94,7 @@ class PostView(BoardView):
         return post.is_permitted(request.user, self.required_permission)
 
     def get_context_data(self, **kwargs):
-        context = super(PostView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         # Store current post
         context['post'] = self.post_
@@ -117,7 +117,7 @@ class PostWriteView(BoardView):
     required_permission = PERM_WRITE
 
     def get_context_data(self, **kwargs):
-        context = super(PostWriteView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['form'] = PostForm()
         return context
 
@@ -142,7 +142,7 @@ class PostEditView(PostView):
     required_permission = PERM_EDIT
 
     def get_context_data(self, **kwargs):
-        context = super(PostEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         post = self.post_
         context['form'] = PostForm(instance=post)
         return context
@@ -191,7 +191,7 @@ class CommentDeleteView(PostView):
     required_permission = PERM_DELETE
 
     def has_permission(self, request, *args, **kwargs):
-        if not super(CommentDeleteView, self).has_permission(request, *args, **kwargs):
+        if not super().has_permission(request, *args, **kwargs):
             return False
         comment = Comment.objects.filter(
             parent_post__board=self.service.board,
@@ -214,7 +214,7 @@ class PostVoteView(PostView):
     required_permission = PERM_READ
 
     def has_permission(self, request, *args, **kwargs):
-        if not super(PostVoteView, self).has_permission(request, *args, **kwargs):
+        if not super().has_permission(request, *args, **kwargs):
             return False
         return request.user.is_authenticated
 

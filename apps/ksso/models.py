@@ -14,8 +14,7 @@ class PortalInfoManager(models.Manager):
     """
 
     def get_queryset(self):
-        return super(PortalInfoManager, self).get_queryset().filter(
-            is_signed_up=True)
+        return super().get_queryset().filter(is_signed_up=True)
 
 
 class PortalInfo(models.Model):

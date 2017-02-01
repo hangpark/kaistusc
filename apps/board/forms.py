@@ -17,7 +17,7 @@ class PostForm(ModelForm):
         fields = ('title_ko', 'title_en', 'content_ko', 'content_en', 'is_notice', 'is_secret', 'tag')
 
     def save(self, POST, FILES):
-        post = super(PostForm, self).save()
+        post = super().save()
 
         prev_files = POST.getlist('prev_files')
         original_files = post.attachedfile_set.all()

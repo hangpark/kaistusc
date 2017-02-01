@@ -64,7 +64,7 @@ class PostActivity(models.Model):
             is_new = not PostActivity.objects.filter(
                 ip=self.ip, post=self.post, activity=self.activity).exists()
         if is_new:
-            super(PostActivity, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
         return is_new
 
 

@@ -17,7 +17,7 @@ class MainPageView(PageView):
     template_name = 'manager/main.jinja'
 
     def get_context_data(self, **kwargs):
-        context = super(MainPageView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['boards'] = Board.objects.accessible_for(
             self.request.user).filter(is_main=True)
         return context
@@ -32,4 +32,4 @@ class ErrorView(PageView):
 
     def render_to_response(self, context, **response_kwargs):
         response_kwargs['status'] = self.status_code
-        return super(ErrorView, self).render_to_response(context, **response_kwargs)
+        return super().render_to_response(context, **response_kwargs)

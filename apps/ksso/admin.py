@@ -182,7 +182,7 @@ class GroupAdminForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(GroupAdminForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             self.fields['users'].initial = self.instance.user_set.all()
 
@@ -191,7 +191,7 @@ class GroupAdminForm(forms.ModelForm):
         fields = '__all__'
 
     def save(self, commit=True):
-        group = super(GroupAdminForm, self).save(commit=False)
+        group = super().save(commit=False)
         if commit:
             group.save()
         if group.pk:
