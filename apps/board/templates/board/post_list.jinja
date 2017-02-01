@@ -27,12 +27,13 @@
       </span>
       <div class="post-list-mobile visible-xs-block">
         {{ name(post.author) }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d') }}
-        <span class="pull-right">{{ post.get_hits() }}</span>
+        <span class="pull-right">+{{ post.vote_up }} / -{{ post.vote_down }}<span class="margin-both">|</span>{{ _('조회') }} {{ post.get_hits() }}</span>
       </div>
     </td>
     <td class="hidden-xs text-center">{{ name(post.author) }}</td>
     <td class="hidden-xs text-center">{{ post.date.strftime('%Y-%m-%d') }}</td>
     <td class="hidden-xs text-center">{{ post.get_hits() }}</td>
+    <td class="hidden-xs text-center">+{{ post.vote_up }}/-{{ post.vote_down }}</td>
   </tr>
 {%- endmacro -%}
 
@@ -44,6 +45,7 @@
       <th class="text-center">{{ _('작성자') }}</th>
       <th class="text-center">{{ _('작성일') }}</th>
       <th class="text-center">{{ _('조회') }}</th>
+      <th class="text-center">{{ _('추천') }}</th>
     </tr>
   </thead>
   <tbody>

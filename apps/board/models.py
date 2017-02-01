@@ -12,7 +12,7 @@ from kaistusc.settings import MEDIA_URL
 
 # Post Activities
 ACTIVITY_VIEW = 'VIEW'
-
+ACTIVITY_VOTE = 'VOTE'
 
 class Board(Service):
     """
@@ -50,6 +50,7 @@ class PostActivity(models.Model):
 
     ACTIVITY_CHOICES = (
         (ACTIVITY_VIEW, _("조회")),
+        (ACTIVITY_VOTE, _("추천/비추천")),
     )
     activity = models.CharField(
         _("활동구분"),
@@ -64,6 +65,7 @@ class PostActivity(models.Model):
                 ip=self.ip, post=self.post, activity=self.activity).exists()
         if is_new:
             super(PostActivity, self).save(*args, **kwargs)
+        return is_new
 
 
 class Tag(models.Model):
@@ -125,6 +127,14 @@ class PostBase(models.Model):
         through=PostActivity, related_name='involved_posts',
         verbose_name=_("참여자"))
 
+    vote_up = models.IntegerField(
+        _("추천수"),
+        default=0)
+
+    vote_down = models.IntegerField(
+        _("비추천수"),
+        default=0)
+
     class Meta:
         ordering = ['-date']
 
@@ -176,7 +186,7 @@ class PostBase(models.Model):
         return self.get_activity_count(ACTIVITY_VIEW)
 
     def assign_activity(self, request, activity):
-        PostActivity(
+        return PostActivity(
             user=request.user if request.user.is_authenticated else None,
             ip=request.META['REMOTE_ADDR'],
             post=self,

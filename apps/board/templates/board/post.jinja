@@ -24,8 +24,12 @@
   <div id="post-content">{{ post.content }}</div>
 
   <div id="post-vote" class="text-center">
-    <button type="button" id="post-up" class="btn btn-default"><span class="glyphicon glyphicon-thumbs-up margin-right"></span><b>0명</b></button>
-    <button type="button" id="post-down" class="btn btn-default"><span class="glyphicon glyphicon-thumbs-down margin-right"></span><b>0명</b></button>
+    <form action="{{ post.get_absolute_url() }}/vote/up/" id="post-up">{% csrf_token %}
+      <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-thumbs-up margin-right"></span><b><span class="vote-status">{{ post.vote_up }}</span>명</b></button>
+    </form>
+    <form action="{{ post.get_absolute_url() }}/vote/down/" id="post-down">{% csrf_token %}
+      <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-thumbs-down margin-right"></span><b><span class="vote-status">{{ post.vote_down }}</span>명</b></button>
+    </form>
   </div>
 
   <div id="comment-list">

@@ -6,7 +6,7 @@ from apps.manager.permissions import *
 from apps.manager.views import BaseServiceView
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from .forms import PostForm
-from .models import Board, Post, Tag, Comment, PostActivity, ACTIVITY_VIEW
+from .models import Board, Post, Tag, Comment, PostActivity, ACTIVITY_VOTE
 
 
 class BoardView(BaseServiceView):
@@ -207,3 +207,26 @@ class CommentDeleteView(PostView):
         self.comment.is_deleted = True
         self.comment.save()
         return HttpResponse()
+
+
+class PostVoteView(PostView):
+
+    required_permission = PERMISSION_READABLE
+
+    def has_permission(self, request, *args, **kwargs):
+        if not super(PostVoteView, self).has_permission(request, *args, **kwargs):
+            return False
+        return request.user.is_authenticated
+
+    def post(self, request, *args, **kwargs):
+        post = self.post_
+        if not ('mode' in kwargs and kwargs['mode'] in ['up', 'down']):
+            raise Http404
+        is_new = post.assign_activity(request, ACTIVITY_VOTE)
+        if is_new:
+            if kwargs['mode'] == 'up':
+                post.vote_up += 1
+            if kwargs['mode'] == 'down':
+                post.vote_down += 1
+            post.save()
+        return HttpResponse(is_new)

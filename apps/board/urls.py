@@ -23,4 +23,10 @@ urlpatterns = [
 
     url(r'^(?:(?P<tag>[a-z0-9]*[a-z]+[a-z0-9]*)/)?(?P<post>[0-9]+)/comment/(?P<comment>[0-9]+)/delete/$',
         CommentDeleteView.as_view()),
+
+    url(r'^(?:(?P<tag>[a-z0-9]*[a-z]+[a-z0-9]*)/)?(?P<post>[0-9]+)/vote/(?P<mode>up)/$',
+        PostVoteView.as_view()),
+
+    url(r'^(?:(?P<tag>[a-z0-9]*[a-z]+[a-z0-9]*)/)?(?P<post>[0-9]+)/vote/(?P<mode>down)/$',
+        PostVoteView.as_view()),
 ]

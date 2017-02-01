@@ -61,4 +61,17 @@ $().ready(function() {
                 });
         }
     });
+
+    $("#post-vote form").click(function() {
+        $vote = $(this).find(".vote-status");
+        $.post($(this).attr('action'), $(this).serialize())
+            .done(function(data) {
+                if (data == "True")
+                    $vote.html(parseInt($vote.html())+ 1)
+                else if (data == "False")
+                    alert("이미 평가하셨습니다.");
+            }).fail(function(data) {
+                alert("권한이 없습니다.");
+            });
+    });
 });

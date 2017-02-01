@@ -132,13 +132,16 @@
 #post-vote {
   padding: 50px 0;
   border-bottom: 1px solid #dcdcdd;
+  form {
+    display: inline-block;
+  }
 }
 
-#post-up {
+#post-up button {
   color: #cc5f5f;
 }
 
-#post-down {
+#post-down button {
   color: #337ab7;
 }
 
