@@ -5,6 +5,7 @@ var sass = require('gulp-sass');
 var minifycss = require('gulp-minify-css');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
+var merge = require('merge-stream');
 
 var src = './static/src';
 var dist = './static/dist';
@@ -12,6 +13,7 @@ var bower = './bower_components';
 
 var jquery = bower + '/jquery/dist';
 var bootstrap = bower + '/bootstrap-sass/assets';
+var fontawesome = bower + '/font-awesome';
 
 var js = {
 	'in': [
@@ -23,12 +25,18 @@ var js = {
 };
 
 var fonts = {
-	'in': bootstrap + '/fonts/**/*',
+	'in': [
+        bootstrap + '/fonts/**/*',
+        fontawesome + '/fonts/**/*',
+    ],
 	'out': dist + '/fonts'
 };
 
-var scss = {
-	'in': src + '/stylesheets/main.scss',
+var css = {
+	'in': {
+        'scss': src + '/stylesheets/main.scss',
+        'css': fontawesome + '/css/font-awesome.css',
+    },
 	'out': dist + '/css',
 	'opts': {
 		errLogToConsole: true,
@@ -48,12 +56,17 @@ gulp.task('fonts', function() {
 		.pipe(gulp.dest(fonts.out));
 });
 
-gulp.task('scss', ['fonts'], function() {
-	return gulp.src(scss.in)
-		.pipe(sass(scss.opts))
+gulp.task('css', ['fonts'], function() {
+    var scss_stream = gulp.src(css.in.scss)
+        .pipe(sass(css.opts));
+
+    var css_stream = gulp.src(css.in.css);
+    
+	return merge(scss_stream, css_stream)
+        .pipe(concat('main.css'))
 		.pipe(postcss([ autoprefixer() ]))
 		.pipe(minifycss())
-		.pipe(gulp.dest(scss.out));
+		.pipe(gulp.dest(css.out));
 });
 
-gulp.task('default', ['js', 'fonts', 'scss']);
+gulp.task('default', ['js', 'fonts', 'css']);
