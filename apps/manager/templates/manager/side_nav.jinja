@@ -2,7 +2,7 @@
 
 <div id="side-user-info" class="container-fluid">
 {% if request.user.is_authenticated() %}
-  <p><span class="glyphicon glyphicon-user"></span> {{ name(request.user) }}</p>
+  <p><i class="fa fa-user-circle"></i> {{ name(request.user) }}</p>
   <a class="btn btn-primary btn-block" href="/user/logout/?next={{ request.path }}">Logout</a>
 {% else %}
   <a class="btn btn-primary btn-block" href="/user/login/?next={{ request.path }}">Login</a>

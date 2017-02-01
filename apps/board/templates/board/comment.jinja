@@ -7,7 +7,7 @@
     </div>
     {% if comment.is_permitted(request.user, PERMISSION_DELETABLE) %}
     <form action="{{ comment.get_absolute_url() }}/delete/" class="pull-right">{% csrf_token %}
-      <span class="comment-remove glyphicon glyphicon-remove"></span>
+      <i class="fa fa-times"></i>
     </form>
     {% endif %}
   </div>

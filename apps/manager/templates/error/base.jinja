@@ -4,7 +4,7 @@
 <div id="container" class="spot">
   <div id="main" class="page-item container-fluid">
     <div id="err" class="text-center">
-      <p class="err-title"><span class="glyphicon glyphicon-alert margin-right"></span>{% block error_title %}{% endblock %}</p>
+      <p class="err-title"><i class="fa fa-exclamation-triangle"></i> {% block error_title %}{% endblock %}</p>
       <p class="err-msg">
       {%- if exception -%}
         {{ exception }}
