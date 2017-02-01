@@ -1,0 +1,20 @@
+#err {
+  margin: 50px auto;
+  @media (min-width: $screen-sm-min) {
+    padding: 0 40px;
+  }
+  .err-title {
+    font-size: 24pt;
+    font-weight: bold;
+    span.glyphicon {
+      color: #ff5555;
+    }
+  }
+  .err-msg {
+    margin-top: 32px;
+    font-size: 14pt;
+  }
+  .err-btn {
+    margin-top: 50px;
+  }
+}

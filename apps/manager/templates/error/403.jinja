@@ -1,0 +1,14 @@
+{% extends 'error/base.jinja' %}
+
+{% block error_title %}
+{{ _("권한이 없습니다.") }}
+{% endblock %}
+
+{% block error_message %}
+{{ _("요청하신 페이지에 접근할 수 있는 권한이 없습니다. 권한이 있는 계정으로 로그인하시거나 사이트 관리자에게 문의해주세요.") }}
+{% endblock %}
+
+{% block error_button %}
+<a class="btn btn-default btn-lg" href="/">{{ _("메인 페이지로") }}</a>
+<a class="btn btn-default btn-lg" href="/user/login/">{{ _("로그인") }}</a>
+{% endblock %}

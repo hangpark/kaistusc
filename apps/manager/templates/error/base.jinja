@@ -1,0 +1,13 @@
+{% extends 'manager/base.jinja' %}
+
+{% block main_area %}
+<div id="container" class="spot">
+  <div id="main" class="page-item container-fluid">
+    <div id="err" class="text-center">
+      <p class="err-title"><span class="glyphicon glyphicon-alert margin-right"></span>{% block error_title %}{% endblock %}</p>
+      <p class="err-msg">{{ exception }} asdf{% block error_message %}{% endblock %}</p>
+      <div class="err-btn">{% block error_button %}{% endblock %}</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

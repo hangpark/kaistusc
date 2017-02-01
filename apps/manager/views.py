@@ -120,3 +120,15 @@ class MainPageView(NavigatorMixin, TemplateView):
         context['boards'] = Board.objects.accessible_for(
             self.request.user).filter(is_main=True)
         return context
+
+
+class ErrorView(NavigatorMixin, TemplateView):
+    """
+    에러 뷰
+    """
+
+    status_code = 200
+
+    def render_to_response(self, context, **response_kwargs):
+        response_kwargs['status'] = self.status_code
+        return super(ErrorView, self).render_to_response(context, **response_kwargs)
