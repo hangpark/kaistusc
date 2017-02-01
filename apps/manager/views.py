@@ -91,8 +91,16 @@ class NavigatorMixin(object):
         return context
 
 
+class PageView(NavigatorMixin, TemplateView):
+    """
+    페이지 view.
+    """
+
+    pass
+
+
 class BaseServiceView(PermissionContextMixin, PermissionRequiredServiceMixin,
-        NavigatorMixin, TemplateView):
+        PageView):
     """
     기본 서비스 view.
 
@@ -106,7 +114,7 @@ class BaseServiceView(PermissionContextMixin, PermissionRequiredServiceMixin,
         return context
 
 
-class MainPageView(NavigatorMixin, TemplateView):
+class MainPageView(PageView):
     """
     메인 페이지 view.
 
@@ -122,7 +130,7 @@ class MainPageView(NavigatorMixin, TemplateView):
         return context
 
 
-class ErrorView(NavigatorMixin, TemplateView):
+class ErrorView(PageView):
     """
     에러 뷰
     """
