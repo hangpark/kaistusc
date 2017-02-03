@@ -75,7 +75,7 @@
       <div class="input-group">
         <input type="text" class="form-control" name="s">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button">{{ _('검색') }}</button>
+          <button class="btn btn-default" type="submit">{{ _('검색') }}</button>
         {% if board.is_permitted(request.user, PERM_WRITE) %}
           <a href="{{ board.get_absolute_url() }}/new/" class="btn btn-primary">{{ _('글쓰기') }}</a>
         {% endif %}
