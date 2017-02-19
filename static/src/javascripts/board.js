@@ -42,6 +42,7 @@ $().ready(function() {
         $.post("./comment/", $("#comment-form").serialize())
             .done(function(data) {
                 $("#comment-list").append(data);
+                $("#comment-form textarea").val("");
             }).fail(function() {
                 alert("Error");
             }).always(function() {
