@@ -6,7 +6,7 @@
     <div id="err" class="text-center">
       <p class="err-title"><i class="fa fa-exclamation-triangle"></i> {% block error_title %}{% endblock %}</p>
       <p class="err-msg">
-      {%- if exception -%}
+      {%- if exception.__class__.__name__ in ['Custom404', 'Custom403', 'Custom400'] and exception.__str__() -%}
         {{ exception }}
       {%- else -%}
         {% block error_message %}{% endblock %}
