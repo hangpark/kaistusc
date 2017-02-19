@@ -32,14 +32,6 @@
     </form>
   </div>
 
-  <div id="comment-list">
-  {% for comment in comments %}
-    {% include 'board/comment.jinja' %}
-  {% endfor %}
-  </div>
-  <div id="deleted-comment-content" style="display: none;">{{ _('삭제되었습니다.') }}</div>
-  <div id="delete-comment-warning" style="display: none;">{{ _('댓글을 정말 삭제할까요?') }}</div>
-
   {% if files %}
   <div id="attached-file">
     <p><b>{{ _('첨부파일') }}</b></p>
@@ -48,6 +40,14 @@
   {% endfor %}
   </div>
   {% endif %}
+
+  <div id="comment-list">
+  {% for comment in comments %}
+    {% include 'board/comment.jinja' %}
+  {% endfor %}
+  </div>
+  <div id="deleted-comment-content" style="display: none;">{{ _('삭제되었습니다.') }}</div>
+  <div id="delete-comment-warning" style="display: none;">{{ _('댓글을 정말 삭제할까요?') }}</div>
 
   {% if post.is_permitted(request.user, PERM_COMMENT) %}
   <form id="comment-form" class="input-group">{% csrf_token %}
