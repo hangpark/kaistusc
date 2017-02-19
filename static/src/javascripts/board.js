@@ -49,7 +49,7 @@ $().ready(function() {
             });
     });
 
-    $(".comment").on('click', ".comment-remove", function() {
+    $("#comment-list").on('click', ".comment-remove", function() {
         var $comment = $(this).parents(".comment");
         var $form = $(this).parent();
         if (confirm($("#delete-comment-warning").text())) {
