@@ -2,6 +2,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 
+from apps.manager import Custom404
 from apps.manager.constants import *
 from apps.manager.views import ServiceView
 
@@ -35,6 +36,8 @@ class BoardView(ServiceView):
         # Fetch post list
         post_list = Post.objects.filter(board=board)
         if kwargs.get('tag', None):
+            if kwargs['tag'] not in context['tags']:
+                raise Custom404
             post_list = post_list.filter(tag__slug=kwargs['tag'])
         if search:
             post_list = post_list.filter(is_deleted=False).filter(
