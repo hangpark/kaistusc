@@ -89,7 +89,7 @@ class NavigatorMixin(object):
         return context
 
 
-class PageView(SignUpRequiredMixin, NavigatorMixin, TemplateView):
+class PageView(NavigatorMixin, TemplateView):
     """
     페이지 view.
     """
@@ -98,7 +98,8 @@ class PageView(SignUpRequiredMixin, NavigatorMixin, TemplateView):
 
 
 class ServiceView(
-        PermissionContextMixin, PermissionRequiredServiceMixin, PageView):
+        SignUpRequiredMixin, PermissionContextMixin,
+        PermissionRequiredServiceMixin, PageView):
     """
     기본 서비스 view.
 
