@@ -9,7 +9,7 @@ KAIST 학부 총학생회 사이트 개발문서
 KAIST 학부 총학생회 사이트를 방문해주셔서 감사합니다. 본 사이트는 오픈소스이며, Django_ 를 통해 개발되었습니다. 소스코드는 GitHub_ 에 올려져 있습니다.
 
 .. _Django: https://djangoproject.com/
-.. _GitHub: https://github.com/HangPark/KAIST-USC
+.. _GitHub: https://github.com/hangpark/kaistusc/
 
 관리자를 위한 문서
 ==================
