@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import AccessMixin
 from django.http import Http404
 from django.views.generic import TemplateView
 
+from apps.ksso.mixins import SignUpRequiredMixin
 from apps.manager.constants import *
 from apps.manager.models import Category, Service
 
@@ -88,7 +89,7 @@ class NavigatorMixin(object):
         return context
 
 
-class PageView(NavigatorMixin, TemplateView):
+class PageView(SignUpRequiredMixin, NavigatorMixin, TemplateView):
     """
     페이지 view.
     """
