@@ -54,11 +54,10 @@ class PortalController():
             self.portal_info.kaist_uid = self.parser.attr('kaist_uid')
 
             fields = [
-                'ku_kname', 'ku_acad_prog', 'ku_std_no', 'ku_born_date'
+                'ku_kname', 'ku_acad_prog', 'ku_std_no', 'ku_born_date',
                 'ku_psft_user_status_kor', 'ku_sex', 'ou', 'mail', 'mobile']
             for field in fields:
                 setattr(self.portal_info, field, self.parser.attr(field))
-
             self.portal_info.save()
 
         def session(self):
