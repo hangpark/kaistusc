@@ -78,11 +78,6 @@ class PostView(BoardView):
     template_name = 'board/post.jinja'
     required_permission = PERM_READ
 
-    def dispatch(self, request, *args, **kwargs):
-        response = super().dispatch(request, *args, **kwargs)
-        self.post_.assign_hits(request)
-        return response
-
     def has_permission(self, request, *args, **kwargs):
         required_permission = self.required_permission
         self.required_permission = PERM_ACCESS
@@ -96,6 +91,10 @@ class PostView(BoardView):
             raise Http404
         self.post_ = post
         return post.is_permitted(request.user, self.required_permission)
+
+    def get(self, request, *args, **kwargs):
+        self.post_.assign_hits(request)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
