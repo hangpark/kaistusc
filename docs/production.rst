@@ -18,7 +18,7 @@ Linux 기준 위 명령어를 통해 docker를 설치합니다. 다른 OS의 경
 
 .. code-block:: bash
 
-    $ git clone https://github.com/HangPark/kaistusc.git
+    $ git clone https://github.com/hangpark/kaistusc.git
 
 Docker로 DB 서버 구축
 ---------------------
