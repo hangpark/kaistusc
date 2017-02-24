@@ -46,7 +46,7 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         """
-        카테고리 내 첫 번째 서비스의 URL을 반환하는 함수.
+        카테고리 내 첫 번째 서비스의 URL을 반환하는 메서드.
 
         카테고리는 특정 뷰와 연결되어 있지 않습니다. 따라서 카테고리에 대한
         URL을 카테고리 내 첫 번째 서비스의 URL로 설정하였습니다.
@@ -69,7 +69,7 @@ class ServiceQuerySet(models.QuerySet):
 
     def accessible_for(self, user):
         """
-        특정 사용자가 접근가능한 서비스를 필터링한 쿼리셋을 리턴하는 함수.
+        특정 사용자가 접근가능한 서비스를 필터링한 쿼리셋을 반환하는 메서드.
         """
         # 관리자 계정인 경우 모든 서비스 접근 가능
         if user.is_superuser:
@@ -98,7 +98,7 @@ class ServiceManager(models.Manager):
 
     def accessible_for(self, user):
         """
-        특정 사용자가 접근가능한 서비스를 필터링한 쿼리셋을 리턴하는 함수.
+        특정 사용자가 접근가능한 서비스를 필터링한 쿼리셋을 반환하는 메서드.
         """
         return self.get_queryset().accessible_for(user)
 
@@ -174,7 +174,7 @@ class Service(models.Model):
 
     def is_permitted(self, user, permission=PERM_ACCESS):
         """
-        특정 사용자에게 주어진 이용권한이 있는지 확인하는 함수.
+        특정 사용자에게 주어진 이용권한이 있는지 확인하는 메서드.
         """
         if user.is_superuser:
             return True

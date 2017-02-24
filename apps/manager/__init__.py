@@ -1,7 +1,7 @@
 """
 사이트 관리 도구.
 
-사이트 내 서비스를 정의하고 관리하기 위한 프로젝트 기본 제공 app 입니다.
+사이트 내 서비스를 정의하고 관리하기 위한 프로젝트 기본 제공 앱입니다.
 """
 
 from django.core.exceptions import SuspiciousOperation, PermissionDenied
