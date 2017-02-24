@@ -267,7 +267,143 @@ DJANGO4KAIST_ 는 **KAIST 단일인증서비스 v3.0** 을 django로 구현하�
 ``ServiceView`` 를 상속받아 구현된 모든 서비스들은 ``SignUpRequiredMixin`` 이 최우선적으로 발동하여 ``is_signed_up`` 이 ``False`` 일 경우에 자동적으로 정보제공 동의페이지로 이동하게 됩니다.
 
 
+apps.board (게시판)
+-------------------
+
+- :file:`apps/board/`
+
+**Board** 앱은 사이트의 기본 게시판 기능을 구현합니다.
+게시판, 게시글, 댓글, 첨부파일, 태그 등 다양한 기능을 제공합니다.
+``apps.board.models`` 모듈 내에 위치한 ``Board`` 모델은 ``Service`` 모델을 상속받습니다.
+따라서 여타 서비스와 같이 일괄적인 관리가 가능합니다.
+기본적으로 게시판은 게시글의 집합으로, 게시글 기능 어떻게 구현하느냐가 더 중요하다고 말할 수 있습니다.
+
+
+포스트 권한
+~~~~~~~~~~~
+
+게시글과 댓글은 모두 ``BasePost`` 를 상속받습니다.
+이 ``BasePost`` 모델에는 권한 관리를 위하여 ``is_permitted`` 메서드가 정의되어 있습니다.
+``is_permitted`` 는 게시글, 댓글 등 여러 포스트 상속 모델들의 권한 설정을 커스터마이징 할 수 있도록 ``pre_permitted`` 와 ``post_permitted`` 메서드를 호출합니다.
+이들은 기본적으로 ``True`` 를 리턴하고 있으며, 게시글 댓글 등 포스트 상속 모델에서 두 메서드를 필요 시 오버라이드 하는 방식으로 활용할 수 있습니다.
+
+예를 들어, 댓글을 구현한 ``Comment`` 모델의 경우 ``pre_permitted`` 에서 댓글이 달린 포스트의 *읽기권한* 을 요구합니다.
+그리고 ``post_permitted`` 에서는 댓글이 달린 포스트가 속한 게시판에서 사용자가 요청한 권한을 갖고있는지 여부를 판단합니다.
+
+.. code-block:: python3
+
+    # apps/board/models.py
+
+    class Comment(BasePost):
+
+        ...
+
+        def pre_permitted(self, user, permission):
+            return self.parent_post.is_permitted(user, PERM_READ)
+
+        def post_permitted(self, user, permission):
+            return self.parent_post.board.is_permitted(user, permission)
+
+이런 식으로 기본적인 포스트 권한 체크 전후로 해당 포스트(위의 예제에서는 댓글)와 연결된 상위 모델들의 권한을 체크하여 연동하는 등 추가적인 로직을 손쉽게 구현할 수 있습니다.
+
+
+사용자 활동 기록
+~~~~~~~~~~~~~~~~
+
+각 포스트에 조회, 추천, 비추천과 같은 사용자 반응이나 특정 활동을 기록할 수 있는 기능을 제공합니다.
+기본 사용자 활동으로 조회, 추천/비추천 두 가지가 구현되어 있습니다.
+이 외의 활동 역시 손쉽게 추가하여 제공하는 기능을 확장하실 수 있습니다.
+
+.. code-block:: python3
+
+    # apps/board/models.py
+
+    # Post Activities
+    ACTIVITY_VIEW = 'VIEW'
+    ACTIVITY_VOTE = 'VOTE'
+
+``PostActivity`` 모델은 사용자, IP 주소, 포스트, 활동구분 4가지 정보를 저장합니다.
+기본적으로 동일 포스트에는 특정 활동을 사용자 당 한 번만 하도록 허용하고 있습니다.
+사용자가 로그인을 하지 않았을 경우 IP 주소로 이를 갈음합니다.
+이 ``PostActivity`` 모델은 ``BasePost`` 모델과 ``User`` 모델 사이의 다대다 관계에서 중간모델_ 역할을 합니다.
+
+``BasePost`` 모델의 ``get_acitivity_count`` 메서드를 통해 특정 활동이 몇 번 이루어졌는지 집계할 수 있습니다.
+또한, ``assign_activity`` 는 특정 유저의 활동을 추가합니다.
+이 두 메서드를 통해 조회와 추천/비추천 두 활동 외에도 다양한 활동을 구현할 수 있습니다.
+``assign_activity`` 매서드는 이미 활동을 한 사용자의 경우 아무런 처리를 하지 않고 ``False`` 를 리턴합니다.
+처음 활동을 하는 경우 활동을 등록하고 ``True`` 를 리턴합니다.
+이 리턴값을 가지고 활동 처리 후 추가 로직을 뷰 차원에서 구현할 수도 있을 것입니다.
+
+위 두 메서드를 조회 활동에 한정시킨 메서드 ``get_hits``, ``assign_hits`` 가 존재하며, shortcut 개념으로 이해하면 됩니다.
+
+추천/비추천의 경우 동일한 활동으로 기록되며, 이는 특정 사용자가 추천을 했는지 비추천을 했는지 파악하지 못하도록 하기 위함입니다.
+따라서 위에서 언급한 뷰 차원의 추가 로직을 통해 ``BasePost`` 모델에 마련되어 있는 ``vote_up`` 과 ``vote_down`` 필드를 단발적으로 증가시키는 형태로 추천/비추천 수를 기록합니다.
+
+.. code-block:: python3
+
+    # apps/board/views.py::PostVoteView::post
+
+    ...
+
+    is_new = post.assign_activity(request, ACTIVITY_VOTE)
+    if is_new:
+        if kwargs['mode'] == 'up':
+            post.vote_up += 1
+        if kwargs['mode'] == 'down':
+            post.vote_down += 1
+        post.save()
+    return HttpResponse(is_new)
+
+
+포스트 뷰
+~~~~~~~~~
+
+게시글을 보여주는 ``PostView`` 는 ``BoardView`` 를 상속받습니다.
+그런데 단순히 게시판 권한 체크 로직만 따라가면 개별 포스트에 대한 권한 체크가 이뤄지지 않습니다.
+이를 해결하기 위해 ``PostView`` 는 ``PermissionRequiredServiceMixin`` 의 ``has_permission`` 을 오버라이드 하여 개별 포스트 권한 체크를 시행하고 있습니다.
+``has_permission`` 에서 사용되는 ``required_permission`` 값을 기본 *읽기권한* 으로 설정하였습니다.
+그리고 우선적으로 ``super`` 메서드를 통해 게시판 *접근권한* 이 있는지 체크한 후 ``Post`` 객체를 추출하여 저장합니다.
+마지막으로 이 객체에 대한 이용권한을 테스트하고 그 여부를 리턴하고 있습니다.
+
+위 과정은 ``PermissionRequiredServiceMixin`` 을 어떻게 활용하고 확장할 것인가에 대한 좋은 예시라고 생각합니다.
+더욱 주목해야 할 점은, 이러한 ``PostView`` 를 상속하여 게시글을 수정하는 ``PostEditView``, 게시글을 삭제하는 ``PostDeleteView``, 댓글을 작성하는 ``CommentWriteView``, 댓글을 삭제하는 ``CommentDeleteView``, 게시글 추천기능을 관장하는 ``PostVoteView`` 등이 구현되었다는 점입니다.
+예를 들어, ``PostDeleteView`` 의 경우 ``required_permission`` 을 *삭제권한* 으로만 설정하고 삭제로직만 추가하면 구현이 완료되는 것입니다.
+
+.. code-block:: python3
+
+    # apps/board/views.py
+
+    class PostDeleteView(PostView):
+
+    template_name = None
+    required_permission = PERM_DELETE
+
+    def post(self, request, *args, **kwargs):
+        post = self.post_
+        post.is_deleted = True
+        post.save()
+        return HttpResponseRedirect(post.board.get_absolute_url())
+
+
+위와 같이 상속기능을 이용하여 손쉽게 많은 기능들을 구현할 수 있습니다.
+
+
+middlewares.locale (다국어 지원)
+--------------------------------
+
+- :file:`middlewares/locale.py`
+
+**Locale** 모듈은 세션을 통해 사용자가 원하는 언어로 사이트를 이용할 수 있게끔 지원하는 기능을 제공합니다.
+기본적으로 사용자 로케일이 전달되어 이를 변경하여 다른 언어로 사이트를 이용하기에는 번잡스러운 부분이 많습니다.
+그러나 본 모듈 내 있는 ``SessionBasedLocaleMiddleware`` 는 사용자가 한 번 URL 상 GET 파라미터 ``lang`` 을 통해 언어코드를 전달하면 로케일을 변경하고 이를 세션에 저장하여 지속성을 유지합니다.
+
+본 미들웨어는 schmidsi_ 님이 공유해주신 `Set language via HTTP GET Parameter`_ 코드를 django 1.10 버전에 맞게 수정한 것입니다.
+
+
 .. _django-modeltranslation: http://django-modeltranslation.readthedocs.io/en/latest/
 .. _`Jinja 2`: http://jinja.pocoo.org/docs/2.9/
 .. _django-jinja: http://niwinz.github.io/django-jinja/latest/
 .. _DJANGO4KAIST: https://github.com/talkwithraon/tree/py3/
+.. _중간모델: https://docs.djangoproject.com/en/1.10/topics/db/models/#intermediary-manytomany/
+.. _schmidsi: https://github.com/schmidsi/
+.. _`Set language via HTTP GET Parameter`: https://djangosnippets.org/snippets/1948/
