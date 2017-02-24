@@ -4,8 +4,8 @@ Django
 Django 프로젝트는 최상위 폴더 안의 :file:`manage.py` 파일과 :file:`kaistusc/` 내부의 설정파일들, 그리고 :file:`apps/` 내부의 세 개의 앱과 :file:`middlewares/` 내부의 한 개의 미들웨어로 구성되어 있습니다.
 
 본 프로젝트에서는 i18n을 위해 django-modeltranslation_ 을 이용하여 사용자 작성 컨텐츠가 유동적으로 번역될 수 있도록 하였습니다.
-또한, 템플릿은 `Jinja 2`_ 엔진을 사용하였으며 이는 django-jinja_ 라이브러리를 통해 지원되고 있습니다. 다만,
-내장 템플릿 엔진 역시 사용이 가능하며, ``*.jinja`` 파일은 ``django-jinja`` 로, ``*.html`` 파일은 내장 템플릿 엔진으로 처리됩니다.
+또한, 템플릿은 `Jinja 2`_ 엔진을 사용하였으며 이는 django-jinja_ 라이브러리를 통해 지원되고 있습니다.
+다만, 내장 템플릿 엔진 역시 사용이 가능하며, ``*.jinja`` 파일은 ``django-jinja`` 로, ``*.html`` 파일은 내장 템플릿 엔진으로 처리됩니다.
 이 외 자세한 사항은 각 링크를 참고하시길 바랍니다.
 아래에서는 본 프로젝트의 요구사항과 각각의 앱, 미들웨어에 대해 살펴보도록 하겠습니다.
 
@@ -74,7 +74,7 @@ apps.manager (사이트 관리도구)
 또한, 유사한 서비스들의 모임을 *카테고리* 로 두고 있습니다.
 즉, 간단히 생각하면 사이트맵에서 최상위 분류가 카테고리, 그 다음 분류가 서비스라고 생각하시면 되겠습니다.
 
-:dfn:`Manager` 앱은 요약하자면 사이트 내 서비스를 정의하고 관리하는, 사이트 관리 앱입니다.
+**Manager** 앱은 요약하자면 사이트 내 서비스를 정의하고 관리하는, 사이트 관리 앱입니다.
 :file:`models.py` 에는 ``Category`` 와 ``Service`` 모델이 정의되어 있습니다.
 각 필드에 대한 설명은 ``verbose_name`` 에 담겨 있습니다.
 
@@ -82,7 +82,7 @@ apps.manager (사이트 관리도구)
 서비스 권한
 ~~~~~~~~~~~
 
-:dfn:`Manager` 앱이 필요한 가장 큰 이유는 **권한 관리** 때문입니다.
+**Manager** 앱이 필요한 가장 큰 이유는 **권한 관리** 때문입니다.
 기본적으로 kaistusc 프로젝트는 각 서비스에 대한 권한을 아래 7가지 중 하나로 나타냅니다. (:file:`apps.manager.constants` 에 위치)
 
 - 권한없음
@@ -126,12 +126,12 @@ apps.manager (사이트 관리도구)
 기본으로는 *접근권한* 이 있는지 여부를 따지지만, ``required_permission`` 을 설정하여 다른 권한이 있을 것을 요구할 수 있습니다.
 
 따라서 ``ServiceView`` 를 상속하여 커스텀 서비스(예를 들어 ``CustomServiceView``)를 만들고, 해당 서비스 내부의 여러 뷰는 ``CustomServiceView`` 를 상속하고 ``required_permission`` 을 조정하는 식으로 쉽게 구현할 수 있습니다.
-자세한 응용 예시는 ``apps.board.views`` 를 참고하세요.
+자세한 응용 예시는 ``apps.board.views`` 모듈을 참고하세요.
 
 ``NavigatorMixin`` 은 카테고리와 하위 접근 가능 서비스들의 계층 목록을 얻어 사이트 네비게이터를 생성합니다.
 사이트 기본 레이아웃에 존재하는 네비게이션바 등을 구현하는 데에 쓰입니다.
 이 믹스인과 ``TemplateView`` 를 합친 ``PageView`` 는 권한이 필요하지 않는 정적 서비스나 정적 페이지 등을 구현하는 데 요긴하게 쓰입니다.
-활용 예시는 ``apps.manager.views.statics`` 를 참고하세요.
+활용 예시는 ``apps.manager.views.statics`` 모듈을 참고하세요.
 
 
 커스텀 에러
@@ -159,7 +159,7 @@ apps.manager (사이트 관리도구)
 템플릿
 ~~~~~~
 
-:dfn:`Manager` 앱은 사이트 기본 레이아웃을 정의한 템플릿을 제공합니다.
+**Manager** 앱은 사이트 기본 레이아웃을 정의한 템플릿을 제공합니다.
 :file:`templates/manager/base.jinja` 는 기본 HTML 파일 구조를 정의합니다.
 모바일 용 사이드 네비게이션과 헤더, 푸터는 각각 같은 디렉토리 내의 :file:`side_nav.jinja`, :file:`header.jinja`, :file:`footer.jinja` 에 기술되어 있습니다.
 
