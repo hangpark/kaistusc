@@ -12,7 +12,7 @@ from .models import Category, Service
 @register(Category)
 class CategoryTranslationOptions(TranslationOptions):
     """
-    `Category` 모델에 대한 국제화 지원.
+    :class:`Category` 모델에 대한 국제화 지원.
     """
 
     fields = ('name',)
@@ -21,7 +21,7 @@ class CategoryTranslationOptions(TranslationOptions):
 @register(Service)
 class ServiceTranslationOptions(TranslationOptions):
     """
-    `Service` 모델에 대한 국제화 지원.
+    :class:`Service` 모델에 대한 국제화 지원.
     """
 
     fields = ('name',)

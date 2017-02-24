@@ -1,3 +1,10 @@
+"""
+KAIST 단일인증서비스 어드민 페이지 설정.
+
+Django 내장 인증 체계의 어드민 페이지와 병합하여 단일한 인증 시스템 관리로
+구현합니다.
+"""
+
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
@@ -11,8 +18,8 @@ from .models import PortalInfo
 
 def portal_info_protection(func):
     """
-    유저 리스트에서 정보제공 미동의 유저의 포탈 계정정보를 출력하지 않도록
-    처리하는 데코레이터
+    사용자 리스트에서 정보제공 미동의 유저의 포탈 계정정보를 출력하지 않도록
+    처리하는 데코레이터.
     """
 
     def decorator(self, e):
@@ -24,7 +31,7 @@ def portal_info_protection(func):
 
 class PortalInfoInline(admin.StackedInline):
     """
-    유저 모델 인스턴스 수정 시 포탈 계정정보 출력을 위한 인라인
+    사용자 인스턴스 수정 시 포탈 계정정보 출력을 위한 인라인.
     """
 
     model = PortalInfo
@@ -60,7 +67,7 @@ class PortalInfoInline(admin.StackedInline):
 
 class CustomUserAdmin(UserAdmin):
     """
-    유저 모델과 포탈 계정정보를 연동한 커스텀 어드민
+    :class:`User` 모델과 :class:`PortalInfo` 모델을 연동한 커스텀 어드민.
     """
 
     inlines = [PortalInfoInline] + UserAdmin.inlines
@@ -149,7 +156,7 @@ class CustomUserAdmin(UserAdmin):
 
 class UserModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     """
-    그룹멤버 설정 시 유저 리스트 출력 방식
+    그룹멤버 설정 시 사용자 리스트 출력 방식.
     """
 
     def label_from_instance(self, obj):
@@ -168,7 +175,7 @@ class UserModelMultipleChoiceField(forms.ModelMultipleChoiceField):
 
 class GroupAdminForm(forms.ModelForm):
     """
-    그룹멤버 설정 폼
+    그룹멤버 설정 폼.
     """
 
     users = UserModelMultipleChoiceField(
@@ -202,7 +209,7 @@ class GroupAdminForm(forms.ModelForm):
 
 class CustomGroupAdmin(admin.ModelAdmin):
     """
-    그룹 설정 커스텀 어드민
+    그룹 설정 커스텀 어드민.
     """
 
     form = GroupAdminForm

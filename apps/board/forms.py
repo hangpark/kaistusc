@@ -1,3 +1,7 @@
+"""
+게시판 폼.
+"""
+
 from django.forms import ModelForm
 
 from .models import AttachedFile, Post
@@ -5,9 +9,10 @@ from .models import AttachedFile, Post
 
 class PostForm(ModelForm):
     """
-    포스트를 등록/수정하는 폼.
+    게시글을 등록 및 수정하는 폼.
 
-    ModelForm으로 구현되었으며, save method에서 첨부파일까지 저장한다.
+    :class:`ModelForm`으로 구현되었으며, :meth:`save` 메서드에서 첨부파일까지
+    저장합니다.
     """
 
     class Meta:
@@ -17,6 +22,9 @@ class PostForm(ModelForm):
             'is_notice', 'is_secret', 'tag')
 
     def save(self, POST, FILES):
+        """
+        게시글과 그에 첨부된 파일들을 저장하는 메서드.
+        """
         post = super().save()
 
         prev_files = POST.getlist('prev_files')

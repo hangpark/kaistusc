@@ -10,9 +10,9 @@ from .models import Category, GroupServicePermission, Service
 
 class CategoryAdmin(TranslationAdmin):
     """
-    `Category` 모델에 대한 커스텀 어드민.
+    :class:`Category` 모델에 대한 커스텀 어드민.
 
-    `django-modeltranlation` 에서 제공하는 `TranslationAdmin` 을 상속받아
+    `django-modeltranlation` 에서 제공하는 :class:`TranslationAdmin` 을 상속받아
     다국어 처리를 사용자 친화적으로 변경하였습니다.
     """
 
@@ -23,7 +23,7 @@ class ServiceAdmin(TranslationAdmin):
     """
     `Service` 모델에 대한 커스텀 어드민.
 
-    `django-modeltranlation` 에서 제공하는 `TranslationAdmin` 을 상속받아
+    `django-modeltranlation` 에서 제공하는 :class:`TranslationAdmin` 을 상속받아
     다국어 처리를 사용자 친화적으로 변경하였습니다.
     """
 

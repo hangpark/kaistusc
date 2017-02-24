@@ -1,3 +1,7 @@
+"""
+게시판 모델.
+"""
+
 import os
 
 from django.db import models
@@ -16,7 +20,9 @@ ACTIVITY_VOTE = 'VOTE'
 
 class Board(Service):
     """
-    서비스를 확장하여 게시판을 정의하는 모델.
+    게시판을 구현한 모델.
+
+    :class:`Service` 모델을 상속받아 메인페이지 노출여부를 추가로 저장합니다.
     """
 
     is_main = models.BooleanField(
@@ -34,6 +40,16 @@ class Board(Service):
 
 
 class PostActivity(models.Model):
+    """
+    포스트 활동을 구현한 모델.
+
+    사용자가 포스트에 정해진 활동을 행하였다는 정보를 기록하는 모델입니다.
+    :class:`User` 모델과 :class:`BasePost` 모델 사이의 중간모델 역할을
+    수행합니다.
+
+    포스트 조회나 추천/비추천 등 활동이 있을 수 있습니다. 기본적으로 사용자의
+    포스트에 대한 활동은 각 포스트마다 최대 한 번 가능합니다.
+    """
 
     user = models.ForeignKey(
         'auth.User',
@@ -57,6 +73,16 @@ class PostActivity(models.Model):
         max_length=4, choices=ACTIVITY_CHOICES)
 
     def save(self, *args, **kwargs):
+        """
+        사용자 활동을 저장하는 메서드.
+
+        포스트에 해당 사용자가 같은 활동을 이미 진행한 경우 아무런 처리를 하지
+        않습니다. 사용자가 로그인이 되어있지 않은 경우 중복활동 여부는 IP 주소로
+        판단합니다.
+
+        본 메서드는 중복활동 여부를 반환합니다. 이 반환값을 통해 추가 로직을
+        구현할 수도 있습니다.
+        """
         if self.user:
             is_new = not PostActivity.objects.filter(
                 user=self.user, post=self.post,
@@ -98,9 +124,11 @@ class Tag(models.Model):
 
 class BasePost(models.Model):
     """
-    게시글, 댓글 등 포스트를 정의하는 모델.
+    포스트를 정의하는 모델.
 
-    게시글과 댓글은 본 베이스 모델을 상속받아 구현한다.
+    게시글과 댓글 등 포스트에 해당하는 모델은 본 베이스 모델을 상속받아
+    구현되었습니다. 본 모델은 강력한 포스트 권한 관리와 사용자 활동 관리
+    기능을 제공합니다.
     """
 
     date = models.DateTimeField(
@@ -141,19 +169,20 @@ class BasePost(models.Model):
 
     def is_owned_by(self, user):
         """
-        주어진 유저의 포스트인지 확인하는 함수.
+        주어진 사용자의 포스트인지 확인하는 메서드.
         """
-
         return self.author == user
 
     def is_permitted(self, user, permission):
         """
-        주어진 유저의 포스트 이용권한을 확인하는 함수.
+        주어진 사용자의 포스트 이용권한을 확인하는 메서드.
 
-        게시글이나 댓글 등 `BasePost`를 상속확장하는 모델에서
-        `pre_permitted()`와 `post_permitted()`를 정의하여 사용한다.
+        본 메서드는 게시글, 댓글 등 여러 포스트 상속 모델들의 권한 설정을 손쉽게
+        커스터마이징 할 수 있도록 :meth:`pre_permitted` 와
+        :meth:`post_permitted` 메서드를 호출합니다. 이들은 기본적으로
+        :const:`True` 를 반환하며, 포스트 상속 모델에서 두 메서드를 필요 시
+        오버라이드 하는 방식으로 활용 가능합니다.
         """
-
         if user.is_superuser:
             return True
         if not self.pre_permitted(user, permission):
@@ -168,26 +197,35 @@ class BasePost(models.Model):
 
     def pre_permitted(self, user, permission):
         """
-        포스트 이용권한 확인 이전 필수적으로 있어야 하는 권한을 체크한다.
+        포스트 이용권한 확인 이전 필수적으로 있어야 하는 권한을 확인하는 메서드.
         """
-
         return True
 
     def post_permitted(self, user, permission):
         """
-        포스트 이용권한 확인 후 계층관계에 있는 객체의 이용권한을 체크한다.
+        포스트 이용권한 확인 후 관련 객체의 이용권한을 확인하는 메서드.
         """
-
         return True
 
     def get_activity_count(self, activity):
+        """
+        특정 활동을 진행한 사용자 총수를 반환하는 메서드.
+        """
         return PostActivity.objects.filter(
             post=self, activity=activity).count()
 
     def get_hits(self):
+        """
+        조회수를 반환하는 메서드.
+        """
         return self.get_activity_count(ACTIVITY_VIEW)
 
     def assign_activity(self, request, activity):
+        """
+        포스트에 특정 활동을 등록하는 메서드.
+
+        :class:`PostActivity` 의 :meth:`save` 메서드와 동일합니다.
+        """
         return PostActivity(
             user=request.user if request.user.is_authenticated else None,
             ip=request.META['REMOTE_ADDR'],
@@ -196,12 +234,15 @@ class BasePost(models.Model):
         ).save()
 
     def assign_hits(self, request):
+        """
+        포스트 조회 활동을 등록하는 메서드.
+        """
         self.assign_activity(request, ACTIVITY_VIEW)
 
 
 class Post(BasePost):
     """
-    게시글을 정의한 모델.
+    게시글을 구현한 모델.
     """
 
     board = models.ForeignKey(
@@ -232,15 +273,21 @@ class Post(BasePost):
         return os.path.join(self.board.get_absolute_url(), str(self.id))
 
     def pre_permitted(self, user, permission):
+        """
+        게시글 권한 확인 이전에 게시판 접근권한을 확인하는 메서드.
+        """
         return self.board.is_permitted(user, PERM_ACCESS)
 
     def post_permitted(self, user, permission):
+        """
+        게시글 권한 확인 이후에 동일 권한이 게시판에도 있는지 확인하는 메서드.
+        """
         return self.board.is_permitted(user, permission)
 
 
 class Comment(BasePost):
     """
-    댓글을 정의한 모델.
+    댓글을 구현한 모델.
     """
 
     parent_post = models.ForeignKey(
@@ -260,19 +307,30 @@ class Comment(BasePost):
             self.parent_post.get_absolute_url(), "comment", str(self.id))
 
     def pre_permitted(self, user, permission):
+        """
+        댓글 권한 확인 이전에 게시글 읽기권한을 확인하는 메서드.
+        """
         return self.parent_post.is_permitted(user, PERM_READ)
 
     def post_permitted(self, user, permission):
+        """
+        댓글 권한 확인 이후에 동일 권한이 게시판에도 있는지 확인하는 메서드.
+        """
         return self.parent_post.board.is_permitted(user, permission)
 
 
 def get_upload_path(instance, filename):
+    """
+    첨부파일이 업로드 되는 경로를 반환하는 함수.
+
+    첨부파일은 포스트별로 다른 디렉토리에 저장됩니다.
+    """
     return os.path.join("post-%d" % instance.post.id, filename)
 
 
 class AttachedFile(models.Model):
     """
-    게시글, 댓글 등 포스트에 삽입되는 첨부파일 모델.
+    포스트 첨부파일을 구현한 모델.
     """
 
     post = models.ForeignKey(
@@ -294,6 +352,9 @@ class AttachedFile(models.Model):
         return os.path.join(MEDIA_URL, self.file.name)
 
     def get_file_size(self):
+        """
+        파일 크기를 반환하는 메서드.
+        """
         try:
             return self.file.size
         except:
@@ -302,5 +363,9 @@ class AttachedFile(models.Model):
 
 @receiver(post_delete, sender=AttachedFile)
 def delete_file(sender, instance, *args, **kwargs):
+    """
+    :class:`AttachedFile` 인스턴스가 삭제될 시 실제 저장된 첨부파일도 함께
+    삭제하는 함수.
+    """
     if os.path.isfile(instance.file.path):
         os.remove(instance.file.path)

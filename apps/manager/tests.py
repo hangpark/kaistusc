@@ -132,7 +132,7 @@ class ServiceTestCase(TestCase):
             self.svc_all, self.svc_log, self.svc_grp1,
             self.svc_grp2, self.svc_cls]
         res_accessible = [(repr(user), repr(srv), srv.is_permitted(user))
-            for user in users for srv in services]
+                          for user in users for srv in services]
 
         # 유저-서비스 이용가능여부 결과 테스트
         exp_res = [
@@ -141,6 +141,6 @@ class ServiceTestCase(TestCase):
             True, True, True, True, False,
             True, True, True, True, True]
         temp_list = [[repr(user), repr(srv)]
-            for user in users for srv in services]
+                     for user in users for srv in services]
         self.assertEqual(res_accessible, [
             (e[0], e[1], exp_res[i]) for i, e in enumerate(temp_list)])

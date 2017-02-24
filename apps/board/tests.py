@@ -1,3 +1,7 @@
+"""
+게시판 테스트.
+"""
+
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.test import TestCase
 
@@ -7,19 +11,11 @@ from .models import *
 
 
 class BoardTestCase(TestCase):
-    def setUp(self):
-        """
-                  |  board_all    board_log    board_grp1   board_grp2   board_cls
-        ----------+---------------------------------------------------------------------
-        anon      |  Accessible   None         None         None         None
-                  |
-        usr1      |  Accessible   Writable     Editable     Readable     None(Readable)
-                  |
-        usr2      |  Accessible   Writable     Editable     Deletable    None(Deletable)
-                  |
-        superuser |  Deletable    Deletable    Deletable    Deletable    Deletable
-        """
+    """
+    보드 권한 관리 기능 테스트.
+    """
 
+    def setUp(self):
         # 카테고리 생성
         self.cat = Category.objects.create(
             name='Test Category'
@@ -118,7 +114,7 @@ class BoardTestCase(TestCase):
 
     def test_board_permission_for_various_types_of_user(self):
         """
-        서비스의 퍼미션과 유저 상태에 따라 접근가능한지 여부를 체크한다.
+        게시판의 권한과 사용자 상태에 따라 이용가능한지 여부를 체크한다.
         """
 
         # 각 유저의 접근가능 보드를 구한다.
@@ -142,17 +138,16 @@ class BoardTestCase(TestCase):
             self.board_all, self.board_log, self.board_grp1,
             self.board_grp2, self.board_cls]))
 
-
         def test_board_permission(permission, exp_res):
             users = [self.anon, self.user1, self.user2, self.superuser]
             boards = [
                 self.board_all, self.board_log, self.board_grp1,
                 self.board_grp2, self.board_cls]
-            res = [(repr(user), repr(board), board.is_permitted(user, permission))
-            for user in users for board in boards]
+            res = [(repr(user), repr(board), board.is_permitted(
+                user, permission)) for user in users for board in boards]
 
-            temp_list = [[repr(user), repr(board)]
-                for user in users for board in boards]
+            temp_list = [[repr(user), repr(board)] for user in users
+                         for board in boards]
             self.assertEqual(res, [
                 (e[0], e[1], exp_res[i]) for i, e in enumerate(temp_list)])
 
@@ -191,8 +186,11 @@ class BoardTestCase(TestCase):
             False, False, False, False, False,
             False, False, False, True, False,
             True, True, True, True, True])
-    
+
     def test_post_permission(self):
+        """
+        게시글의 권한과 사용자의 상태에 따라 이용가능한지 여부를 체크한다.
+        """
         self.post_normal = Post.objects.create(
             author=self.user2,
             board=self.board_grp2,
@@ -215,10 +213,10 @@ class BoardTestCase(TestCase):
             users = [self.anon, self.user1, self.user2, self.superuser]
             posts = [self.post_normal, self.post_secret, self.post_deleted]
             res = [(repr(user), repr(post), post.is_permitted(user, permission))
-            for user in users for post in posts]
+                   for user in users for post in posts]
 
             temp_list = [[repr(user), repr(post)]
-                for user in users for post in posts]
+                         for user in users for post in posts]
             self.assertEqual(res, [
                 (e[0], e[1], exp_res[i]) for i, e in enumerate(temp_list)])
 
