@@ -1,3 +1,7 @@
+"""
+KAIST 단일인증서비스 URL 설정.
+"""
+
 from django.conf.urls import url
 
 from .views import AgreeView, DisagreeView, LoginView, LogoutView, SignUpView
