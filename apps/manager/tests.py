@@ -1,3 +1,7 @@
+"""
+사이트 관리 도구 테스트.
+"""
+
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.test import TestCase
 
@@ -6,6 +10,10 @@ from .models import *
 
 
 class ServiceTestCase(TestCase):
+    """
+    서비스 권한 관리 기능 테스트.
+    """
+
     def setUp(self):
         # 카테고리 생성
         self.cat = Category.objects.create(
@@ -125,7 +133,7 @@ class ServiceTestCase(TestCase):
             self.svc_grp2, self.svc_cls]
         res_accessible = [(repr(user), repr(srv), srv.is_permitted(user))
             for user in users for srv in services]
-        
+
         # 유저-서비스 이용가능여부 결과 테스트
         exp_res = [
             True, False, False, False, False,

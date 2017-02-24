@@ -1,10 +1,14 @@
+"""
+서비스 관리 도구 모델.
+"""
+
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from .constants import *
 
-# Basic service permissions
+#: 서비스 기본 권한들.
 PERMISSION_CHOICES = (
     (PERM_NONE, _("권한없음")),
     (PERM_ACCESS, _("접근권한")),
@@ -18,7 +22,10 @@ PERMISSION_CHOICES = (
 
 class Category(models.Model):
     """
-    홈페이지 구조에서 상위 단위로 카테고리를 정의한 모델.
+    카테고리를 구현한 모델.
+
+    사이트 구조 상 유사한 서비스들의 모임으로 카테고리를 정의합니다. 사이트맵의
+    최상위 분류로 기능합니다.
     """
 
     name = models.CharField(
@@ -38,6 +45,15 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
+        """
+        카테고리 내 첫 번째 서비스의 URL을 반환하는 함수.
+
+        카테고리는 특정 뷰와 연결되어 있지 않습니다. 따라서 카테고리에 대한
+        URL을 카테고리 내 첫 번째 서비스의 URL로 설정하였습니다.
+
+        이는 사용자가 카테고리 이름을 페이지 상에서 클릭하였을 때 자동으로 내부
+        서비스로 이동하는 기능 등에 활용될 수 있어 UX 향상에 도움이 됩니다.
+        """
         s = self.service_set.first()
         if s:
             return s.get_absolute_url()
@@ -46,12 +62,14 @@ class Category(models.Model):
 
 class ServiceQuerySet(models.QuerySet):
     """
-    Service에 대한 커스텀 query set.
+    서비스에 대한 커스텀 쿼리셋.
+
+    사용자에 따른 접근가능 서비스 필터링을 지원하기 위한 커스텀 쿼리셋입니다.
     """
 
     def accessible_for(self, user):
         """
-        특정 유저가 접근가능한 서비스를 필터링한다.
+        특정 사용자가 접근가능한 서비스를 필터링한 쿼리셋을 리턴하는 함수.
         """
         # 관리자 계정인 경우 모든 서비스 접근 가능
         if user.is_superuser:
@@ -70,19 +88,34 @@ class ServiceQuerySet(models.QuerySet):
 
 class ServiceManager(models.Manager):
     """
-    Service에 대한 커스텀 manager. Service와 ServiceQuerySet을 연결한다.
+    서비스에 대한 커스텀 매니저.
+
+    사용자에 따른 접근가능 서비스 필터링을 지원하기 위한 커스텀 매니저입니다.
     """
 
     def get_queryset(self):
         return ServiceQuerySet(self.model, using=self._db)
 
     def accessible_for(self, user):
+        """
+        특정 사용자가 접근가능한 서비스를 필터링한 쿼리셋을 리턴하는 함수.
+        """
         return self.get_queryset().accessible_for(user)
 
 
 class Service(models.Model):
     """
-    홈페이지 구조에서 하위 단위인 메뉴를 정의한 모델.
+    서비스를 구현한 모델.
+
+    서비스는 사이트의 독립된 각 기능입니다. 사용자는 특정 서비스에 대한
+    이용권한이 정해져 있으며, 본 모델에는 권한관리 기능이 구현되어 있습니다.
+    이러한 강력한 권한관리 기능을 이용하기 위해 각 서비스는 본 모델을 상속받아
+    구현될 수 있습니다.
+
+    서비스의 권한에는 `apps.service.constants` 에 정의된 7가지가 있습니다.
+    이들은 상하관계를 갖게 되며, 상위 권한이 있는 사용자는 하위 권한 모두를
+    갖고 있는 것으로 판단합니다. 또한, 사용자가 여러 권한이 있을 경우 그 중 가장
+    높은 권한을 갖고 있는 것으로 판단합니다.
     """
 
     name = models.CharField(
@@ -125,7 +158,7 @@ class Service(models.Model):
         through='GroupServicePermission', related_name='permitted_services',
         verbose_name=_("그룹별 권한"))
 
-    # Custom Manager
+    #: 커스텀 매니저
     objects = ServiceManager()
 
     class Meta:
@@ -141,9 +174,8 @@ class Service(models.Model):
 
     def is_permitted(self, user, permission=PERM_ACCESS):
         """
-        주어진 유저가 접근할 수 있는 서비스인지 확인하는 함수.
+        특정 사용자에게 주어진 이용권한이 있는지 확인하는 함수.
         """
-
         if user.is_superuser:
             return True
         if self.is_closed:
@@ -158,7 +190,10 @@ class Service(models.Model):
 
 class GroupServicePermission(models.Model):
     """
-    특정 그룹에 특정 서비스에 대한 특정 권한을 부여하는 모델.
+    그룹과 서비스 사이의 권한을 관리하는 중간모델.
+
+    그룹과 서비스 사이의 다대다 관계에서 특정 그룹의 주어진 서비스에 대한 권한을
+    관리하는 중간모델입니다.
     """
 
     group = models.ForeignKey(
