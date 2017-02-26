@@ -2,9 +2,10 @@
 __pycache__/
 *.py[cod]
 
-# Django migrations
+# Django
 **/migrations/*.py
 !**/migrations/__init__.py
+db.sqlite3
 
 # Swap files
 *.swp
@@ -19,3 +20,7 @@ docs/_*/
 
 # Virtualenv
 venv/
+.env
+
+# Python mode
+**/.ropeproject/
