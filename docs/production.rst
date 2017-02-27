@@ -4,7 +4,7 @@
 Docker를 이용한 배포
 --------------------
 
-kaistusc 프로젝트는 Docker_ 를 이용하여 손쉽게 배포할 수 있습니다.
+**KAIST USC** 프로젝트는 Docker_ 를 이용하여 손쉽게 배포할 수 있습니다.
 
 .. code-block:: bash
 
@@ -23,7 +23,7 @@ Linux 기준 위 명령어를 통해 docker를 설치합니다. 다른 OS의 경
 Docker로 DB 서버 구축
 ---------------------
 
-kaistusc는 기본적으로 MySQL_ 을 사용합니다. 다른 DBMS의 경우 :file:`settings.py` 등을 적절히 수정해야 합니다. 여기서는 MySQL 서버를 구축하도록 하겠습니다. MySQL 서버 이미지를 다운받기 위해 아래의 명령어를 입력합니다.
+**KAIST USC** 는 기본적으로 MySQL_ 을 사용합니다. 다른 DBMS의 경우 :file:`settings.py` 등을 적절히 수정해야 합니다. 여기서는 MySQL 서버를 구축하도록 하겠습니다. MySQL 서버 이미지를 다운받기 위해 아래의 명령어를 입력합니다.
 
 .. code-block:: bash
 

@@ -13,7 +13,7 @@ Django 프로젝트는 최상위 폴더 안의 :file:`manage.py` 파일과 :file
 프로젝트 요구사항
 -----------------
 
-kaistusc django 프로젝트는 일반적인 django 프로젝트에 비해 몇 가지 강력한 요구사항이 존재합니다.
+**KAIST USC** django 프로젝트는 일반적인 django 프로젝트에 비해 몇 가지 강력한 요구사항이 존재합니다.
 
 
 국제화/지역화
@@ -83,7 +83,7 @@ apps.manager (사이트 관리도구)
 ~~~~~~~~~~~
 
 **Manager** 앱이 필요한 가장 큰 이유는 **권한 관리** 때문입니다.
-기본적으로 kaistusc 프로젝트는 각 서비스에 대한 권한을 아래 7가지 중 하나로 나타냅니다. (:mod:`apps.manager.constants` 에 위치)
+기본적으로 **KAIST USC** 프로젝트는 각 서비스에 대한 권한을 아래 7가지 중 하나로 나타냅니다. (:mod:`apps.manager.constants` 에 위치)
 
 - 권한없음
 - 접근권한
