@@ -68,6 +68,9 @@
 
 #main-board-list .main-board { 
   margin-bottom: 32px;
+  table {
+    table-layout: fixed;
+  }
   caption {
     margin-bottom: 8px;
     border-bottom: 1px solid #666666;
@@ -81,5 +84,13 @@
   td {
     padding: 4px 8px;
     border: 0;
+    &.text-left {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    &.text-right {
+      width: 110px;
+    }
   }
 }
