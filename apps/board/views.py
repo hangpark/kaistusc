@@ -45,7 +45,7 @@ class BoardView(ServiceView):
         # 게시글 목록 조회
         post_list = Post.objects.filter(board=board)
         if kwargs.get('tag', None):
-            if kwargs['tag'] not in context['tags']:
+            if kwargs['tag'] not in [tag.slug for tag in context['tags']]:
                 raise Custom404
             post_list = post_list.filter(tag__slug=kwargs['tag'])
         if search:
