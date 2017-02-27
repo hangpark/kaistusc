@@ -36,7 +36,7 @@ class BoardView(ServiceView):
         context['board'] = board
 
         # 태그 목록 저장
-        context['tags'] = Tag.objects.all()
+        context['tags'] = Tag.objects.filter(board=board)
 
         # 검색어 저장
         search = self.request.GET.get('s')
@@ -152,7 +152,7 @@ class PostWriteView(BoardView):
         게시글 작성 폼을 컨텍스트에 추가하는 메서드.
         """
         context = super().get_context_data(**kwargs)
-        context['form'] = PostForm()
+        context['form'] = PostForm(self.service.board)
         return context
 
     def post(self, request, *args, **kwargs):

@@ -98,7 +98,13 @@ class PostActivity(models.Model):
 class Tag(models.Model):
     """
     게시글에 달리는 태그 모델.
+
+    게시판별로 가능한 태그를 생성할 수 있습니다.
     """
+
+    board = models.ForeignKey(
+        Board,
+        verbose_name=_("게시판"))
 
     name = models.CharField(
         _("태그명"),

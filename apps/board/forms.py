@@ -4,7 +4,7 @@
 
 from django.forms import ModelForm
 
-from .models import AttachedFile, Post
+from .models import AttachedFile, Post, Tag
 
 
 class PostForm(ModelForm):
@@ -12,8 +12,12 @@ class PostForm(ModelForm):
     게시글을 등록 및 수정하는 폼.
 
     :class:`ModelForm`으로 구현되었으며, :meth:`save` 메서드에서 첨부파일까지
-    저장합니다.
+    저장합니다. 게시글이 속해있는 게시판에서 가능한 태그만 선택할 수 있습니다.
     """
+
+    def __init__(self, board, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tag'].queryset = Tag.objects.filter(board=board)
 
     class Meta:
         model = Post
