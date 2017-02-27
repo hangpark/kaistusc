@@ -1,0 +1,555 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Django &mdash; KAIST 학부 총학생회  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="색인"
+              href="genindex.html"/>
+        <link rel="search" title="검색" href="search.html"/>
+    <link rel="top" title="KAIST 학부 총학생회  documentation" href="index.html"/>
+        <link rel="prev" title="배포하기" href="production.html"/> 
+
+  
+  <script src="static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> KAIST 학부 총학생회
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="basic.html">프로젝트 기본사항</a></li>
+<li class="toctree-l1"><a class="reference internal" href="production.html">배포하기</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Django</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">프로젝트 요구사항</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">국제화/지역화</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">코멘트</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">앱 디렉토리</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#apps-manager">apps.manager (사이트 관리도구)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">서비스 권한</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">서비스 뷰</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">커스텀 에러</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">템플릿</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#apps-ksso-kaist">apps.ksso (KAIST 단일인증서비스)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#django4kaist">DJANGO4KAIST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">포탈 계정 정보</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">로그인/로그아웃</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">정보제공 동의절차</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#apps-board">apps.board (게시판)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id12">포스트 권한</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">사용자 활동 기록</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">포스트 뷰</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#middlewares-locale">middlewares.locale (다국어 지원)</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">KAIST 학부 총학생회</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Django</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="sources/django.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="django">
+<h1>Django<a class="headerlink" href="#django" title="제목 주소">¶</a></h1>
+<p>Django 프로젝트는 최상위 폴더 안의 <code class="file docutils literal"><span class="pre">manage.py</span></code> 파일과 <code class="file docutils literal"><span class="pre">kaistusc/</span></code> 내부의 설정파일들, 그리고 <code class="file docutils literal"><span class="pre">apps/</span></code> 내부의 세 개의 앱과 <code class="file docutils literal"><span class="pre">middlewares/</span></code> 내부의 한 개의 미들웨어로 구성되어 있습니다.</p>
+<p>본 프로젝트에서는 i18n을 위해 <a class="reference external" href="http://django-modeltranslation.readthedocs.io/en/latest/">django-modeltranslation</a> 을 이용하여 사용자 작성 컨텐츠가 유동적으로 번역될 수 있도록 하였습니다.
+또한, 템플릿은 <a class="reference external" href="http://jinja.pocoo.org/docs/2.9/">Jinja 2</a> 엔진을 사용하였으며 이는 <a class="reference external" href="http://niwinz.github.io/django-jinja/latest/">django-jinja</a> 라이브러리를 통해 지원되고 있습니다.
+다만, 내장 템플릿 엔진 역시 사용이 가능하며, <code class="file docutils literal"><span class="pre">*.jinja</span></code> 파일은 <strong>django-jinja</strong> 로, <code class="file docutils literal"><span class="pre">*.html</span></code> 파일은 내장 템플릿 엔진으로 처리됩니다.
+이 외 자세한 사항은 각 링크를 참고하시길 바랍니다.
+아래에서는 본 프로젝트의 요구사항과 각각의 앱, 미들웨어에 대해 살펴보도록 하겠습니다.</p>
+<div class="section" id="id1">
+<h2>프로젝트 요구사항<a class="headerlink" href="#id1" title="제목 주소">¶</a></h2>
+<p>kaistusc django 프로젝트는 일반적인 django 프로젝트에 비해 몇 가지 강력한 요구사항이 존재합니다.</p>
+<div class="section" id="id2">
+<h3>국제화/지역화<a class="headerlink" href="#id2" title="제목 주소">¶</a></h3>
+<p>국제학생의 참여를 보장하기 위하여 모든 문자열은 <strong class="program">gettext</strong> 를 통해 번역 될 수 있도록 처리합니다.
+기본 문자열은 한국어로 설정합니다.
+예를 들어 아래는 일반적인 문자열 사용입니다.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="s2">&quot;카테고리명&quot;</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>위의 예시에서 <em>&#8220;카테고리명&#8221;</em> 은 <code class="xref py py-attr docutils literal"><span class="pre">name</span></code> 의 <code class="xref py py-attr docutils literal"><span class="pre">verbose_name</span></code> 으로, 어드민 페이지나 폼 등에서 나타나는 문자열입니다.
+이를 국제화하는 방법은 아래와 같습니다.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="k">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+
+<span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;카테고리명&quot;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>이후 <code class="file docutils literal"><span class="pre">manage.py</span></code> 의 <strong class="program">makemessages</strong> 명령어를 통해 <code class="file docutils literal"><span class="pre">*.po</span></code> 파일을 생성하고 이에 대한 지역화를 수행한 후 <strong class="program">compilemessages</strong> 명령어로 번역을 완료합니다.
+이 때, 최소한 <strong>영어</strong> 번역은 완료하는 것이 본 프로젝트의 요구사항입니다.</p>
+<p>또한, 게시글 등 사용자 입력 데이터의 경우 <strong>django-modeltranslation</strong> 을 이용하여 영어로 번역할 수 있는 방법을 제공해야 합니다.
+위에서 언급했듯이, 자세한 사항은 <a class="reference external" href="http://django-modeltranslation.readthedocs.io/en/latest/">django-modeltranslation</a> 문서를 참고하시길 바랍니다.
+<em>(새로운 DB 테이블을 사용하는 서비스를 생성하실 때 확인하시는 것이 좋을 것입니다.)</em></p>
+</div>
+<div class="section" id="id3">
+<h3>코멘트<a class="headerlink" href="#id3" title="제목 주소">¶</a></h3>
+<p>각 모듈과 클래스 마다 docstring을 작성하여 코드를 읽는 사람으로 하여금 그 역할을 분명히 알 수 있도록 해야 합니다.
+또한, 모델 필드의 경우 <code class="xref py py-attr docutils literal"><span class="pre">verbose_name</span></code> 을 필수적으로 명시하여야 하며, <code class="xref py py-attr docutils literal"><span class="pre">help_text</span></code> 작성 역시 권장합니다.
+모델 클래스의 경우 메타 클래스에 <code class="xref py py-attr docutils literal"><span class="pre">verbose_name</span></code> 과 <code class="xref py py-attr docutils literal"><span class="pre">verbose_name_plural</span></code> 을 적어야 합니다.</p>
+</div>
+<div class="section" id="id4">
+<h3>앱 디렉토리<a class="headerlink" href="#id4" title="제목 주소">¶</a></h3>
+<p>새로운 앱을 생성할 때 반드시 <code class="file docutils literal"><span class="pre">apps/</span></code> 내부에 위치하도록 합니다.
+여러 앱이 공통될 경우 <code class="file docutils literal"><span class="pre">apps/</span></code> 의 하위 디렉토리로 묶는 것은 허용합니다.
+외부 django 라이브러리의 경우에는 당연히 해당되지 않는 내용입니다.</p>
+</div>
+</div>
+<div class="section" id="apps-manager">
+<h2>apps.manager (사이트 관리도구)<a class="headerlink" href="#apps-manager" title="제목 주소">¶</a></h2>
+<ul class="simple">
+<li><code class="file docutils literal"><span class="pre">apps/manager/</span></code></li>
+</ul>
+<p>총학생회 사이트는 기본적으로 여러가지 <em>서비스</em> 들의 집합으로 정의됩니다.
+또한, 유사한 서비스들의 모임을 <em>카테고리</em> 로 두고 있습니다.
+즉, 간단히 생각하면 사이트맵에서 최상위 분류가 카테고리, 그 다음 분류가 서비스라고 생각하시면 되겠습니다.</p>
+<p><strong>Manager</strong> 앱은 요약하자면 사이트 내 서비스를 정의하고 관리하는, 사이트 관리 앱입니다.
+<code class="file docutils literal"><span class="pre">models.py</span></code> 에는 <code class="xref py py-class docutils literal"><span class="pre">Category</span></code> 와 <code class="xref py py-class docutils literal"><span class="pre">Service</span></code> 모델이 정의되어 있습니다.
+각 필드에 대한 설명은 <code class="xref py py-attr docutils literal"><span class="pre">verbose_name</span></code> 에 담겨 있습니다.</p>
+<div class="section" id="id5">
+<h3>서비스 권한<a class="headerlink" href="#id5" title="제목 주소">¶</a></h3>
+<p><strong>Manager</strong> 앱이 필요한 가장 큰 이유는 <strong>권한 관리</strong> 때문입니다.
+기본적으로 kaistusc 프로젝트는 각 서비스에 대한 권한을 아래 7가지 중 하나로 나타냅니다. (<code class="xref py py-mod docutils literal"><span class="pre">apps.manager.constants</span></code> 에 위치)</p>
+<ul class="simple">
+<li>권한없음</li>
+<li>접근권한</li>
+<li>읽기권한</li>
+<li>댓글권한</li>
+<li>쓰기권한</li>
+<li>수정권한</li>
+<li>삭제권한</li>
+</ul>
+<p>게시판을 예시로 들면 쉽게 이해가 가는 권한 계층이지만, 모든 서비스가 게시판과 동일한 활동 층위로 나뉠 수 있는 것은 아닙니다.
+이 경우 각 권한의 위상과 비슷한 수준의 층위로 설정하는 것이 바람직할 것입니다.
+대부분의 경우 위의 권한 목록 전부가 필요하지 않을 수 있습니다.
+이 경우 필요한 권한들을 적절히 골라 사용하시면 됩니다.</p>
+<p>권한은 <code class="xref py py-class docutils literal"><span class="pre">GroupServicePermission</span></code> 모델에 의해 관리됩니다.
+각 서비스와 django가 기본으로 제공하는 그룹 기능 사이에 특정한 권한을 부여할 수 있습니다.
+사용자가 여러 그룹에 속해있고 각 그룹이 특정 서비스에 서로 다른 권한을 지닌다면, 그 사용자는 해당 서비스에 대하여 각 그룹의 권한들 중 최고로 높은 권한을 갖게 됩니다.</p>
+<p>특히, 서비스 모델 내의 <code class="xref py py-attr docutils literal"><span class="pre">max_permission_anon</span></code> 과 <code class="xref py py-attr docutils literal"><span class="pre">max_permission_auth</span></code> 를 이용하여 각각 비로그인 사용자, 로그인 사용자의 최대 권한을 설정할 수 있습니다.
+이 경우 특정 사용자의 권한은 위의 최고 높은 그룹 권한과 이 필드의 값들을 비교하여 산출됩니다.
+또한, <code class="xref py py-attr docutils literal"><span class="pre">is_closed</span></code> 가 <code class="xref py py-const docutils literal"><span class="pre">True</span></code> 로 설정된 경우, 기존에 갖고 있던 권한에 상관 없이 관리자를 제외한 사용자는 <em>권한없음</em> 상태가 됩니다.</p>
+<p>권한여부를 확인하는 로직은 <code class="xref py py-meth docutils literal"><span class="pre">is_permitted()</span></code> 메소드에 구현되어 있으며, 아래와 같이 커스텀 매니저(<code class="xref py py-class docutils literal"><span class="pre">ServiceManager</span></code>)와 쿼리셋 (<code class="xref py py-class docutils literal"><span class="pre">ServiceQueryset</span></code>)을 통해 특정 유저가 접근가능한 서비스를 뽑아낼 수 있습니다.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">apps.manager.models</span> <span class="k">import</span> <span class="n">Service</span>
+
+<span class="c1"># In view</span>
+<span class="n">services</span> <span class="o">=</span> <span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+    <span class="n">category__name</span><span class="o">=</span><span class="s2">&quot;카테고리&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">accessible_for</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>서비스 뷰<a class="headerlink" href="#id6" title="제목 주소">¶</a></h3>
+<p>각 서비스는 기본적으로 <code class="xref py py-mod docutils literal"><span class="pre">apps.manager.views.base</span></code> 의 <code class="xref py py-class docutils literal"><span class="pre">ServiceView</span></code> 를 상속받아 구현합니다.
+이는 몇 가지 믹스인과 <code class="xref py py-class docutils literal"><span class="pre">TemplateView</span></code> 로 이루어져 있는 뷰입니다.
+이 중 <code class="xref py py-class docutils literal"><span class="pre">PermissionRequiredServiceMixin</span></code> 은 권한이 없는 사용자가 서비스에 접근할 때 403 에러를 발생시킵니다.
+기본으로는 <em>접근권한</em> 이 있는지 여부를 따지지만, <code class="xref py py-attr docutils literal"><span class="pre">required_permission</span></code> 을 설정하여 다른 권한이 있을 것을 요구할 수 있습니다.</p>
+<p>따라서 <code class="xref py py-class docutils literal"><span class="pre">ServiceView</span></code> 를 상속하여 커스텀 서비스(예를 들어 <code class="xref py py-class docutils literal"><span class="pre">CustomServiceView</span></code>)를 만들고, 해당 서비스 내부의 여러 뷰는 <code class="xref py py-class docutils literal"><span class="pre">CustomServiceView</span></code> 를 상속하고 <code class="xref py py-attr docutils literal"><span class="pre">required_permission</span></code> 을 조정하는 식으로 쉽게 구현할 수 있습니다.
+자세한 응용 예시는 <code class="xref py py-mod docutils literal"><span class="pre">apps.board.views</span></code> 모듈 소스코드를 참고하세요.</p>
+<p><code class="xref py py-class docutils literal"><span class="pre">NavigatorMixin</span></code> 은 카테고리와 하위 접근 가능 서비스들의 계층 목록을 얻어 사이트 네비게이터를 생성합니다.
+사이트 기본 레이아웃에 존재하는 네비게이션바 등을 구현하는 데에 쓰입니다.
+이 믹스인과 <code class="xref py py-class docutils literal"><span class="pre">TemplateView</span></code> 를 합친 <code class="xref py py-class docutils literal"><span class="pre">PageView</span></code> 는 권한이 필요하지 않는 정적 서비스나 정적 페이지 등을 구현하는 데 요긴하게 쓰입니다.
+활용 예시는 <code class="xref py py-mod docutils literal"><span class="pre">apps.manager.views.statics</span></code> 모듈 소스코드를 참고하세요.</p>
+</div>
+<div class="section" id="id7">
+<h3>커스텀 에러<a class="headerlink" href="#id7" title="제목 주소">¶</a></h3>
+<p>기본적으로 django는 404, 500, 403, 400 에러에 대해 이벤트 핸들러를 제공합니다.
+이를 활용하면 사이트에서 에러 페이지를 커스터마이징 할 수 있습니다.
+본 사이트에서도 커스텀 에러 페이지를 제공하고 있습니다.
+각 종류의 에러마다 에러 문구가 다릅니다.
+이를 테면, 404 에러의 경우 제목은 <em>&#8216;페이지가 존재하지 않습니다.&#8217;</em>, 내용은 <em>&#8216;클릭하신 링크가 잘못되었거나 페이지가 제거되었습니다.&#8217;</em> 로 구성된 에러 페이지가 나타납니다.</p>
+<p>커스텀 에러는 각각의 상황에 맞는 에러 내용을 에러 페이지에 띄울 수 있도록 해줍니다.
+<code class="xref py py-class docutils literal"><span class="pre">Custom404</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Custom500</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Custom403</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Custom400</span></code> 에러 클래스가 <code class="xref py py-mod docutils literal"><span class="pre">apps.manager</span></code> 에 정의되어 있습니다.
+이를 이용하여 아래 예시와 같이 사용하시면 인자로 넘겨준 내용이 에러 페이지에 뜨게 됩니다.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="k">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+
+<span class="kn">from</span> <span class="nn">apps.manager</span> <span class="k">import</span> <span class="n">Custom404</span>
+
+<span class="k">raise</span> <span class="n">Custom404</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;존재하지 않는 게시글입니다.&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>템플릿<a class="headerlink" href="#id8" title="제목 주소">¶</a></h3>
+<p><strong>Manager</strong> 앱은 사이트 기본 레이아웃을 정의한 템플릿을 제공합니다.
+<code class="file docutils literal"><span class="pre">templates/manager/base.jinja</span></code> 는 기본 HTML 파일 구조를 정의합니다.
+모바일 용 사이드 네비게이션과 헤더, 푸터는 각각 같은 디렉토리 내의 <code class="file docutils literal"><span class="pre">side_nav.jinja</span></code>, <code class="file docutils literal"><span class="pre">header.jinja</span></code>, <code class="file docutils literal"><span class="pre">footer.jinja</span></code> 에 기술되어 있습니다.</p>
+<p>이 베이스 레이아웃을 토대로 서비스 기본 레이아웃을 설정한 <code class="file docutils literal"><span class="pre">app_base.jinja</span></code> 역시 마련되어 있습니다.
+이는 카테고리명과 데스크탑 용 사이드 네비게이션을 출력하며 서비스 컨텐츠가 출력될 영역을 <code class="docutils literal"><span class="pre">{%</span> <span class="pre">block</span> <span class="pre">content</span> <span class="pre">%}{%</span> <span class="pre">endblock</span> <span class="pre">%}</span></code> 으로 잡습니다.
+따라서, 새롭게 웹디자인을 하지 않고 기존 레이아웃을 사용하여 제작할 서비스의 경우 레이아웃 걱정 없이 서비스 컨텐츠만 작성하시면 됩니다.
+또한, <code class="file docutils literal"><span class="pre">base.jinja</span></code> 에서 정의된 <em class="dfn">stylesheet</em> 블록과 <em class="dfn">javascript</em> 블록을 활용하여 추가적인 페이지 구성요소를 쉽게 로드할 수 있습니다.
+아래는 예시입니다.</p>
+<div class="highlight-html+jinja"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">extends</span> <span class="s1">&#39;manager/app_base.jinja&#39;</span> <span class="cp">%}</span>
+
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">javascript</span> <span class="cp">%}</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">static</span><span class="o">(</span><span class="s1">&#39;custom/script.js&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">content</span> <span class="cp">%}</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>커스텀 서비스 내용<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="cp">{%</span> <span class="k">endcontent</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<p>메인 페이지(<code class="file docutils literal"><span class="pre">main.jinja</span></code>) 역시 서비스 기본 레이아웃과 마찬가지로 <code class="file docutils literal"><span class="pre">base.jinja</span></code> 를 상속받습니다.
+특별한 경우에 내부의 <code class="docutils literal"><span class="pre">div#main-spot</span></code> 등을 수정할 수 있을 것입니다.</p>
+</div>
+</div>
+<div class="section" id="apps-ksso-kaist">
+<h2>apps.ksso (KAIST 단일인증서비스)<a class="headerlink" href="#apps-ksso-kaist" title="제목 주소">¶</a></h2>
+<ul class="simple">
+<li><code class="file docutils literal"><span class="pre">apps/ksso/</span></code></li>
+</ul>
+<p>총학생회 사이트의 인증체계는 기본적으로 <strong>KAIST 단일인증서비스</strong> 를 이용합니다.
+포탈 계정을 통해 로그인이 가능하게 하는 것입니다.
+물론 단체 계정, 루트 계정 등은 django의 기본 <code class="xref py py-class docutils literal"><span class="pre">User</span></code> 모델을 이용하며, <code class="docutils literal"><span class="pre">/admin</span></code> 에서 로그인합니다.</p>
+<div class="section" id="django4kaist">
+<h3>DJANGO4KAIST<a class="headerlink" href="#django4kaist" title="제목 주소">¶</a></h3>
+<p><a class="reference external" href="https://github.com/talkwithraon/tree/py3/">DJANGO4KAIST</a> 는 <strong>KAIST 단일인증서비스 v3.0</strong> 을 django로 구현하는 프로젝트입니다.
+<a class="reference external" href="https://github.com/talkwithraon/">김강인</a> 제29대 총학생회장이 완성하였으며, <a class="reference external" href="https://github.com/hangpark/">박항</a> 제30대 부총학생회장이 파이썬 3 버전으로 수정하였습니다.
+<strong>ksso</strong> 이름의 django 앱으로 만들어져 있습니다.
+본 프로젝트에서는 이 <strong>ksso</strong> 앱을 수정하여 사용하고 있습니다.
+이 문서에는 기본사항만 담겨있습니다.
+자세한 내용은 <a class="reference external" href="https://github.com/talkwithraon/tree/py3/">DJANGO4KAIST</a> <code class="file docutils literal"><span class="pre">README</span></code> 문서를 참고하시길 바랍니다.</p>
+<p>참고로 <strong>KAIST 단일인증서비스 v3.0</strong> 은 등록된 아이피에서 443 포트로 HTTPS 통신을 해야만 사용하실 수 있습니다.
+따라서 로컬에서 테스트하기가 어려운 면이 있습니다.</p>
+</div>
+<div class="section" id="id9">
+<h3>포탈 계정 정보<a class="headerlink" href="#id9" title="제목 주소">¶</a></h3>
+<p><strong>KAIST 단일인증서비스</strong> 를 이용하여 로그인을 알맞게 하게 되면 KAIST 학교당국으로부터 총학생회 서버로 사용자의 개인정보가 전달됩니다.
+기본 인증모델은 django 내장 <code class="xref py py-class docutils literal"><span class="pre">User</span></code> 모델을 사용하며, ID와 패스워드 둘 다 전달받은 사용자의 UID로 설정합니다.
+(이 경우 패스워드가 암호화되기 때문에 나중에 UID를 패스워드로 입력하여도 해시값이 일치하지 않아 직접 로그인이 불가능합니다.)
+<code class="xref py py-class docutils literal"><span class="pre">User</span></code> 모델을 확장하기 위해서 <strong>ksso</strong> 앱에서는 <code class="xref py py-class docutils literal"><span class="pre">PortalInfo</span></code> 라는 모델을 정의하고 이를 <code class="xref py py-class docutils literal"><span class="pre">User</span></code> 모델과 1-1 대응을 시킵니다.
+이 <code class="xref py py-class docutils literal"><span class="pre">PortalInfo</span></code> 의 각 필드에는 전달된 사용자의 개인정보가 저장됩니다.</p>
+<p>본 프로젝트가 KAIST로부터 허가 받은 사용자의 개인정보는 아래와 같습니다.</p>
+<ul class="simple">
+<li>이름 (<code class="xref py py-attr docutils literal"><span class="pre">ku_kname</span></code>)</li>
+<li>고유번호(UID) (<code class="xref py py-attr docutils literal"><span class="pre">kaist_uid</span></code>)</li>
+<li>학위과정 (<code class="xref py py-attr docutils literal"><span class="pre">ku_acad_prog</span></code>)</li>
+<li>학번 (<code class="xref py py-attr docutils literal"><span class="pre">ku_std_no</span></code>)</li>
+<li>학적상태 (<code class="xref py py-attr docutils literal"><span class="pre">ku_psft_user_status_kor</span></code>)</li>
+<li>생년월일 (<code class="xref py py-attr docutils literal"><span class="pre">ku_born_date</span></code>)</li>
+<li>성별 (<code class="xref py py-attr docutils literal"><span class="pre">ku_sex</span></code>)</li>
+<li>학과 (<code class="xref py py-attr docutils literal"><span class="pre">ou</span></code>)</li>
+<li>메일주소 (<code class="xref py py-attr docutils literal"><span class="pre">mail</span></code>)</li>
+<li>전화번호 (<code class="xref py py-attr docutils literal"><span class="pre">mobile</span></code>)</li>
+</ul>
+<p>개인정보는 합법적 테두리 안에서 최소한으로 활용해야 하며, 유지보안에 심혈을 기울여야 합니다.</p>
+</div>
+<div class="section" id="id10">
+<h3>로그인/로그아웃<a class="headerlink" href="#id10" title="제목 주소">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">/user/login/</span></code> 와 <code class="docutils literal"><span class="pre">/user/logout/</span></code> 에 접속하면 각각 <code class="xref py py-class docutils literal"><span class="pre">LoginView</span></code>, <code class="xref py py-class docutils literal"><span class="pre">LogoutView</span></code> 를 통해 로그인 절차가 진행됩니다.
+데이터베이스에 저장되어 있는 <code class="xref py py-class docutils literal"><span class="pre">PortalInfo</span></code> 는 기존 사용자가 재로그인을 할 때 해당 시점에 맞게 업데이트 됩니다.
+따라서 <code class="xref py py-class docutils literal"><span class="pre">PortalInfo</span></code> 에 저장된 정보는 최신 정보가 아닐 수 있습니다.</p>
+<p>로그인과 로그아웃 URL 뒤 <code class="docutils literal"><span class="pre">next</span></code> 파라미터를 통해 로그인/아웃 처리 후 이동할 경로를 지정할 수 있습니다.
+로그인의 경우 <em>단일 서비스 인증 페이지</em> 에서 인증을 담당하기 때문에 리다이렉션 경로 저장을 위해 쿠키를 사용합니다.
+아래는 로그인 후 <em>about</em> 페이지로 이동하는 예시입니다.</p>
+<div class="highlight-html"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/user/login/?next=/about/&quot;</span><span class="p">&gt;</span>로그인 후 about 페이지 이동<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id11">
+<h3>정보제공 동의절차<a class="headerlink" href="#id11" title="제목 주소">¶</a></h3>
+<p>기존 <strong>DJANGO4KAIST</strong> 에서 제공하는 기능에 더하여 본 프로젝트에서는 <strong>정보제공 동의절차</strong> 를 구현하였습니다.
+사용자가 본인의 개인정보 제공에 동의할 때에만 사이트를 이용할 수 있도록 최초 로그인 시 정보제공 동의페이지로 이동시킵니다.
+여기서 동의하지 않을 경우 <code class="xref py py-class docutils literal"><span class="pre">User</span></code> 모델과 <code class="xref py py-class docutils literal"><span class="pre">PortalInfo</span></code> 모델 인스턴스를 삭제하고 로그아웃 처리합니다.
+일련의 과정은 <code class="xref py py-mod docutils literal"><span class="pre">apps.ksso.views</span></code> 모듈의 <code class="xref py py-class docutils literal"><span class="pre">SignUpView</span></code>, <code class="xref py py-class docutils literal"><span class="pre">AgreeView</span></code>, <code class="xref py py-class docutils literal"><span class="pre">DisagreeView</span></code> 에 구현되어 있습니다.</p>
+<p>정보제공 동의절차 기능에 있어 중요한 점은 사용자가 동의페이지에서 아무런 선택을 하지 않은 채 사이트를 이탈할 가능성이 있다는 점입니다.
+이에 대한 해결책으로 <code class="xref py py-class docutils literal"><span class="pre">PortalInfo</span></code> 모델에 <code class="xref py py-attr docutils literal"><span class="pre">is_signed_up</span></code> 필드를 추가하여 정보제공 동의여부를 기록할 수 있도록 하였습니다.
+또한, 아직 동의여부를 선택하지 않은 사용자의 개인정보가 DB 상에 존재하는 문제점을 최대한 해결하기 위하여 시스템 관리자를 제외하고 사이트 관리자, 스태프 등이 정보를 활용하지 못하도록 <code class="xref py py-attr docutils literal"><span class="pre">is_signed_up</span></code> 이 <code class="xref py py-const docutils literal"><span class="pre">True</span></code> 인 사용자만 필터링한 <code class="xref py py-class docutils literal"><span class="pre">PortalInfoManager</span></code> 를 기본 매니저로 설정하였습니다.
+따라서 사이트 관리자, 스태프 등 어드민 페이지 이용 권한이 있는 자들은 동의여부 선택하지 않은 사용자의 개인정보를 확인할 수 없게 됩니다.</p>
+<p>직접적으로 모든 사용자를 다뤄야 할 경우가 있다면 <code class="xref py py-class docutils literal"><span class="pre">PortalInfo</span></code> 의 <code class="xref py py-attr docutils literal"><span class="pre">all_objects</span></code> 매니저를 이용하시면 됩니다.
+<code class="xref py py-class docutils literal"><span class="pre">ServiceView</span></code> 를 상속받아 구현된 모든 서비스들은 <code class="xref py py-class docutils literal"><span class="pre">SignUpRequiredMixin</span></code> 이 최우선적으로 발동하여 <code class="xref py py-attr docutils literal"><span class="pre">is_signed_up</span></code> 이 <code class="xref py py-const docutils literal"><span class="pre">False</span></code> 일 경우에 자동적으로 정보제공 동의페이지로 이동하게 됩니다.</p>
+</div>
+</div>
+<div class="section" id="apps-board">
+<h2>apps.board (게시판)<a class="headerlink" href="#apps-board" title="제목 주소">¶</a></h2>
+<ul class="simple">
+<li><code class="file docutils literal"><span class="pre">apps/board/</span></code></li>
+</ul>
+<p><strong>Board</strong> 앱은 사이트의 기본 게시판 기능을 구현합니다.
+게시판, 게시글, 댓글, 첨부파일, 태그 등 다양한 기능을 제공합니다.
+<code class="xref py py-mod docutils literal"><span class="pre">apps.board.models</span></code> 모듈 내에 위치한 <code class="xref py py-class docutils literal"><span class="pre">Board</span></code> 모델은 <code class="xref py py-class docutils literal"><span class="pre">Service</span></code> 모델을 상속받습니다.
+따라서 여타 서비스와 같이 일괄적인 관리가 가능합니다.
+기본적으로 게시판은 게시글의 집합으로, 게시글 기능 어떻게 구현하느냐가 더 중요하다고 말할 수 있습니다.</p>
+<div class="section" id="id12">
+<h3>포스트 권한<a class="headerlink" href="#id12" title="제목 주소">¶</a></h3>
+<p>게시글과 댓글은 모두 <code class="xref py py-class docutils literal"><span class="pre">BasePost</span></code> 를 상속받습니다.
+이 <code class="xref py py-class docutils literal"><span class="pre">BasePost</span></code> 모델에는 권한 관리를 위하여 <code class="xref py py-meth docutils literal"><span class="pre">is_permitted()</span></code> 메서드가 정의되어 있습니다.
+<code class="xref py py-meth docutils literal"><span class="pre">is_permitted()</span></code> 는 게시글, 댓글 등 여러 포스트 상속 모델들의 권한 설정을 커스터마이징 할 수 있도록 <code class="xref py py-meth docutils literal"><span class="pre">pre_permitted()</span></code> 와 <code class="xref py py-meth docutils literal"><span class="pre">post_permitted()</span></code> 메서드를 호출합니다.
+이들은 기본적으로 <code class="xref py py-const docutils literal"><span class="pre">True</span></code> 를 리턴하고 있으며, 게시글 댓글 등 포스트 상속 모델에서 두 메서드를 필요 시 오버라이드 하는 방식으로 활용할 수 있습니다.</p>
+<p>예를 들어, 댓글을 구현한 <code class="xref py py-class docutils literal"><span class="pre">Comment</span></code> 모델의 경우 <code class="xref py py-meth docutils literal"><span class="pre">pre_permitted()</span></code> 에서 댓글이 달린 포스트의 <em>읽기권한</em> 을 요구합니다.
+그리고 <code class="xref py py-meth docutils literal"><span class="pre">post_permitted()</span></code> 에서는 댓글이 달린 포스트가 속한 게시판에서 사용자가 요청한 권한을 갖고있는지 여부를 판단합니다.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="c1"># apps/board/models.py</span>
+
+<span class="k">class</span> <span class="nc">Comment</span><span class="p">(</span><span class="n">BasePost</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">pre_permitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_post</span><span class="o">.</span><span class="n">is_permitted</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">PERM_READ</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">post_permitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_post</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">is_permitted</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">permission</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>이런 식으로 기본적인 포스트 권한 체크 전후로 해당 포스트(위의 예제에서는 댓글)와 연결된 상위 모델들의 권한을 체크하여 연동하는 등 추가적인 로직을 손쉽게 구현할 수 있습니다.</p>
+</div>
+<div class="section" id="id13">
+<h3>사용자 활동 기록<a class="headerlink" href="#id13" title="제목 주소">¶</a></h3>
+<p>각 포스트에 조회, 추천, 비추천과 같은 사용자 반응이나 특정 활동을 기록할 수 있는 기능을 제공합니다.
+기본 사용자 활동으로 조회, 추천/비추천 두 가지가 구현되어 있습니다.
+이 외의 활동 역시 손쉽게 추가하여 제공하는 기능을 확장하실 수 있습니다.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="c1"># apps/board/models.py</span>
+
+<span class="c1"># Post Activities</span>
+<span class="n">ACTIVITY_VIEW</span> <span class="o">=</span> <span class="s1">&#39;VIEW&#39;</span>
+<span class="n">ACTIVITY_VOTE</span> <span class="o">=</span> <span class="s1">&#39;VOTE&#39;</span>
+</pre></div>
+</div>
+<p><code class="xref py py-class docutils literal"><span class="pre">PostActivity</span></code> 모델은 사용자, IP 주소, 포스트, 활동구분 4가지 정보를 저장합니다.
+기본적으로 동일 포스트에는 특정 활동을 사용자 당 한 번만 하도록 허용하고 있습니다.
+사용자가 로그인을 하지 않았을 경우 IP 주소로 이를 갈음합니다.
+이 <code class="xref py py-class docutils literal"><span class="pre">PostActivity</span></code> 모델은 <code class="xref py py-class docutils literal"><span class="pre">BasePost</span></code> 모델과 <code class="xref py py-class docutils literal"><span class="pre">User</span></code> 모델 사이의 다대다 관계에서 <a class="reference external" href="https://docs.djangoproject.com/en/1.10/topics/db/models/#intermediary-manytomany/">중간모델</a> 역할을 합니다.</p>
+<p><code class="xref py py-class docutils literal"><span class="pre">BasePost</span></code> 모델의 <code class="xref py py-meth docutils literal"><span class="pre">get_acitivity_count()</span></code> 메서드를 통해 특정 활동이 몇 번 이루어졌는지 집계할 수 있습니다.
+또한, <code class="xref py py-meth docutils literal"><span class="pre">assign_activity()</span></code> 는 특정 유저의 활동을 추가합니다.
+이 두 메서드를 통해 조회와 추천/비추천 두 활동 외에도 다양한 활동을 구현할 수 있습니다.
+<code class="xref py py-meth docutils literal"><span class="pre">assign_activity()</span></code> 매서드는 이미 활동을 한 사용자의 경우 아무런 처리를 하지 않고 <code class="xref py py-const docutils literal"><span class="pre">False</span></code> 를 리턴합니다.
+처음 활동을 하는 경우 활동을 등록하고 <code class="xref py py-const docutils literal"><span class="pre">True</span></code> 를 리턴합니다.
+이 리턴값을 가지고 활동 처리 후 추가 로직을 뷰 차원에서 구현할 수도 있을 것입니다.</p>
+<p>위 두 메서드를 조회 활동에 한정시킨 메서드 <code class="xref py py-meth docutils literal"><span class="pre">get_hits()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">assign_hits()</span></code> 가 존재하며, shortcut 개념으로 이해하면 됩니다.</p>
+<p>추천/비추천의 경우 동일한 활동으로 기록되며, 이는 특정 사용자가 추천을 했는지 비추천을 했는지 파악하지 못하도록 하기 위함입니다.
+따라서 위에서 언급한 뷰 차원의 추가 로직을 통해 <code class="xref py py-class docutils literal"><span class="pre">BasePost</span></code> 모델에 마련되어 있는 <code class="xref py py-attr docutils literal"><span class="pre">vote_up</span></code> 과 <code class="xref py py-attr docutils literal"><span class="pre">vote_down</span></code> 필드를 단발적으로 증가시키는 형태로 추천/비추천 수를 기록합니다.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="c1"># apps/board/views.py::PostVoteView::post</span>
+
+<span class="o">...</span>
+
+<span class="n">is_new</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">assign_activity</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">ACTIVITY_VOTE</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">is_new</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;up&#39;</span><span class="p">:</span>
+        <span class="n">post</span><span class="o">.</span><span class="n">vote_up</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;down&#39;</span><span class="p">:</span>
+        <span class="n">post</span><span class="o">.</span><span class="n">vote_down</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">post</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">is_new</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id14">
+<h3>포스트 뷰<a class="headerlink" href="#id14" title="제목 주소">¶</a></h3>
+<p>게시글을 보여주는 <code class="xref py py-class docutils literal"><span class="pre">PostView</span></code> 는 <code class="xref py py-class docutils literal"><span class="pre">BoardView</span></code> 를 상속받습니다.
+그런데 단순히 게시판 권한 체크 로직만 따라가면 개별 포스트에 대한 권한 체크가 이뤄지지 않습니다.
+이를 해결하기 위해 <code class="xref py py-class docutils literal"><span class="pre">PostView</span></code> 는 <code class="xref py py-class docutils literal"><span class="pre">PermissionRequiredServiceMixin</span></code> 의 <code class="xref py py-meth docutils literal"><span class="pre">has_permission()</span></code> 을 오버라이드 하여 개별 포스트 권한 체크를 시행하고 있습니다.
+<code class="xref py py-meth docutils literal"><span class="pre">has_permission()</span></code> 에서 사용되는 <code class="xref py py-attr docutils literal"><span class="pre">required_permission</span></code> 값을 기본 <em>읽기권한</em> 으로 설정하였습니다.
+그리고 우선적으로 <code class="xref py py-meth docutils literal"><span class="pre">super()</span></code> 메서드를 통해 게시판 <em>접근권한</em> 이 있는지 체크한 후 <code class="xref py py-class docutils literal"><span class="pre">Post</span></code> 객체를 추출하여 저장합니다.
+마지막으로 이 객체에 대한 이용권한을 테스트하고 그 여부를 리턴하고 있습니다.</p>
+<p>위 과정은 <code class="xref py py-class docutils literal"><span class="pre">PermissionRequiredServiceMixin</span></code> 을 어떻게 활용하고 확장할 것인가에 대한 좋은 예시라고 생각합니다.
+더욱 주목해야 할 점은, 이러한 <code class="xref py py-class docutils literal"><span class="pre">PostView</span></code> 를 상속하여 게시글을 수정하는 <code class="xref py py-class docutils literal"><span class="pre">PostEditView</span></code>, 게시글을 삭제하는 <code class="xref py py-class docutils literal"><span class="pre">PostDeleteView</span></code>, 댓글을 작성하는 <code class="xref py py-class docutils literal"><span class="pre">CommentWriteView</span></code>, 댓글을 삭제하는 <code class="xref py py-class docutils literal"><span class="pre">CommentDeleteView</span></code>, 게시글 추천기능을 관장하는 <code class="xref py py-class docutils literal"><span class="pre">PostVoteView</span></code> 등이 구현되었다는 점입니다.
+예를 들어, <code class="xref py py-class docutils literal"><span class="pre">PostDeleteView</span></code> 의 경우 <code class="xref py py-attr docutils literal"><span class="pre">required_permission</span></code> 을 <em>삭제권한</em> 으로만 설정하고 삭제로직만 추가하면 구현이 완료되는 것입니다.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="c1"># apps/board/views.py</span>
+
+<span class="k">class</span> <span class="nc">PostDeleteView</span><span class="p">(</span><span class="n">PostView</span><span class="p">):</span>
+
+<span class="n">template_name</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">required_permission</span> <span class="o">=</span> <span class="n">PERM_DELETE</span>
+
+<span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_</span>
+    <span class="n">post</span><span class="o">.</span><span class="n">is_deleted</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">post</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="n">post</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">get_absolute_url</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>위와 같이 상속기능을 이용하여 손쉽게 많은 기능들을 구현할 수 있습니다.</p>
+</div>
+</div>
+<div class="section" id="middlewares-locale">
+<h2>middlewares.locale (다국어 지원)<a class="headerlink" href="#middlewares-locale" title="제목 주소">¶</a></h2>
+<ul class="simple">
+<li><code class="file docutils literal"><span class="pre">middlewares/locale.py</span></code></li>
+</ul>
+<p><strong>Locale</strong> 모듈은 세션을 통해 사용자가 원하는 언어로 사이트를 이용할 수 있게끔 지원하는 기능을 제공합니다.
+기본적으로 사용자 로케일이 전달되어 이를 변경하여 다른 언어로 사이트를 이용하기에는 번잡스러운 부분이 많습니다.
+그러나 본 모듈 내 있는 <code class="xref py py-class docutils literal"><span class="pre">SessionBasedLocaleMiddleware</span></code> 는 사용자가 한 번 URL 상 GET 파라미터 <code class="docutils literal"><span class="pre">lang</span></code> 을 통해 언어코드를 전달하면 로케일을 변경하고 이를 세션에 저장하여 지속성을 유지합니다.</p>
+<p>본 미들웨어는 <a class="reference external" href="https://github.com/schmidsi/">schmidsi</a> 님의 <a class="reference external" href="https://djangosnippets.org/snippets/1948/">Set language via HTTP GET Parameter</a> 코드를 django 1.10 버전에 맞게 수정한 것입니다.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="production.html" class="btn btn-neutral" title="배포하기" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Hang Park.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
+      <script type="text/javascript" src="static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
