@@ -165,7 +165,7 @@ class PostWriteView(BoardView):
         """
         user = request.user if request.user.is_authenticated() else None
         post = Post(author=user, board=self.service.board)
-        form = PostForm(request.POST, request.FILES, instance=post)
+        form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())
@@ -190,7 +190,7 @@ class PostEditView(PostView):
         """
         context = super().get_context_data(**kwargs)
         post = self.post_
-        context['form'] = PostForm(instance=post)
+        context['form'] = PostForm(self.service.board, instance=post)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -202,7 +202,7 @@ class PostEditView(PostView):
         재전달하여 수정을 요구합니다.
         """
         post = self.post_
-        form = PostForm(request.POST, request.FILES, instance=post)
+        form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())
