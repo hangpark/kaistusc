@@ -1,9 +1,11 @@
 $().ready(function() {
     function convert2html(str) {
-      return "<p>" + str.replace(/^\n+/g, "").replace(/\n+$/g, "").replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") + "</p>";
+        return "<p>" + str.replace(/^\n+/g, "").replace(/\n+$/g, "").replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") + "</p>";
     }
 
-    $("#post-content, .comment-content").html(convert2html($("#post-content").html()));
+    $("#post-content, .comment-content").each(function() {
+        $(this).html(convert2html($(this).html()));
+    });
 
     $("#post-lang-func button.post-lang").click(function() {
         var lang = $(this).attr('post-lang');
