@@ -43,6 +43,9 @@
         {% endfor %}
       </div>
       <div class="col-sm-6">
+        <a target="_blank" href="http://www.uplus.co.kr/sqr/evnt/evtp/RetrieveEventProgDetail.hpi?selectedEventId=246&utm_source=AD&utm_campaign=news&utm_medium=banner&utm_content=PC_G6">
+          <img id="banner" src="{{ static('manager/images/banner.jpeg') }}">
+        </a>
         <div id="fb-root"></div>
         <script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v2.6&appId=551602898355546";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>
         <div class="fb-page" data-href="https://www.facebook.com/kaistusc/" data-tabs="timeline" data-width="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/kaistusc/"><a href="https://www.facebook.com/kaistusc/">KAIST 학부 총학생회</a></blockquote></div></div>
@@ -75,4 +78,28 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  function is_mobile() {
+   if( navigator.userAgent.match(/Android/i)
+   || navigator.userAgent.match(/webOS/i)
+   || navigator.userAgent.match(/iPhone/i)
+   || navigator.userAgent.match(/iPad/i)
+   || navigator.userAgent.match(/iPod/i)
+   || navigator.userAgent.match(/BlackBerry/i)
+   || navigator.userAgent.match(/Windows Phone/i)
+   ){
+      return true;
+    }
+   else {
+      return false;
+    }
+  }
+
+  if(is_mobile()) {
+    $('#banner').attr('href', 'http://m.shop.uplus.co.kr/sqr/mobv/evnt/evnt/eventProdDetail.hpi?selectedEventId=246&utm_source=AD&utm_campaign=news&utm_medium=banner&utm_content=M_G6');
+  }
+  </script>
 {% endblock %}
