@@ -32,6 +32,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr']
 
+CSRF_TRUSTED_ORIGINS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr']
+
 
 # Application definition
 
