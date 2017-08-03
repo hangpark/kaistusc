@@ -20,6 +20,8 @@ from django.views.generic import TemplateView
 from apps.board.views import BoardView
 from apps.manager.views import ServiceView, MainPageView, ErrorView
 
+from apps.board.router import router
+
 handler400 = ErrorView.as_view(template_name='error/400.jinja', status_code=400)
 handler403 = ErrorView.as_view(template_name='error/403.jinja', status_code=403)
 handler404 = ErrorView.as_view(template_name='error/404.jinja', status_code=404)
@@ -28,6 +30,8 @@ handler500 = ErrorView.as_view(template_name='error/500.jinja', status_code=500)
 urlpatterns = [
     # Main page
     url(r'^$', MainPageView.as_view(), name='main'),
+
+    url(r'^api/', include(router.urls)),
 
     # Basic app redirections
     url(r'^admin/', admin.site.urls),

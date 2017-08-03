@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_jinja',
+    'rest_framework',
+    'rest_framework.authtoken',
     'apps.manager',
     'apps.ksso',
     'apps.board',
@@ -175,3 +177,15 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Authentication
 
 LOGIN_URL = '/user/login/'
+
+
+# http://www.django-rest-framework.org/
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
