@@ -90,7 +90,8 @@ class Rule(models.Model):
     @property
     def d_chapters(self):
         q = self.chapters.filter(parent_chapter=None)
-        chapter_type_list = [chapter_type[0] for chapter_type in CHAPTER_TYPE.values()]
+        ordering = ['PREAMBLE', 'CHAPTER', 'SECTION', 'SUPPLEMENT']
+        chapter_type_list = [CHAPTER_TYPE[chapter_type][0] for chapter_type in ordering]
         q_list = [q.filter(chapter_type=chapter_type) for chapter_type in chapter_type_list]
         return list(chain(*q_list))
 
