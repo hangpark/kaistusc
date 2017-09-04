@@ -1,0 +1,42 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'ksso/macros.jinja' import name %}
+{% from 'revision/panel.jinja' import panel with context %}
+{% from 'revision/header.jinja' import header %}
+
+{% block content %}
+<div id="container" class="rule-item">
+    <div class="rule-item-view">
+        {{ header(rule_item) }}
+        {% block item_area %}{% endblock %}
+    </div>
+    <div class="rule-discussion-view">
+    {% for discussion in discussions %}
+        {% call panel(('' if discussion.from_committee else '<i class="fa fa-commenting"></i> ') + discussion.subject, 'primary' if discussion.from_committee else 'default', None if discussion.from_committee else '/revision/discussion/{}/comment/new'.format(discussion.id), True, 'discussion-{}'.format(discussion.id)) %}
+            {% if discussion.d_comments %}
+            {% for comment in discussion.d_comments %}
+                <li class="list-group-item">
+                    <div class="rule-comment-body">{{ comment.body }}</div>
+                    {% if not discussion.from_committee %}
+                    <div class="rule-comment-info">{{ name(comment.author) }} | {{ comment.date_created }}</div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            {% else %}
+                <li class="list-group-item">의견이 없습니다.</li>
+            {% endif %}
+        {% endcall %}
+    {% endfor %}
+    </div>
+    <div class="rule-discussion-add panel panel-default">
+        <div class="panel-heading"><i class="fa fa-plus"></i> 새 논의사항 추가</div>
+        <form id="add-discussion" action="/revision/{{ rule_item_type }}/{{ rule_item.id }}/discussion/new" method="post">{% csrf_token %}
+            <div class="input-group">
+                <input type="text" class="form-control" name="subject" placeholder="논의명">
+                <textarea class="form-control" name="body" placeholder="논의내용" rows=8></textarea>
+                <span onclick="document.getElementById('add-discussion').submit()" class="input-group-addon btn btn-primary">등록</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

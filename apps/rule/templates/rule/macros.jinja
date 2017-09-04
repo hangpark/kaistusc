@@ -1,0 +1,42 @@
+{% macro render_clause_first(clause, show_num=True, first=True, chapter=False) -%}
+    <p class="rule-clause{% if first %} rule-clause-first{% endif %}{% if chapter %} rule-clause-chapter{% endif %}">{{ caller() }}{% if clause.num and show_num %}{{ clause.num_v }} {% endif %}{{ clause.content }}</p>
+{%- endmacro %}
+
+{% macro render_clause(clause, chapter=False) -%}
+    {% call render_clause_first(clause, True, False, chapter) %}{% endcall %}
+{%- endmacro %}
+
+{% macro render_article(article) %}
+    <div class="rule-article" {% if article.is_normal() %}id="article-{{ article.num }}"{% endif %}>
+    {% call render_clause_first(article.first_clause, article.num_clauses != 1) %}
+        {%- if article.num -%}
+            <span class="rule-article-title">제{{ article.num }}조
+            {%- if article.title %}({{ article.title }}){% endif -%}
+            </span> {% endif -%}
+    {% endcall %}
+    {% for clause in article.rest_clauses %}
+        {{ render_clause(clause) }}
+    {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro render_chapter_title(chapter) %}
+    <div class="rule-chapter-title {% if chapter.chapter_type == 'PRE' %} rule-preamble-title{% elif chapter.chapter_type == 'SEC' %} rule-section-title{% elif chapter.chapter_type == 'SUPPL' %} rule-supplement-title{% endif %}">
+    {%- if chapter.num %}<span class="rule-chapter-num">제{{ chapter.num }}{{ chapter.chapter_type_v }}</span> {% endif -%}
+    {{ chapter.content }}</div>
+    {% for clause in chapter.d_clauses %}
+        {{ render_clause(clause, True) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_chapter(chapter) %}
+    <div class="rule-chapter{% if chapter.chapter_type == 'PRE' %} rule-preamble{% elif chapter.chapter_type == 'SEC' %} rule-section{% elif chapter.chapter_type == 'SUPPL' %} rule-supplement{% endif %}">
+        {{ render_chapter_title(chapter) }}
+        {% for sub_chapter in chapter.d_chapters %}
+            {{ render_chapter(sub_chapter) }}
+        {% endfor %}
+        {% for article in chapter.d_articles %}
+            {{ render_article(article) }}
+        {% endfor %}
+    </div>
+{% endmacro %}

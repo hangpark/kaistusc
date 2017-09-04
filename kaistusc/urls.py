@@ -38,7 +38,9 @@ urlpatterns = [
     url(r'^user/', include('apps.ksso.urls', namespace='ksso')),
 
     # Service redirections
+    url(r'^(?P<url>usc/rule)/', include('apps.rule.urls.rule')),
     url(r'^(?P<url>board/[a-z0-9]*[a-z]+[a-z0-9]*)/', include('apps.board.urls')),
+    url(r'^revision/', include('apps.rule.urls.revision')),
 
     # Custom static pages
 ]

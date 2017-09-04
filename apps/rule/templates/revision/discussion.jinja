@@ -1,0 +1,48 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'revision/panel.jinja' import panel %}
+
+{% block content %}
+<div id="container" class="rule-item">
+    <h3><b>KAIST 학부 총학생회 학생회칙 전부개정</b></h3>
+    <hr/>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            모두가 함께 만드는 학생회칙
+        </div>
+        <div class="panel-body rule-discussion-help">
+            <p><b>학생회칙은 학우 모두의 것입니다.</b></p>
+            <p>이 개정 플랫폼을 통해 학우 여러분들은 회칙개정에 대한 의견을 손쉽게 주고받을 수 있습니다. 아직 로그인을 하시지 않으셨다면 포탈 계정으로 <a href="/user/login">로그인</a> 해보시는 게 어떨까요?</p>
+        </div>
+    </div>
+    {% call panel('목차', 'primary') %}
+    <ul class="rule-discussion-navi">
+        <li><a href="{{ rule.get_revision_url() }}">제목 및 연혁</a></li>
+        {% for chapter in rule.d_chapters %}
+        <li>
+            <a href="{{ chapter.get_revision_url() }}">{{ chapter.verbose }}</a>
+            {% if chapter.d_chapters or chapter.d_articles %}
+            <ul>
+            {% for section in chapter.d_chapters %}
+                <li>
+                    <a href="{{ section.get_revision_url() }}">{{ section.verbose }}</a>
+                    {% if section.d_articles %}
+                    <ul>
+                    {% for article in section.d_articles %}
+                        <li><a href="{{ article.get_revision_url() }}">{{ article.verbose }}</a></li>
+                    {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            {% for article in chapter.d_articles %}
+                <li><a href="{{ article.get_revision_url() }}">{{ article.verbose }}</a></li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endcall %}
+</div>
+{% endblock %}

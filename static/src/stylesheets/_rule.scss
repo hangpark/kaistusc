@@ -1,0 +1,199 @@
+$color-rule-emph: #0e268b;
+
+.rule-viewer {
+  margin-top: 24px;
+  margin-right: 16px;
+
+  a {
+    border-bottom: 1px dashed #333;
+  }
+  .rule-title {
+    text-align: center;
+    font-size: 22pt;
+    font-weight: bold;
+  }
+  .rule-info {
+    margin-top: 8px;
+    text-align: center;
+    color: $color-rule-emph;
+  }
+  .rule-history {
+    text-align: right;
+    margin: 36px 0;
+    li {
+      list-style: none;
+    }
+  }
+  .rule-chapter {
+    margin-top: 32px;
+
+    &.rule-preamble {
+      .rule-chapter-title {
+        margin-left: 0px;
+        text-align: center;
+        letter-spacing: .4em;
+        margin-bottom: 24px;
+      }
+
+      .rule-clause {
+        margin-left: 0;
+        text-indent: 20px;
+      }
+    }
+
+    &.rule-section .rule-chapter-title {
+      font-size: 14pt;
+    }
+
+    &.rule-supplement .rule-chapter-title {
+      font-size: 12pt;
+    }
+  }
+  .rule-chapter-title {
+    margin-left: 16px;
+    margin-bottom: 14px;
+    font-size: 16pt;
+    font-weight: bold;
+    color: $color-rule-emph;
+  }
+  .rule-article {
+    margin-bottom: 16px;
+  }
+  .rule-clause {
+    font-size: 11pt;
+    margin: 0 0 0 20px;
+    line-height: 1.7;
+    text-align: justify;
+    text-align-last: left;
+    &:first-child {
+      text-indent: -20px;
+    }
+  }
+  .rule-article-title {
+    font-weight: bold;
+    color: $color-rule-emph;
+  }
+}
+
+#rule-modal {
+  .rule-viewer {
+    margin: 0;
+  }
+  .rule-article {
+    margin: 0;
+  }
+}
+
+.rule-item {
+  .rule-discussion-help {
+    p {
+      text-align: justify;
+      text-align-last: left;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    a {
+      color: #315f8e;
+      border-bottom: 1px dashed #315f8e;
+    }
+  }
+  .rule-discussion-navi {
+    padding-left: 0;
+    font-weight: bold;
+    li {
+      list-style: none;
+    }
+    &>li>ul {
+      padding-left: 0;
+      font-weight: normal;
+      &>li>ul {
+        padding-left: 10px;
+        font-size: 10pt;
+      }
+    }
+  }
+  .rule-chapter-num, .rule-article-title {
+    font-weight: bold;
+  }
+  .rule-preamble-title {
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .rule-clause {
+    text-align: justify;
+    text-align-last: left;
+  }
+  .rule-article {
+    p {
+      margin: 0;
+    }
+    .rule-clause {
+      margin: 0 0 0 20px;
+      &:first-child {
+        text-indent: -20px;
+      }
+    }
+  }
+  .rule-clause-chapter {
+    margin: 0;
+  }
+  .rule-child-direct, .rule-child-indirect {
+    margin: 0;
+    padding: 0;
+    li {
+      list-style: none;
+    }
+  }
+  .rule-child-indirect {
+    padding-left: 12px;
+    li {
+      font-size: 10pt;
+    }
+  }
+  .rule-comment-info {
+    margin-top: 8px;
+    font-size: 10pt;
+    color: #888;
+  }
+  .panel {
+    border-radius: 0;
+    .panel-heading {
+      padding-top: 6px;
+      padding-bottom: 6px;
+      font-weight: bold;
+    }
+    &.panel-primary {
+      border-color: #315f8e;
+      & * {
+        border-color: #315f8e;
+      }
+      .panel-heading {
+        background-color: #315f8e;
+        color: #fff;
+      }
+    }
+    &.panel-default {
+      border-color: #ffc8c8;
+      & * {
+        border-color: #ffc8c8;
+      }
+      .panel-heading {
+        background-color: #ffc8c8;
+        color: #2b2b2b;
+      }
+    }
+  }
+  input:first-child {
+    border-bottom: 0;
+  }
+  textarea {
+    resize: none;
+  }
+  * {
+    border-radius: 0;
+  }
+  hr {
+    border-color: #bbb;
+  }
+}

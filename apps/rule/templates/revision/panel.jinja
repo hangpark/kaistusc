@@ -1,0 +1,26 @@
+{% macro panel(title, type='default', comment=None, list=False, id=None) %}
+    <div class="panel panel-{{ type }}">
+        <div class="panel-heading">{{ title|safe }}</div>
+        {% if list %}
+        <ul class="list-group">
+            {{ caller() }}
+            {% if comment %}
+            <form {% if id %}id="{{ id }}" {% endif %}action="{{ comment }}" method="post" class="input-group">{% csrf_token %}
+                <textarea name="body" class="form-control" placeholder="새 의견 등록" rows=5></textarea>
+                <span type="submit" onclick="document.getElementById('{{ id }}').submit();" class="input-group-addon btn btn-primary">등록</span>
+            </form>
+            {% endif %}
+        </ul>
+        {% else %}
+        <div class="panel-body">{{ caller() }}</div>
+        {% if comment %}
+        <div class="list-group">
+            <form {% if id %}id="{{ id }}" {% endif %}action="{{ comment }}" method="post" class="input-group">{% csrf_token %}
+                <textarea name="body" class="form-control" placeholder="새 의견 등록" rows=5></textarea>
+                <span type="submit" onclick="document.getElementById('{{ id }}').submit();" class="input-group-addon btn btn-primary">등록</span>
+            </form>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+{% endmacro %}

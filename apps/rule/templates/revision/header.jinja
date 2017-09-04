@@ -1,0 +1,8 @@
+{% macro header(rule_item) %}
+    <h3><b>{{ rule_item.verbose }}</b> <small><span class="label label-{% if rule_item.revision_class == 'new' %}primary{% elif rule_item.revision_class == 'revised' %}warning{% else %}success{% endif %}">{% if rule_item.revision_class == 'new' %}신설{% elif rule_item.revision_class == 'revised' %}개정{% else %}유지{% endif %}</span>
+    {% for parent in rule_item.get_parents() %}
+        <a href="{{ parent.get_revision_url() }}"><span class="label label-default">{{ parent.verbose }}</span></a>
+    {%- endfor -%}
+</small></h3>
+<hr/>
+{% endmacro %}

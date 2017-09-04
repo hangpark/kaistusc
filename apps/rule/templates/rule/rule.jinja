@@ -1,0 +1,35 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'rule/macros.jinja' import render_chapter, render_article %}
+
+{% block content %}
+<div id="container" class="rule-viewer">
+    <div class="rule-title">{{ rule.name }}</div>
+    <div class="rule-info">[{{ rule.rule_type_v }}, {{ rule.date_resolved|rule_date }} {{rule.revision_type_v }}]</div>
+    <ul class="rule-history">
+    {%- for history in rule_list -%}
+        <li><a href="{{ rule_set.get_absolute_url() }}/{{ history.date_resolved }}">{{ history.date_resolved|rule_date }} {{ history.revision_type_v }}</li></a>
+    {%- endfor -%}
+    </ul>
+    {% for chapter in rule.d_chapters %}
+        {{ render_chapter(chapter) }}
+    {% endfor %}
+    {% for article in rule.d_articles %}
+        {{ render_article(article) }}
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="rule-modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">조문보기</h4>
+      </div>
+      <div class="modal-body rule-viewer">
+        <div id="rule-modal-article" class="rule-article"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

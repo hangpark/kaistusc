@@ -1,0 +1,21 @@
+{% extends 'revision/item_base.jinja' %}
+
+{% from 'revision/panel.jinja' import panel %}
+
+{% block item_area %}
+{% call panel('기존규정명', 'primary') %}
+    {% if rule_item.prev_rule -%}
+        {{ rule_item.prev_rule.name }}
+    {%- else -%}
+        연혁이 없습니다.
+    {%- endif %}
+{% endcall %}
+{% call panel('개정규정명', 'primary') %}
+    {{ rule_item.name }}
+{% endcall %}
+{% call panel('규정연혁', 'primary', list=True) %}
+    {% for history in rule_list %}
+    <li class="list-group-item">{{ history.date_resolved }} {{ history.revision_type_v }}</li>
+    {% endfor %}
+{% endcall %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'revision/item_base.jinja' %}
+
+{% from 'rule/macros.jinja' import render_article %}
+{% from 'revision/panel.jinja' import panel %}
+
+{% block item_area %}
+{% call panel('기존조문', 'primary') %}
+    {% if rule_item.prev_article -%}
+        {{ render_article(rule_item.prev_article) }}
+    {%- else -%}
+        연혁이 없습니다.
+    {%- endif %}
+{% endcall %}
+{% call panel('개정조문', 'primary') %}
+    {{ render_article(rule_item) }}
+{% endcall %}
+{% endblock %}

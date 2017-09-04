@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'apps.manager',
     'apps.ksso',
     'apps.board',
+    'apps.rule',
 ]
 
 MIDDLEWARE = [

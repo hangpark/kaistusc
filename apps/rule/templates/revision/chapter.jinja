@@ -1,0 +1,40 @@
+{% extends 'revision/item_base.jinja' %}
+
+{% from 'rule/macros.jinja' import render_chapter_title %}
+{% from 'revision/panel.jinja' import panel %}
+
+{% block item_area %}
+{% call panel('기존조문', 'primary') %}
+    {% if rule_item.prev_chapter -%}
+        {{ render_chapter_title(rule_item.prev_chapter) }}
+    {%- else -%}
+        연혁이 없습니다.
+    {%- endif %}
+{% endcall %}
+{% call panel('개정조문', 'primary') %}
+    {{ render_chapter_title(rule_item) }}
+{% endcall %}
+{% if rule_item.d_chapters or rule_item.d_articles%}
+{% call panel('하위조문', 'primary') %}
+    <ul class="rule-child-direct">
+    {% for chapter in rule_item.d_chapters %}
+        <li>
+            <a href="{{ chapter.get_revision_url() }}">{{ chapter.verbose }}</a>
+            {% if chapter.d_articles %}
+            <ul class="rule-child-indirect">
+            {% for article in chapter.d_articles %}
+                <li><a href="{{ article.get_revision_url() }}">{{ article.verbose }}</a></li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+    {% if rule_item.d_articles %}
+    {% for article in rule_item.d_articles %}
+        <li><a href="{{ article.get_revision_url() }}">{{ article.verbose }}</a></li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+{% endcall %}
+{% endif %}
+{% endblock %}
