@@ -348,7 +348,7 @@ class Article(models.Model):
     def verbose(self):
         if self.title:
             return _("제{}조 {}").format(self.num, self.title)
-        return _("제{}조 {}").format(self.num)
+        return _("제{}조").format(self.num)
 
     def get_rule(self):
         hierarchy = self.get_parents()
