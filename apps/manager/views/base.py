@@ -125,7 +125,7 @@ class NavigatorMixin(object):
         """
         context = super().get_context_data(**kwargs)
         context['navigator'] = []
-        categories = Category.objects.all()
+        categories = Category.objects.filter(is_open=True)
         for category in categories:
             context['navigator'].append({
                 'category': category,
