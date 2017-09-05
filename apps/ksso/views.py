@@ -38,25 +38,35 @@ class LoginView(TemplateView):
         즉, 정상적인 사용자는 KAIST 단일인증서비스에서 제공하는 로그인
         페이지에서 포탈 계정정보를 입력하기 전과 후 총 두 번 본 뷰를 실행합니다.
         """
-        self.token = self.request.COOKIES.get('SATHTOKEN', False)
-        if self.token:
-            self.user = PortalController(self.token).retrieve_user()
-            if self.user:
-                login(request, self.user)
-                self.next = self.request.COOKIES.get(
-                    'REDIRECT_URL_TOKEN', settings.AUTH_REDIRECT_URL)
-                if self.user.portal_info.is_signed_up:
-                    response = redirect(self.next)
-                else:
-                    response = redirect('ksso:signup')
-                    response['Location'] += '?next=%s' % (self.next,)
-            else:
-                response = redirect(settings.AUTH_REDIRECT_URL)
-            response.delete_cookie('REDIRECT_URL_TOKEN')
-            response.delete_cookie('SATHTOKEN', '/', '.kaist.ac.kr')
-            return response
+        token = request.COOKIES.get('SATHTOKEN', False)
+        if token:
+            return self.process_login(token)
         self.next = self.request.GET.get('next', settings.AUTH_REDIRECT_URL)
         return super().dispatch(request, *args, **kwargs)
+
+    def process_login(self, token):
+        """
+        토큰값을 이용하여 사용자 정보를 가져와 로그인하는 메서드.
+
+        토큰값이 올바르지 않아 인증 절차가 올바르게 완료되지 못한 경우 기본
+        리다이렉트 URL로 이동합니다.
+        """
+        try:
+            user = PortalController(token).retrieve_user()
+        except:
+            response = redirect(settings.AUTH_REDIRECT_URL)
+        else:
+            login(self.request, user)
+            self.next = self.request.COOKIES.get(
+                'REDIRECT_URL_TOKEN', settings.AUTH_REDIRECT_URL)
+            if user.portal_info.is_signed_up:
+                response = redirect(self.next)
+            else:
+                response = redirect('ksso:signup')
+                response['Location'] += '?next={}'.format(self.next)
+        response.delete_cookie('REDIRECT_URL_TOKEN')
+        response.delete_cookie('SATHTOKEN', '/', '.kaist.ac.kr')
+        return response
 
     def render_to_response(self, context, **response_kwargs):
         """

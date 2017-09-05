@@ -28,22 +28,29 @@ class PortalController():
     """
 
     def __init__(self, token):
-        #: 인증 컨트롤러.
-        self.auth_ctrl = self.AuthController(token)
+        try:
+            #: 인증 컨트롤러.
+            self.auth_ctrl = self.AuthController(token)
 
-        #: 인증 컨트롤러에 세팅된 요청에 대한 KAIST 단일인증서비스 서버의 응답
-        self.user_data = self.auth_ctrl.connect()
+            #: 인증 컨트롤러에 세팅된 요청에 대한 KAIST 단일인증서비스 서버의 응답
+            self.user_data = self.auth_ctrl.connect()
 
-        #: 사용자 컨트롤러.
-        self.user_ctrl = self.UserController(self.user_data)
+            #: 사용자 컨트롤러.
+            self.user_ctrl = self.UserController(self.user_data)
 
-        #: 인증된 사용자 인스턴스.
-        self.user = self.user_ctrl.session()
+            #: 인증된 사용자 인스턴스.
+            self.user = self.user_ctrl.session()
+        except:
+            self.user = None
 
     def retrieve_user(self):
         """
         인증된 사용자 인스턴스를 반환하는 메서드.
+
+        사용자 인증 처리에 오류가 발생한 경우 :class:`Exception`을 발생시킵니다.
         """
+        if not self.user:
+            raise Exception
         return self.user
 
     class UserController():
