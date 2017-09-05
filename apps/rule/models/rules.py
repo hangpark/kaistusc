@@ -237,6 +237,10 @@ class Chapter(models.Model):
         if self.rule:
             return [self.rule]
 
+    def get_rule(self):
+        hierarchy = self.get_parents()
+        return hierarchy[-1] if hierarchy else None
+
     @property
     def verbose(self):
         if self.num:
@@ -346,6 +350,10 @@ class Article(models.Model):
             return _("제{}조 {}").format(self.num, self.title)
         return _("제{}조 {}").format(self.num)
 
+    def get_rule(self):
+        hierarchy = self.get_parents()
+        return hierarchy[-1] if hierarchy else None
+
 
 class Clause(models.Model):
     """
@@ -394,3 +402,16 @@ class Clause(models.Model):
 
     def __str__(self):
         return "{} 제{}조 제{}항".format(self.rule, self.article, self.num)
+
+    def get_parents(self):
+        if self.article:
+            return [self.article] + self.article.get_parents()
+        if self.chapter:
+            return [self.chapter] + self.chapter.get_parents()
+        if self.rule:
+            return [self.rule]
+        return []
+
+    def get_rule(self):
+        hierarchy = self.get_parents()
+        return hierarchy[-1] if hierarchy else None
