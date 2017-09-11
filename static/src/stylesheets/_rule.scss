@@ -156,6 +156,22 @@ $color-rule-emph: #0e268b;
     font-size: 10pt;
     color: #888;
   }
+  .revision-recent-disc {
+    cursor: pointer;
+    .revision-recent-disc-loca {
+      font-size: 10pt;
+      margin: 0;
+    }
+    .revision-recent-disc-subject {
+      font-size: 13pt;
+      font-weight: bold;
+      margin: 0;
+    }
+    .revision-recent-info {
+      font-size: 10pt;
+      margin: 12px 0 0 0;
+    }
+  }
   .panel {
     border-radius: 0;
     .panel-heading {

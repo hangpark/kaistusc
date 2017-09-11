@@ -89,6 +89,12 @@ class RevisionDiscussionView(RevisionView):
         kwargs['url'] = '/revision/discussion'
         return super().get_service(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recent_discussion'] = Discussion.objects.order_by(
+            '-comments__date_created').distinct()[:10]
+        return context
+
 
 class RevisionItemView(RevisionDiscussionView):
     rule_item_type = None

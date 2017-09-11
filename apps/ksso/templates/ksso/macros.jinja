@@ -9,3 +9,15 @@
 		{{ _('(익명)') }}
 	{%- endif %}
 {%- endmacro %}
+
+{% macro info(user) -%}
+    {% if user and user.is_authenticated() -%}
+        {% if user.portal_info is undefined -%}
+            {{ user }}
+        {%- else -%}
+            {{ user.portal_info }} ({{ user.portal_info.ou }}{% if user.portal_info.enter_year %}·{{ user.portal_info.enter_year }}{% endif %})
+        {%- endif %}
+    {%- else -%}
+        {{ _('(익명)') }}
+    {%- endif %}
+{%- endmacro %}

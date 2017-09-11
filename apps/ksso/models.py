@@ -101,3 +101,9 @@ class PortalInfo(models.Model):
         사용자 인스턴스와 사용자 UID를 입력받습니다.
         """
         return cls(user=user, kaist_uid=kaist_uid)
+
+    @property
+    def enter_year(self):
+        if self.ku_std_no and len(self.ku_std_no) == 8:
+            return self.ku_std_no[2:4]
+        return None

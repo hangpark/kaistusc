@@ -1,5 +1,6 @@
 {% extends 'manager/app_base.jinja' %}
 
+{% from 'ksso/macros.jinja' import info %}
 {% from 'revision/panel.jinja' import panel %}
 
 {% block content %}
@@ -15,6 +16,15 @@
             <p>이 개정 플랫폼을 통해 학우 여러분들은 회칙개정에 대한 의견을 손쉽게 주고받을 수 있습니다. 아직 로그인을 하시지 않으셨다면 포탈 계정으로 <a href="/user/login">로그인</a> 해보시는 게 어떨까요?</p>
         </div>
     </div>
+    {% call panel('최근논의', 'primary', list=True) %}
+    {% for discussion in recent_discussion %}
+    <li class="list-group-item revision-recent-disc" onclick="window.location='{{ discussion.get_rule_item().get_revision_url() }}';">
+        <p class="revision-recent-disc-loca">{{ discussion.get_rule_item().verbose }}</p>
+        <p class="revision-recent-disc-subject">{{ discussion.subject }}</p>
+        <p class="revision-recent-disc-info">{{ info(discussion.comments.order_by('-date_created').first().author) }} | {{ discussion.comments.order_by('-date_created').first().date_created }}</p>
+    </li>
+    {% endfor %}
+    {% endcall %}
     {% call panel('목차', 'primary') %}
     <ul class="rule-discussion-navi">
         <li><a href="{{ rule.get_revision_url() }}">제목 및 연혁</a></li>
