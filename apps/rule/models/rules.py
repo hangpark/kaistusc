@@ -332,7 +332,7 @@ class Article(models.Model):
             if len(prev_clauses) != len(current_clauses):
                 return 'revised'
             for i in range(len(prev_clauses)):
-                if prev_clauses[i].content != prev_clauses[i].content:
+                if current_clauses[i].content != prev_clauses[i].content:
                     return 'revised'
             return 'maintain'
         return 'revised'
