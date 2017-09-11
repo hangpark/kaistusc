@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $(".rule-viewer p.rule-clause").each(function() {
+  $(".rule-article p.rule-clause").each(function() {
     $para = $(this);
     var lines = $para.html().replace(/\s(제(\d+)조)/g, " <a href='javascript:void(0);' class='rule-article-popup' data-article-num='$2'>$1</a>").split("\n");
     if (lines.length == 1) {
