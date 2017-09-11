@@ -49,9 +49,11 @@
                     {% endif %}
                 </li>
             {% endfor %}
+            <li><ul>
             {% for article in chapter.d_articles %}
                 <li><a href="{{ article.get_revision_url() }}">{{ revision_type(article) }} {{ article.verbose }}</a></li>
             {% endfor %}
+            </ul></li>
             </ul>
             {% endif %}
         </li>
