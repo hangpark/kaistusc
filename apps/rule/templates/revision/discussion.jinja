@@ -3,6 +3,10 @@
 {% from 'ksso/macros.jinja' import info %}
 {% from 'revision/panel.jinja' import panel %}
 
+{%- macro revision_type(rule_item) -%}
+<span class="label label-{% if rule_item.revision_class == 'new' %}primary{% elif rule_item.revision_class == 'revised' %}warning{% else %}success{% endif %}">{% if rule_item.revision_class == 'new' %}신설{% elif rule_item.revision_class == 'revised' %}개정{% else %}유지{% endif %}</span>
+{%- endmacro -%}
+
 {% block content %}
 <div id="container" class="rule-item">
     <h3><b>KAIST 학부 총학생회 학생회칙 전부개정</b></h3>
@@ -27,26 +31,26 @@
     {% endcall %}
     {% call panel('목차', 'primary') %}
     <ul class="rule-discussion-navi">
-        <li><a href="{{ rule.get_revision_url() }}">제목 및 연혁</a></li>
+        <li><a href="{{ revision_type(rule) }} {{ rule.get_revision_url() }}">제목 및 연혁</a></li>
         {% for chapter in rule.d_chapters %}
         <li>
-            <a href="{{ chapter.get_revision_url() }}">{{ chapter.verbose }}</a>
+            <a href="{{ chapter.get_revision_url() }}">{{ revision_type(chapter) }} {{ chapter.verbose }}</a>
             {% if chapter.d_chapters or chapter.d_articles %}
             <ul>
             {% for section in chapter.d_chapters %}
                 <li>
-                    <a href="{{ section.get_revision_url() }}">{{ section.verbose }}</a>
+                    <a href="{{ section.get_revision_url() }}">{{ revision_type(section) }} {{ section.verbose }}</a>
                     {% if section.d_articles %}
                     <ul>
                     {% for article in section.d_articles %}
-                        <li><a href="{{ article.get_revision_url() }}">{{ article.verbose }}</a></li>
+                        <li><a href="{{ article.get_revision_url() }}">{{ revision_type(article) }} {{ article.verbose }}</a></li>
                     {% endfor %}
                     </ul>
                     {% endif %}
                 </li>
             {% endfor %}
             {% for article in chapter.d_articles %}
-                <li><a href="{{ article.get_revision_url() }}">{{ article.verbose }}</a></li>
+                <li><a href="{{ article.get_revision_url() }}">{{ revision_type(article) }} {{ article.verbose }}</a></li>
             {% endfor %}
             </ul>
             {% endif %}

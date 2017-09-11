@@ -327,7 +327,7 @@ class Article(models.Model):
         if not self.prev_article:
             return 'new'
         if self.prev_article.title == self.title:
-            prev_clauses = self.prev_clauses.d_clauses
+            prev_clauses = self.prev_article.d_clauses
             current_clauses = self.d_clauses
             if len(prev_clauses) != len(current_clauses):
                 return 'revised'
