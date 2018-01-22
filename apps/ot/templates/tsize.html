@@ -1,0 +1,44 @@
+{% extends "base/layout.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <style type="text/css">
+      a {
+        color: #000000;
+      }
+      a:hover {
+        color: #888888;
+        text-decoration: none;
+      }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#update').modal('show');
+      });
+    </script>
+{% endblock %}
+
+{% block contents %}
+<div class="row">
+  <h3 class="text-center">단체 티셔츠 사이즈 조사</h3>
+  <h5 class="text-center">본인 사이즈를 선택해주세요.</h5>
+  <h5 class="text-center">조사를 완료하면 공연 동아리 투표에 참여할 수 있습니다.</h5>
+  <form method="post" action=".">{% csrf_token %}
+    <div class="col-xs-4"></div>
+    <div class="col-xs-3">
+      {{ form.tsize }}
+    </div>
+    <div class="col-xs-1">
+      <button type="submit" class="btn btn-primary">
+        {% if user.freshman %}변경{% else %}확인{% endif %}
+      </button>
+    </div>
+    <div class="col-xs-4"></div>
+  </form>
+  {% if user.freshman %}
+  {% endif %}
+</div>
+{% endblock %}

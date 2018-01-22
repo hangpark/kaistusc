@@ -43,4 +43,7 @@ urlpatterns = [
     url(r'^revision/', include('apps.rule.urls.revision')),
 
     # Custom static pages
+
+    # For freshmen ot
+    url(r'^ot/', include('apps.ot.urls')),
 ]

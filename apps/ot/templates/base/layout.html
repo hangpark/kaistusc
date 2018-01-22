@@ -1,0 +1,52 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+  <html class="no-js lt-ie9 lt-ie8 lt-ie7">
+<![endif]--><!--[if IE 7]>
+  <html class="no-js lt-ie9 lt-ie8">
+<![endif]--><!--[if IE 8]>
+  <html class="no-js lt-ie9">
+<![endif]--><!--[if gt IE 8]><!-->
+  <html class="no-js">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>
+      {% block title %}{% endblock %}
+    </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="shortcut icon" href="/static/img/ico/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% block stylesheets %}
+    {% endblock %}
+  </head>
+  <body style="margin-bottom: 75px;">
+    {% block header %}
+      {% include 'base/header.html' %}
+    {% endblock %}
+
+    <section id="container" class="container">
+      {% block contents %}
+      {% endblock %}
+    </section>
+
+    {% block footer %}
+      {% include 'base/footer.html' %}
+    {% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+    </script>
+    {% block javascripts %}
+    {% endblock %}
+  </body>
+</html>
