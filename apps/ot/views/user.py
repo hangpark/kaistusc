@@ -1,9 +1,12 @@
-from django.views.generic import FormView, View
+from django.views.generic import FormView, TemplateView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Count
 
 from ..forms import TSizeForm
-from ..util import vote_available
+from ..util import vote_available, is_tester
+from ..models.club import Club
+from ..models.user import Freshman
 
 
 @method_decorator(login_required, name='dispatch')
@@ -33,5 +36,17 @@ class TSizeView(FormView):
         return initial
 
 
-class MyPageView(View):
-    pass
+@method_decorator(user_passes_test(is_tester), name='dispatch')
+class ResultView(TemplateView):
+    template_name = 'result.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ResultView, self).get_context_data(**kwargs)
+
+        context['clubs'] = Club.objects.all().annotate(cnt=Count('votes')).order_by('-cnt')
+        context['bands'] = Club.objects.filter(is_band=True).annotate(cnt=Count('votes')).order_by('-cnt')
+        context['non_bands'] = Club.objects.filter(is_band=False).annotate(cnt=Count('votes')).order_by('-cnt')
+
+        context['cnt_voted'] = Freshman.objects.all().count()
+
+        return context

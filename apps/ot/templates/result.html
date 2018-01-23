@@ -1,0 +1,85 @@
+{% extends "base/layout.html" %}
+{% load staticfiles %}
+
+{% block contents %}
+<div class="row">
+  <div class="col-xs-12">
+    동아리에게 투표한 학생의 수 : {{ cnt_voted }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-24">
+    <div class="page-header">
+      <h2>전체 동아리 목록</h2>
+    </div>
+  </div>
+  <div class="col-xs-24">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>득표</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for club in clubs %}
+          <tr>
+            <td>{{ club.name }}</td>
+            <td>{{ club.votes.count }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-24">
+    <div class="page-header">
+      <h2>밴드 동아리 목록</h2>
+    </div>
+  </div>
+  <div class="col-xs-24">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>득표</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for club in bands %}
+          <tr>
+            <td>{{ club.name }}</td>
+            <td>{{ club.votes.count }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-24">
+    <div class="page-header">
+      <h2>비밴드 동아리 목록</h2>
+    </div>
+  </div>
+  <div class="col-xs-24">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>득표</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for club in non_bands %}
+          <tr>
+            <td>{{ club.name }}</td>
+            <td>{{ club.votes.count }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
