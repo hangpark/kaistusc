@@ -1,0 +1,145 @@
+{% extends "base/layout.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+<style type="text/css">
+  a:hover {
+    text-decoration: none;
+  }
+  img {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+  var w_w = $('.panel-body').innerWidth() - 30;
+  var w_h = w_w / 560 * 315;
+  $('iframe').attr({'width':w_w});
+  $('iframe').attr({'height':w_h});
+</script>
+
+<script type="text/javascript">
+  function imageOnError(img) {
+    img.onerror = '';
+    var stub = $('<div />').css({ 'height': 0, 'width': 0 });
+    $(img).parent().html(stub);
+    return true;
+  }
+</script>
+
+<script type="text/javascript">
+  $('#submit').click(function() {
+    $('form').submit();
+  });
+</script>
+{% endblock %}
+
+{% block contents %}
+<div class="row">
+  <div class="col-xs-12">
+    <div class="page-header">
+      <h1 class="text-center">
+        {% if club.is_band %}
+        <a href="{% url 'club_list' %}?is_band=1" class="btn btn-info btn-xs">밴드</a>
+        {% else %}
+        <a href="{% url 'club_list' %}?is_band=0" class="btn btn-info btn-xs">비밴드</a>
+        {% endif %}
+        {{ club.name }}
+      </h1>
+    </div>
+  </div>
+  <div class="col-xs-12" style="margin-bottom: 20px;">
+    {% if user.is_authenticated %}
+      <form role="form" method="post" action=".">{% csrf_token %}
+      {% if not available %}
+        <button id="submit" class="btn btn-block btn-primary" disabled="disabled">
+          <i class="fa fa-thumbs-up"></i>
+          신입생만 투표에 참여할 수 있습니다.
+        </button>
+      {% elif not user.freshman %}
+        <button id="submit" class="btn btn-block btn-primary" disabled="disabled">
+          <i class="fa fa-thumbs-up"></i>
+          티셔츠 사이즈 조사에 응답한 후 투표 가능합니다.
+        </button>
+      {% elif voted %}
+        <button id="submit" class="btn btn-block btn-primary active">
+          <i class="fa fa-thumbs-up"></i>
+          [ {{ club.name }} ]에 투표 취소하기
+        </button>
+      {% elif exceeded %}
+        <button class="btn btn-block btn-primary" disabled="disabled">
+          <i class="fa fa-thumbs-up"></i>
+          투표권을 모두 사용하셨습니다. 투표하려면 다른 동아리 투표를 취소해주세요.
+        </button>
+      {% else %}
+        <button id="submit" class="btn btn-block btn-primary">
+          <i class="fa fa-thumbs-up"></i>
+          [ {{ club.name }} ]에 투표하기
+        </button>
+      {% endif %}
+      </form>
+    {% else %}
+      <button id="submit" class="btn btn-block btn-primary" disabled="disabled">
+        <i class="fa fa-thumbs-up"></i>
+          로그인 후 투표에 참여할 수 있습니다.
+      </button>
+    {% endif %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="head-intro">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#intro" aria-expanded="true" aria-controls="collapseOne">
+              동아리 소개
+            </a>
+          </h4>
+        </div>
+        <div id="intro" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            {{ club.intro|safe }}
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="head-video">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#video" aria-expanded="true" aria-controls="collapseOne">
+              동아리 소개 영상
+            </a>
+          </h4>
+        </div>
+        <div id="video" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <iframe style="width:100%" src="//www.youtube.com/embed/{{ club.video_url }}" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="head-photo">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#photo" aria-expanded="true" aria-controls="collapseOne">
+              동아리 활동 사진
+            </a>
+          </h4>
+        </div>
+        <div id="photo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            {% for image in club.images.all %}
+            <div>
+              <img src="{{ image.image.url }}">
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
