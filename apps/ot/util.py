@@ -10,15 +10,18 @@ def vote_available(user):
 
 
 def is_freshman(user):
-    if not user.is_authenticated:
+    if not user.is_authenticated or not hasattr(user, 'portal_info'):
         return False
 
     portal_info = user.portal_info
-    return portal_info.ku_std_no[:4] == "2017" and portal_info.ku_acad_prog == "학사"
+    return portal_info.ku_std_no[:4] == "2018" and portal_info.ku_acad_prog == "학사"
 
 
 def is_tester(user):
-    return user.is_authenticated and user.username in ['ot', 'namsan']
+    if not user.is_authenticated or not hasattr(user, 'portal_info'):
+        return False
+    print(user.portal_info.ku_std_no)
+    return user.portal_info.ku_std_no in ("20140191", "20170742", "20170286", "20170463",)
 
 
 def is_vote_period():
