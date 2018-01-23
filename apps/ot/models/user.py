@@ -12,15 +12,16 @@ class Freshman(models.Model):
     voted_clubs = models.ManyToManyField(Club, related_name='votes')
 
     sizes = (
-        ('xs', 'xs'),
-        ('s', 's'),
-        ('m', 'm'),
-        ('l', 'l'),
-        ('xl', 'xl'),
+        ('S', 'S'),
+        ('M', 'M'),
+        ('L', 'L'),
+        ('XL', 'XL'),
+        ('2XL', '2XL'),
+        ('3XL', '3XL'),
     )
     tsize = models.CharField(null=False, max_length=5, choices=sizes)
 
-    BAND_VOTE_LIMIT = 2
+    BAND_VOTE_LIMIT = 4
     NON_BAND_VOTE_LIMIT = 3
 
     def vote_limit_exceeded(self, is_band):
