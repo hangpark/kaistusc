@@ -9,10 +9,13 @@ class Club(models.Model):
         return str(self.name)
 
     name = models.CharField(max_length=63)
-    intro = models.CharField(max_length=511)
+    pages = models.TextField()
+    intro = models.TextField()
+    ad = models.TextField()
     is_band = models.BooleanField(default=False)
 
-    video_url = models.CharField(max_length=63)
+    video_url1 = models.CharField(max_length=63)
+    video_url2 = models.CharField(max_length=63)
 
 
 class Image(models.Model):
