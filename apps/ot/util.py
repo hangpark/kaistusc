@@ -20,11 +20,13 @@ def is_freshman(user):
 def is_tester(user):
     if not user.is_authenticated or not hasattr(user, 'portal_info'):
         return False
-    print(user.portal_info.ku_std_no)
-    return user.portal_info.ku_std_no in ("20140191", "20170742", "20170286", "20170463",)
+
+    return user.portal_info.ku_std_no in ("20140191", "20170742", "20170286", "20170463", "20150305", "20170337", "20170656",)
 
 
 def is_vote_period():
+    if VotePolicy.objects.count() == 0:
+        return False
     vote_policy = VotePolicy.objects.all()[0]
     time_now = timezone.now()
 
