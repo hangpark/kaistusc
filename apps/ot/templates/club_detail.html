@@ -108,6 +108,34 @@
         </div>
       </div>
       <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="head-intro">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#intro" aria-expanded="true" aria-controls="collapseOne">
+              동아리 홍보글
+            </a>
+          </h4>
+        </div>
+        <div id="intro" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            {{ club.ad|safe }}
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="head-intro">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#intro" aria-expanded="true" aria-controls="collapseOne">
+              동아리 페이스북/유튜브
+            </a>
+          </h4>
+        </div>
+        <div id="intro" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            {{ club.pages|safe }}
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="head-video">
           <h4 class="panel-title">
             <a data-toggle="collapse" data-parent="#accordion" href="#video" aria-expanded="true" aria-controls="collapseOne">
@@ -115,11 +143,20 @@
             </a>
           </h4>
         </div>
+        {% if club.video_url1 %}
         <div id="video" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
           <div class="panel-body">
-            <iframe style="width:100%" src="//www.youtube.com/embed/{{ club.video_url }}" frameborder="0" allowfullscreen></iframe>
+            <iframe style="width:100%" src="//www.youtube.com/embed/{{ club.video_url1 }}" frameborder="0" allowfullscreen></iframe>
           </div>
         </div>
+        {% endif %}
+        {% if club.video_url2 %}
+        <div id="video" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <iframe style="width:100%" src="//www.youtube.com/embed/{{ club.video_url2 }}" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+        {% endif %}
       </div>
       <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="head-photo">
