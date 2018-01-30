@@ -49,4 +49,14 @@ class ResultView(TemplateView):
 
         context['cnt_voted'] = Freshman.objects.all().count()
 
+        # Personal T shirts size
+        freshmen = Freshman.objects.all()
+
+        size_list = ""
+        for freshman in freshmen:
+            info = freshman.user.portal_info
+            size_list += "<p>%s,%s,%s</p>" % (info.ku_kname, info.ku_std_no, freshman.tsize)
+            print(size_list)
+        context['size_list'] = size_list
+
         return context
