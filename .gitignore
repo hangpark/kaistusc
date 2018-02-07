@@ -4,6 +4,7 @@ __pycache__/
 
 # Django
 db.sqlite3
+local_settings.py
 
 # Swap files
 *.swp

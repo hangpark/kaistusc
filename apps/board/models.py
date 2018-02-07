@@ -39,6 +39,29 @@ class Board(Service):
         return self.name
 
 
+class BoardTab(Service):
+    """
+    게시판의 탭을 구현한 모델.
+
+    :class:`Service` 모델을 상속받아 속해있는 보드를 추가로 저장합니다.
+    """
+
+    parent_board = models.ForeignKey(
+        Board,
+        verbose_name=_("탭이 속한 게시판"))
+
+    #: 커스텀 매니저
+    objects = ServiceManager()
+
+    class Meta:
+        ordering = ['parent_board', 'level']
+        verbose_name = _('탭')
+        verbose_name_plural = _('탭(들)')
+
+    def __str__(self):
+        return self.board.name + "/" + self.name
+
+
 class PostActivity(models.Model):
     """
     포스트 활동을 구현한 모델.
@@ -255,6 +278,11 @@ class Post(BasePost):
         Board,
         verbose_name=_("등록 게시판"))
 
+    board_tab = models.ManyToManyField(
+        BoardTab,
+        blank=True,
+        verbose_name=_("등록 탭"))
+
     title = models.CharField(
         _("제목"),
         max_length=128)
@@ -324,6 +352,132 @@ class Comment(BasePost):
         """
         return self.parent_post.board.is_permitted(user, permission)
 
+class Contact(BasePost):
+    """
+    기구 등의 연락망 (소통창구, 오픈톡방, 전화번호)을 구현한 모델.
+    """
+
+    board = models.ForeignKey(
+        Board,
+        verbose_name=_("등록 게시판"))
+
+    board_tab = models.ManyToManyField(
+        BoardTab,
+        blank=True,
+        verbose_name=_("등록 탭"))
+    
+    name = models.CharField(
+        _("기구명"),
+        max_length=32, unique=True)
+    
+    # 전화번호가 여러개일 경우는 대표 전화번호를 여기에 쓰고 나머지는 content에 적도록 한다.
+    phone = models.CharField(
+        _("전화번호"),
+        blank=True,
+        max_length=32)
+
+    link = models.URLField(
+        _("소통창구 링크"),
+        blank=True,
+        max_length=500)
+
+    class Meta:
+        verbose_name = _('연락망')
+        verbose_name_plural = _('연락망(들)')
+
+    def __str__(self):
+        return self.name
+
+
+class ProductCategory(models.Model):
+
+    name = models.CharField(
+        _("카테고리명"),
+        max_length=32, unique=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class Product(Post):
+    """
+    매점/잡화점에서 파는 상품을 구현한 모델.
+    """
+
+    category = models.ForeignKey(
+        ProductCategory,
+        verbose_name=_("상품 카테고리"))
+
+    price = models.IntegerField(
+        _("가격"))
+
+    class Meta:
+        ordering = ['title']
+        verbose_name = _('상품')
+        verbose_name_plural = _('상품(들)')
+
+    def __str__(self):
+        return self.board_tab.name + "에서 파는 " + self.title
+
+    
+class Project(Post):
+
+    ALWAYS = 'ALWAYS'
+    DONE = 'DONE'
+    QUIT = 'QUIT'
+    ONGOING = 'ONGOING'
+    PROJECT_STATUS_CHOICES = (
+        (ALWAYS, 0),
+        (DONE, 1),
+        (QUIT, 2),
+        (ONGOING, 3),
+    )
+    
+    status = models.IntegerField(
+        _("프로젝트 진행 상태"),
+        choices=PROJECT_STATUS_CHOICES, default=ALWAYS)
+    
+    is_pledge = models.BooleanField(
+        _("공약 여부"),
+        default=False)
+    
+    alteration = models.ForeignKey(
+        BasePost,
+        verbose_name=_("프로젝트 일정"))
+    
+    def get_bureau(self):
+        return self.board_tab.name
+
+
+class Debate(Post):
+    
+    is_closed = models.BooleanField(
+        _("논쟁 종결 여부"),
+        default=False)
+    
+    due_date = models.DateTimeField(
+        _("종결 예정일"),
+        null=True, blank=True)
+    
+    
+
+class WebDoc(models.Model):
+    """
+    구글 드라이브 문서 등의 웹 문서 뷰를 위한 모델.
+    웹 문서는 html를 말하는 것이 아닙니다.
+    """
+    post = models.ForeignKey(
+        BasePost,
+        verbose_name=_("연결된 포스트"))
+    
+    embed_link = models.TextField(
+        _("웹 문서 삽입 링크"),
+        blank=True)
+
+    class Meta:
+        verbose_name = _('웹문서 링크')
+        verbose_name_plural = _('웹문서 링크(들)')
+    
 
 def get_upload_path(instance, filename):
     """
