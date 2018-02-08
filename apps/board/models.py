@@ -376,7 +376,7 @@ class Contact(BasePost):
         blank=True,
         max_length=32)
 
-    link = models.URLField(
+    url = models.URLField(
         _("소통창구 링크"),
         blank=True,
         max_length=500)
@@ -399,20 +399,36 @@ class ProductCategory(models.Model):
         return self.name
 
 
-class Product(Post):
+class Product(models.Model):
     """
     매점/잡화점에서 파는 상품을 구현한 모델.
     """
+
+    board = models.ForeignKey(
+        Board,
+        verbose_name=_("등록 게시판"))
+
+    board_tab = models.ManyToManyField(
+        BoardTab,
+        blank=True,
+        verbose_name=_("등록 탭"))
 
     category = models.ForeignKey(
         ProductCategory,
         verbose_name=_("상품 카테고리"))
 
+    name = models.CharField(
+        _("상품명"),
+        max_length=32)
+
     price = models.IntegerField(
         _("가격"))
+    
+    description = models.TextField(
+        _("상품 설명"))
 
     class Meta:
-        ordering = ['title']
+        ordering = ['name']
         verbose_name = _('상품')
         verbose_name_plural = _('상품(들)')
 
@@ -420,7 +436,7 @@ class Product(Post):
         return self.board_tab.name + "에서 파는 " + self.title
 
     
-class Project(Post):
+class ProjectPost(Post):
 
     ALWAYS = 'ALWAYS'
     DONE = 'DONE'
@@ -449,7 +465,7 @@ class Project(Post):
         return self.board_tab.name
 
 
-class Debate(Post):
+class DebatePost(Post):
     
     is_closed = models.BooleanField(
         _("논쟁 종결 여부"),
@@ -458,6 +474,9 @@ class Debate(Post):
     due_date = models.DateTimeField(
         _("종결 예정일"),
         null=True, blank=True)
+    
+    def is_commentable(self):
+        return (self.author.is_superuser or self.vote_up > 2)
     
     
 
@@ -470,8 +489,8 @@ class WebDoc(models.Model):
         BasePost,
         verbose_name=_("연결된 포스트"))
     
-    embed_link = models.TextField(
-        _("웹 문서 삽입 링크"),
+    embed_url = models.TextField(
+        _("웹 문서 삽입 URL"),
         blank=True)
 
     class Meta:
