@@ -5,6 +5,7 @@ __pycache__/
 # Django
 db.sqlite3
 local_settings.py
+livereload.jinja
 
 # Swap files
 *.swp
