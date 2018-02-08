@@ -1,7 +1,6 @@
 """
 고정 페이지 뷰.
 """
-
 from apps.board.models import Board
 
 from .base import PageView
