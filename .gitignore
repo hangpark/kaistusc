@@ -4,6 +4,7 @@ __pycache__/
 
 # Django
 db.sqlite3
+files/
 
 # Swap files
 *.swp
@@ -11,7 +12,7 @@ db.sqlite3
 # NPM files
 node_modules/
 bower_components/
-static/dist/
+static/dist
 
 # Sphinx build files
 docs/_*/
@@ -19,6 +20,9 @@ docs/_*/
 # Virtualenv
 venv/
 .env
+
+#local
+local_settings.py
 
 # Python mode
 **/.ropeproject/

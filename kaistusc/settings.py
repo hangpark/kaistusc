@@ -30,9 +30,9 @@ SECRET_KEY = '_dcwta0d49azy*1##hy*j*g)s8d3&q88q(eushtfqrx&ff#auw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr']
+ALLOWED_HOSTS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr', u'kaistusc.hangpark.com']
 
-CSRF_TRUSTED_ORIGINS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr']
+CSRF_TRUSTED_ORIGINS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr', u'kaistusc.hangpark.com']
 
 
 # Application definition
@@ -191,3 +191,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
 }
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

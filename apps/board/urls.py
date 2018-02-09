@@ -4,19 +4,19 @@
 
 from django.conf.urls import url
 
-from apps.board.views import (BoardView, CommentDeleteView, CommentWriteView,
-                              PostDeleteView, PostEditView, PostView,
+from apps.board.views import (BoardView, CommentDeleteView,CommentWriteWithFileView,CommentWriteView,
+                              PostDeleteView, PostEditView, PostView,PostAgoraView,
                               PostVoteView, PostWriteView)
 
 url_tag = r'^(?:(?P<tag>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
-
+# 아고라는 PostAgoraView로 들어가야 합니다.
 urlpatterns = [
     url(r'^new/$',
         PostWriteView.as_view()),
 
     url(url_tag + r'$',
         BoardView.as_view()),
-
+        
     url(url_tag + r'(?P<post>[0-9]+)/$',
         PostView.as_view()),
 
@@ -25,6 +25,9 @@ urlpatterns = [
 
     url(url_tag + r'(?P<post>[0-9]+)/delete/$',
         PostDeleteView.as_view()),
+
+    url(url_tag + r'(?P<post>[0-9]+)/commentAttached/$',
+        CommentWriteWithFileView.as_view()),
 
     url(url_tag + r'(?P<post>[0-9]+)/comment/$',
         CommentWriteView.as_view()),

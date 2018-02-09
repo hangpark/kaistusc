@@ -154,6 +154,14 @@
   }
 }
 
+#attached-file-comment {
+  padding: 0px 25px 10px;
+  font-size: 10pt;
+  p {
+    margin-bottom: 5px;
+  }
+}
+
 #comment-list .comment {
   padding-top: 6px;
   border-left: 14px solid #dcdcdd;
@@ -178,6 +186,11 @@
 
 #comment-form {
   margin-top: 28px;
+}
+
+#commentAttached-form {
+  margin-top: 28px;
+  width: 100%;
 }
 
 #post-func {
@@ -217,4 +230,12 @@
   @media (min-width: $screen-sm-min) {
     margin-right: 12px;
   }
+}
+
+//== 댓글 폼
+//
+//##
+
+#btn-commentAttached-form{
+  width: 100%;
 }
