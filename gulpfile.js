@@ -4,6 +4,8 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var minifycss = require('gulp-minify-css');
 var postcss = require('gulp-postcss');
+var watch = require('gulp-watch');
+var livereload = require('gulp-livereload');
 var autoprefixer = require('autoprefixer');
 var merge = require('merge-stream');
 
@@ -34,7 +36,8 @@ var fonts = {
 
 var css = {
 	'in': {
-        'scss': src + '/stylesheets/main.scss',
+		'scss': src + '/stylesheets/*.scss',
+        'main': src + '/stylesheets/main.scss',
         'css': fontawesome + '/css/font-awesome.css',
     },
 	'out': dist + '/css',
@@ -44,11 +47,13 @@ var css = {
 	}
 };
 
-gulp.task('js', function() {
-	return gulp.src(js.in)
+// process JS files and return the stream.
+gulp.task('js', function () {
+    return gulp.src(js.in)
 		.pipe(concat('main.js'))
-		.pipe(uglify())
-		.pipe(gulp.dest(js.out));
+        .pipe(uglify())
+		.pipe(gulp.dest(js.out))
+		.pipe(livereload());
 });
 
 gulp.task('fonts', function() {
@@ -56,8 +61,8 @@ gulp.task('fonts', function() {
 		.pipe(gulp.dest(fonts.out));
 });
 
-gulp.task('css', ['fonts'], function() {
-    var scss_stream = gulp.src(css.in.scss)
+gulp.task('css', function() {
+    var scss_stream = gulp.src(css.in.main)
         .pipe(sass(css.opts));
 
     var css_stream = gulp.src(css.in.css);
@@ -66,7 +71,15 @@ gulp.task('css', ['fonts'], function() {
         .pipe(concat('main.css'))
 		.pipe(postcss([ autoprefixer() ]))
 		.pipe(minifycss())
-		.pipe(gulp.dest(css.out));
+		.pipe(gulp.dest(css.out))
+		.pipe(livereload());
 });
 
 gulp.task('default', ['js', 'fonts', 'css']);
+
+gulp.task('watch', function() {
+	livereload.listen();
+	gulp.watch(css.in.scss, ['css']);
+	gulp.watch(css.in.js, ['js']);
+	gulp.watch(dist + '/**').on('change', livereload.changed);
+});

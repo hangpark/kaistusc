@@ -1,7 +1,7 @@
 """
 고정 페이지 뷰.
 """
-
+from django.conf import settings
 from apps.board.models import Board
 
 from .base import PageView
@@ -23,6 +23,10 @@ class MainPageView(PageView):
         context = super().get_context_data(**kwargs)
         context['boards'] = Board.objects.accessible_for(
             self.request.user).filter(is_main=True)
+        try:
+            context['development_ip'] = settings.DEVELOPMENT_IP
+        except:
+            pass
         return context
 
 
