@@ -8,7 +8,7 @@ from apps.board.views import (BoardView, CommentDeleteView, CommentWriteView,
                               PostDeleteView, PostEditView, PostView,
                               PostVoteView, PostWriteView)
 
-url_tag = r'^(?:(?P<tag>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
+url_tag = r'^(?:(?P<tab>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
 
 urlpatterns = [
     url(r'^new/$',

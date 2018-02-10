@@ -6,7 +6,7 @@
 
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import Category, Service, TopBanner
+from .models import Category, BaseService, Service, TopBanner
 
 
 @register(Category)
@@ -18,13 +18,21 @@ class CategoryTranslationOptions(TranslationOptions):
     fields = ('name',)
 
 
+@register(BaseService)
+class BaseServiceTranslationOptions(TranslationOptions):
+    """
+    :class:`Service` 모델에 대한 국제화 지원.
+    """
+
+    fields = ('name',)
+
 @register(Service)
 class ServiceTranslationOptions(TranslationOptions):
     """
     :class:`Service` 모델에 대한 국제화 지원.
     """
 
-    fields = ('name',)
+    fields = ()
 
 @register(TopBanner)
 class TopBannerTranslationOptions(TranslationOptions):

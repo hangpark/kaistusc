@@ -40,7 +40,23 @@
 <table id="post-list" class="table table-hover">
   <thead class="hidden-xs">
     <tr>
-      <th class="text-center">{{ _('태그') }}</th>
+      <th class="text-center">
+        <div class="dropdown">
+          <button class="dropdown-toggle" type="button" id="post-list-header-tag" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            {{ _('태그') }}
+            {% if tags %}
+              <span class="caret"></span>
+            {% endif %}
+          </button>
+          {% if tags %}
+            <ul class="dropdown-menu" id="post-list-header-tag-dropdown" aria-labelledby="post-list-header-tag">
+              {% for tag in tags %}
+                <li>{{ make_tag(board, tag) }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </th>
       <th class="post-list-dom-width text-center">{{ _('제목') }}</th>
       <th class="text-center">{{ _('작성자') }}</th>
       <th class="text-center">{{ _('작성일') }}</th>
@@ -73,7 +89,7 @@
   <div class="pull-right col-sm-5">
     <form action="." method="get" id="search-form">
       <div class="input-group">
-        <input type="text" class="form-control" name="s">
+        <input type="text" class="form-control" name="s" style="height:auto">
         <span class="input-group-btn">
           <button class="btn btn-default" type="submit">{{ _('검색') }}</button>
         {% if board.is_permitted(request.user, PERM_WRITE) %}
