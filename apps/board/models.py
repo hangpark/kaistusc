@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from apps.manager.constants import *
 from apps.board.constants import *
-from apps.manager.models import Service, ServiceManager
+from apps.manager.models import BaseService, Service, ServiceManager
 from kaistusc.settings import MEDIA_URL
 
 class Board(Service):
@@ -43,8 +43,7 @@ class Board(Service):
     def __str__(self):
         return self.name
 
-
-class BoardTab(Service):
+class BoardTab(BaseService):
     """
     게시판의 탭을 구현한 모델.
 
@@ -55,17 +54,25 @@ class BoardTab(Service):
         Board,
         verbose_name=_("탭이 속한 게시판"))
 
+    url = models.CharField(
+        _("하위 주소"),
+        max_length=32,
+        help_text=_("탭을 나타낼 하위 경로만 적어주세요."))
+
     #: 커스텀 매니저
     objects = ServiceManager()
-
+        
     class Meta:
         ordering = ['parent_board', 'level']
         verbose_name = _('탭')
         verbose_name_plural = _('탭(들)')
 
     def __str__(self):
-        return self.board.name + "/" + self.name
+        return self.parent_board.name + "/" + self.name
 
+    def get_absolute_url(self):
+        url = '/' + os.path.join(self.parent_board.url.strip('/'), self.url.strip('/'))
+        return url
 
 class PostActivity(models.Model):
     """
@@ -368,7 +375,7 @@ class Banner(BasePost):
 
     url = models.URLField(
         _("링크 URL"),
-        blank=True)
+        blank=True, null=True)
 
     image = models.ImageField(
         _("이미지"),
