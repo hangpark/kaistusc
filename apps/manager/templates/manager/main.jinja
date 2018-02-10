@@ -2,7 +2,9 @@
 
 {% block main_area %}
 <div id="container">
-  <div class="alert alert-info" style="margin: 0;"><a href="/ot"><b><i class="fa fa-info-circle"></i> 2018년도 전기 새내기 새로 배움터 공연 투표가 시작되었습니다! (1.24 ~ 1.28)</b></a></div>
+  {% if topBanner %}
+  {% include 'manager/top_banner.jinja' %}
+  {% endif %}
   <div id="main-spot" class="spot hidden-xs">
     <div class="page-item container-fluid">
       <div class="spot-wrap">

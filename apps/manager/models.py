@@ -59,7 +59,28 @@ class Category(models.Model):
             return s.get_absolute_url()
         return '/'
 
+class TopBanner(models.Model):
+    """
+    탑배너를 구현한 모델
+    """
+    text = models.CharField(
+        _("텍스트"),
+        max_length=128)
 
+    url = models.URLField(
+        _("링크 URL"),
+        blank=True)
+
+    terminate_at = models.DateTimeField(
+        _("노출종료일시"),
+        blank=True,
+        help_text=_("공란일경우, 직접 삭제시까지 노출됩니다"))
+        
+    class Meta:
+        verbose_name = _('탑배너')
+        verbose_name_plural = _('탑배너(들)')
+    
+    
 class ServiceQuerySet(models.QuerySet):
     """
     서비스에 대한 커스텀 쿼리셋.

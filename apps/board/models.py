@@ -368,7 +368,7 @@ class Banner(BasePost):
 
     url = models.URLField(
         _("링크 URL"),
-        null=True)
+        blank=True)
 
     image = models.ImageField(
         _("이미지"),
