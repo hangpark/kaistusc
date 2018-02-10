@@ -75,7 +75,10 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'match_extension': '.jinja',
-            'extensions': django_jinja.builtins.DEFAULT_EXTENSIONS
+            'extensions': django_jinja.builtins.DEFAULT_EXTENSIONS,
+            'context_processors': [
+                'apps.manager.context_processors.development_ip',
+            ]
         },
     },
     {

@@ -17,6 +17,10 @@ var jquery = bower + '/jquery/dist';
 var bootstrap = bower + '/bootstrap-sass/assets';
 var fontawesome = bower + '/font-awesome';
 
+var template = {
+	in : 'apps/**/*.jinja'
+}
+
 var js = {
 	'in': [
 		jquery + '/jquery.js',
@@ -81,5 +85,5 @@ gulp.task('watch', function() {
 	livereload.listen();
 	gulp.watch(css.in.scss, ['css']);
 	gulp.watch(css.in.js, ['js']);
-	gulp.watch(dist + '/**').on('change', livereload.changed);
+	gulp.watch([dist + '/**', template.in]).on('change', livereload.changed);
 });
