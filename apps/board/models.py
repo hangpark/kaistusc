@@ -27,6 +27,15 @@ class Board(Service):
 
     objects = ServiceManager()
 
+    BOARD_ROLE_CHOICES = (
+        (BOARD_ROLE_DEFAULT, _('기본')),
+        (BOARD_ROLE_PROJECT, _('사업')),
+    )
+
+    role = models.IntegerField(
+        _("보드 역할"),
+        choices=BOARD_ROLE_CHOICES, default=BOARD_ROLE_DEFAULT)
+
     class Meta:
         verbose_name = _('게시판')
         verbose_name_plural = _('게시판(들)')
