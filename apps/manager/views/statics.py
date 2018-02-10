@@ -1,7 +1,6 @@
 """
 고정 페이지 뷰.
 """
-
 from django.db import models
 from apps.board.models import Board, BannerCarousel
 from apps.board.constants import *
@@ -28,7 +27,6 @@ class MainPageView(PageView):
             context['bannerCarousel'] = BannerCarousel.objects.get(sector=BANNER_CAROUSEL_SECTOR_MAIN)
         except BannerCarousel.DoesNotExist:
             pass
-
         return context
 
 
