@@ -11,7 +11,7 @@ from apps.board.views import (BoardView, CommentDeleteView, CommentWriteView,
 url_tag = r'^(?:(?P<tab>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
 
 urlpatterns = [
-    url(r'^new/$',
+    url(url_tag + r'new/$',
         PostWriteView.as_view()),
 
     url(url_tag + r'$',

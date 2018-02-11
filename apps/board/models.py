@@ -318,6 +318,9 @@ class Post(BasePost):
     def get_absolute_url(self):
         return os.path.join(self.board.get_absolute_url(), str(self.id))
 
+    def get_first_tab(self):
+        return self.board_tab.all().first()
+
     def pre_permitted(self, user, permission):
         """
         게시글 권한 확인 이전에 게시판 접근권한을 확인하는 메서드.

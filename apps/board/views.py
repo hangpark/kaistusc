@@ -26,9 +26,13 @@ class BoardView(ServiceView):
         dispatch = super().dispatch(request, *args, **kwargs)
         # 탭이있을경우 리다이렉트
         board = self.service.board
-        if not kwargs.get('tab', None) and board.boardtab_set.exists() :
-            url = self.get_tab(**kwargs).get_absolute_url()
-            print(url)
+        tab = kwargs.get('tab', None)
+        post = kwargs.get('post', None)
+        if not post and not tab and board.boardtab_set.exists() :
+            # 포스트와 탭의 경로가아니고, 보드에 탭이있을경우 
+            # 첫번째탭으로 리다이렉트
+            query = request.META['QUERY_STRING']
+            url = self.get_tab(**kwargs).get_absolute_url() + (query and '?' + query)
             return HttpResponseRedirect(url)
         return dispatch
         
@@ -47,7 +51,11 @@ class BoardView(ServiceView):
         context['board'] = board
 
         # 현재탭 저장
-        context['tab'] = self.get_tab(**kwargs)
+        tab = self.get_tab(**kwargs)
+        context['tab'] = tab
+
+        # 현재 위치 저장
+        context['current_path'] = tab and tab.get_absolute_url() or board.get_absolute_url()
 
         # 태그 목록 저장
         context['tags'] = Tag.objects.filter(board=board)
@@ -58,10 +66,13 @@ class BoardView(ServiceView):
 
         # 게시글 목록 조회
         post_list = Post.objects.filter(board=board)
-        if kwargs.get('tag', None):
-            if kwargs['tag'] not in [tag.slug for tag in context['tags']]:
+
+        # 태그 필터링
+        tag = self.request.GET.get('tag')
+        if tag:
+            if tag not in [tag.slug for tag in context['tags']]:
                 raise Custom404
-            post_list = post_list.filter(tag__slug=kwargs['tag'])
+            post_list = post_list.filter(tag__slug=tag)
         if search:
             post_list = post_list.filter(is_deleted=False).filter(
                 Q(title__icontains=search) | Q(content__icontains=search))
