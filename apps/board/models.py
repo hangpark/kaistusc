@@ -10,13 +10,9 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from apps.manager.constants import *
+from apps.board.constants import *
 from apps.manager.models import Service, ServiceManager
 from kaistusc.settings import MEDIA_URL
-
-# Post Activities
-ACTIVITY_VIEW = 'VIEW'
-ACTIVITY_VOTE = 'VOTE'
-
 
 class Board(Service):
     """
@@ -30,6 +26,15 @@ class Board(Service):
         default=False)
 
     objects = ServiceManager()
+
+    BOARD_ROLE_CHOICES = (
+        (BOARD_ROLE_DEFAULT, _('기본')),
+        (BOARD_ROLE_PROJECT, _('사업')),
+    )
+
+    role = models.IntegerField(
+        _("보드 역할"),
+        choices=BOARD_ROLE_CHOICES, default=BOARD_ROLE_DEFAULT)
 
     class Meta:
         verbose_name = _('게시판')
@@ -352,6 +357,72 @@ class Comment(BasePost):
         """
         return self.parent_post.board.is_permitted(user, permission)
 
+class Banner(BasePost):
+    """
+    배너를 구현한 모델
+    """
+
+    title = models.CharField(
+        _("제목"),
+        max_length=128)
+
+    url = models.URLField(
+        _("링크 URL"),
+        null=True)
+
+    image = models.ImageField(
+        _("이미지"),
+        upload_to='banner')
+
+    class Meta:
+        verbose_name = _('배너')
+        verbose_name_plural = _('배너(들)')
+
+    def __str__(self):
+        return self.title
+
+class BannerCarousel(models.Model):
+    """
+    배너 Carousel을 구현한 모델
+    """
+    banners = models.ManyToManyField(
+        Banner,
+        verbose_name=_("배너"))
+
+    BANNER_CAROUSEL_SECTOR_CHOICES = (
+       (BANNER_CAROUSEL_SECTOR_MAIN, _('메인페이지')),
+    )
+
+    sector = models.IntegerField(
+        _("노출위치"),
+        choices=BANNER_CAROUSEL_SECTOR_CHOICES)
+
+    class Meta:
+        verbose_name = _('배너그룹')
+        verbose_name_plural = _('배너그룹(들)')
+
+    def __str__(self):
+        return self.get_sector_display()
+
+class Link(BasePost):
+    """
+    링크를 구현한 모델
+    """
+
+    url = models.URLField(
+        _("URL"))
+
+    text = models.CharField(
+        _("텍스트"),
+        max_length=128)
+
+    class Meta:
+        verbose_name = _('링크')
+        verbose_name_plural = _('링크(들)')
+
+    def __str__(self):
+        return self.text
+
 class Contact(BasePost):
     """
     기구 등의 연락망 (소통창구, 오픈톡방, 전화번호)을 구현한 모델.
@@ -437,21 +508,17 @@ class Product(models.Model):
 
     
 class ProjectPost(Post):
-
-    ALWAYS = 'ALWAYS'
-    DONE = 'DONE'
-    QUIT = 'QUIT'
-    ONGOING = 'ONGOING'
+    
     PROJECT_STATUS_CHOICES = (
-        (ALWAYS, 0),
-        (DONE, 1),
-        (QUIT, 2),
-        (ONGOING, 3),
+        (PROJECT_STATUS_ALWAYS, _('항상')),
+        (PROJECT_STATUS_DONE, _('완료')),
+        (PROJECT_STATUS_QUIT, _('파기')),
+        (PROJECT_STATUS_ONGOING, _('진행중')),
     )
     
     status = models.IntegerField(
         _("프로젝트 진행 상태"),
-        choices=PROJECT_STATUS_CHOICES, default=ALWAYS)
+        choices=PROJECT_STATUS_CHOICES, default=PROJECT_STATUS_ALWAYS)
     
     is_pledge = models.BooleanField(
         _("공약 여부"),
@@ -496,7 +563,6 @@ class WebDoc(models.Model):
     class Meta:
         verbose_name = _('웹문서 링크')
         verbose_name_plural = _('웹문서 링크(들)')
-    
 
 def get_upload_path(instance, filename):
     """
