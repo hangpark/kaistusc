@@ -65,7 +65,10 @@ class BoardView(ServiceView):
         context['search'] = search
 
         # 게시글 목록 조회
-        post_list = Post.objects.filter(board=board)
+        if (tab):
+            post_list = Post.objects.filter(board=board, board_tab=tab)
+        else:
+            post_list = Post.objects.filter(board=board)
 
         # 태그 필터링
         tag = self.request.GET.get('tag')
