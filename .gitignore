@@ -17,6 +17,7 @@ bower_components/
 
 static/dist/
 files/
+media/
 
 # Sphinx build files
 docs/_*/

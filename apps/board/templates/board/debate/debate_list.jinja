@@ -16,20 +16,19 @@
         {{ _('삭제되었습니다.') }}
       {%- elif post.is_secret -%}
         <i class="fa fa-lock"></i>
-      {% if post.is_permitted(request.user, PERM_READ) -%}
-        {{ post.title }}
-      {%- else -%}
-        {{ _('비밀글입니다.') }}
-      {%- endif -%}
+        {% if post.is_permitted(request.user, PERM_READ) -%}
+          {{ post.title }}
+        {%- else -%}
+          {{ _('비밀글입니다.') }}
+        {%- endif -%}
       {%- else -%}
         {% if post.is_commentable() %}
-        {{ _('논쟁중입니다.  ') }}
+        <span class="debate-state debate-ongoing">{{ _('논의중') }}</span>
         {% elif (post.is_closed or post.is_over_due()) %}
-        {{ _('Finshed  ') }}
+        <span class='debate-state debate-finished'>{{ _('종료') }}</span>
         {% else %}
-        {{ _('청원을 기다리고 있습니다  ') }}
+        <span class='debate-state debate-waiting'>{{ _('청원중') }}</span>
         {%- endif -%}
-
         {{ post.title }}
         
       {%- endif -%}
@@ -83,18 +82,21 @@
     </ul>
   </div>
   <div class = "filter-checkbox">
-    <span class="checkbox-inline pull-right" >
-        <input type="radio" name='filter_state' value="finish" {% if filter_state == 'finish' %} checked{% endif %}> {{ _('종료')}}
-    </span>
-    <span class="checkbox-inline pull-right" >
-        <input type="radio" name='filter_state' value='wait' {% if filter_state == 'wait' %} checked{% endif %}> {{ _('대기중')}}
-    </span>
-    <span class="checkbox-inline pull-right" >
-        <input type="radio" name='filter_state' value='debate' {% if filter_state == 'debate' %} checked{% endif %}> {{ _('논의중')}}
-    </span>
-    <span class="checkbox-inline pull-right" >
+    <label><span class="checkbox-inline pull-right" >
         <input type="radio" name='filter_state' value = 'all' {% if filter_state == 'all' %} checked{% endif %} > {{ _('전체보기')}}
-    </span>
+    </span></label>
+    <label><span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value='ongoing' {% if filter_state == 'ongoing' %} checked{% endif %}> {{ _('논의중')}}
+    </span></label>
+    <label><span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value='wait' {% if filter_state == 'wait' %} checked{% endif %}> {{ _('청원중')}}
+    </span></label>
+    <label><span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value="finish" {% if filter_state == 'finish' %} checked{% endif %}> {{ _('종료')}}
+    </span></label>
+    
+    
+    
   </div>
   <div class="pull-right col-sm-5">
       <div class="input-group">
