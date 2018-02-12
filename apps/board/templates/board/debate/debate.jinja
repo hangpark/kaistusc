@@ -48,10 +48,7 @@
   <div id="delete-comment-warning" style="display: none;">{{ _('댓글을 정말 삭제할까요?') }}</div>
 
   {% if post.is_permitted(request.user, PERM_COMMENT) and post.is_commentable() %}
-  <form id="comment-form" class="input-group">{% csrf_token %}
-    <textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
-    <span id="btn-comment-form" class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
-  </form>
+  {% include 'board/comment_form.jinja' %}
   {% endif %}
   <div id="comment-no-input" style="display: none;">{{ _('댓글 내용을 입력해주세요.') }}</div>
 

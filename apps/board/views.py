@@ -174,14 +174,6 @@ class PostView(BoardView):
 
         return context
 
-class PostAgoraView(PostView):
-    """
-    아고라 게시글 조회 뷰.
-
-    :class:`PostView` 를 상속받습니다.
-    """
-    template_name = 'board/agora_post.jinja'
-    
 class DebateView(PostView):
 
     template_name = 'board/debate/debate.jinja'
@@ -415,7 +407,7 @@ class CommentWriteView(PostView):
         return self.render_to_response(self.get_permission_context(context))
 
 
-class CommentWriteWithFileView(PostView):
+class CommentWriteWithFileView(DebateView):
     """
     첨부 가능한 댓글 등록 뷰.
 

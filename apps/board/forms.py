@@ -43,7 +43,7 @@ class PostForm(ModelForm):
 
         return post
 
-<<<<<<< HEAD
+
 class CommentForm(ModelForm):
     """
     댓글을 등록 및 수정하는 폼.
