@@ -1,18 +1,21 @@
 """
 게시판 뷰.
 """
+from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.contrib.auth.models import User
 
 from apps.manager import Custom404
 from apps.manager.constants import *
 from apps.manager.views import ServiceView
 
-from .forms import PostForm, CommentForm
-from .models import ACTIVITY_VOTE, Comment, Post, Tag
+from apps.board.constants import *
 
+from .forms import PostForm, CommentForm,DebateForm
+from .models import ACTIVITY_VOTE, Comment, Post, Tag,DebatePost
 
 class BoardView(ServiceView):
     """
@@ -31,26 +34,56 @@ class BoardView(ServiceView):
         """
         context = super().get_context_data(**kwargs)
 
+        #게시판 역할 상수 저장
+        context['BOARD_ROLE_DEFAULT'] = BOARD_ROLE_DEFAULT
+        context['BOARD_ROLE_PROJECT'] = BOARD_ROLE_PROJECT
+        context['BOARD_ROLE_DEBATE'] = BOARD_ROLE_DEBATE
+
+        
         # 게시판 저장
         board = self.service.board
         context['board'] = board
-
+        
+        
         # 태그 목록 저장
         context['tags'] = Tag.objects.filter(board=board)
 
         # 검색어 저장
         search = self.request.GET.get('s')
         context['search'] = search
+        filter_state = self.request.GET.get('filter_state')
 
         # 게시글 목록 조회
-        post_list = Post.objects.filter(board=board)
+        if board.check_role(BOARD_ROLE_DEBATE):
+            post_list = DebatePost.objects.filter(board=board)
+            context['notices'] = DebatePost.objects.filter(board=board, is_notice=True)
+        else:
+            post_list = Post.objects.filter(board=board)
+            context['notices'] = Post.objects.filter(board=board, is_notice=True)
+        
+
         if kwargs.get('tag', None):
             if kwargs['tag'] not in [tag.slug for tag in context['tags']]:
                 raise Custom404
             post_list = post_list.filter(tag__slug=kwargs['tag'])
+        
         if search:
             post_list = post_list.filter(is_deleted=False).filter(
                 Q(title__icontains=search) | Q(content__icontains=search))
+        
+
+        if filter_state:
+            superUser = User.objects.all().filter(is_superuser = True)
+            if filter_state == 'finish':
+                post_list = post_list.filter(is_deleted=False).filter(Q(is_closed = True)|Q(due_date__lte = datetime.now()))
+            elif filter_state == 'wait':
+                post_list = post_list.filter(is_deleted=False ,is_closed = False, due_date__gte = datetime.now(), vote_up__lte = 2).exclude(author__in = superUser)
+            elif filter_state == 'debate':
+                post_list = post_list.filter(is_deleted=False,is_closed = False, due_date__gte = datetime.now()).filter(Q(vote_up__gte = 3)|Q(author__in = superUser))
+        else:
+            filter_state = 'all'
+         
+        context['filter_state'] = filter_state
 
         # 페이지네이션 생성
         paginator = Paginator(post_list, 15)
@@ -67,8 +100,8 @@ class BoardView(ServiceView):
 
         # 게시글 목록 저장
         context['posts'] = posts
-        context['notices'] = Post.objects.filter(board=board, is_notice=True)
-
+        
+        
         return context
 
     def _get_pagination_list(self, page, num_pages):
@@ -77,6 +110,8 @@ class BoardView(ServiceView):
         pivot = (
             3 * (page < 3) or (num_pages - 2) * (page > num_pages - 2) or page)
         return range(pivot - 2, pivot + 3)
+
+
 
 
 class PostView(BoardView):
@@ -147,6 +182,47 @@ class PostAgoraView(PostView):
     """
     template_name = 'board/agora_post.jinja'
     
+class DebateView(PostView):
+
+    template_name = 'board/debate/debate.jinja'
+
+    def has_permission(self, request, *args, **kwargs):
+        """
+        게시판에 대한 접근권한과 게시글에 대한 필요권한을 체크하는 메서드.
+
+        전역변수 :attr:`post_` 에 게시글 인스턴스가 저장되며, 게시글이 존재하지
+        않을 시 404 에러가 발생합니다.
+        """
+        required_permission = self.required_permission
+        self.required_permission = PERM_ACCESS
+        if not super().has_permission(request, *args, **kwargs):
+            return False
+        self.required_permission = required_permission
+        post = DebatePost.objects.filter(
+            board=self.service.board, id=kwargs['post']).first()
+
+        if not post:
+            raise Http404
+        self.post_ = post
+        return post.is_permitted(request.user, self.required_permission)
+
+    def get_context_data(self, **kwargs):
+        """
+        게시글과 관련 정보를 컨텍스트에 저장하는 메서드.
+        """
+        context = super().get_context_data(**kwargs)
+
+        # 게시글 저장
+        context['post'] = self.post_
+
+        # 게시글에 달린 댓글 목록 저장
+        context['comments'] = self.post_.comment_set.all()
+
+        # 게시글에 첨부된 파일 목록 저장
+        context['files'] = self.post_.attachedfile_set.all()
+
+        return context
+
 
 class PostWriteView(BoardView):
     """
@@ -154,7 +230,6 @@ class PostWriteView(BoardView):
 
     기본 필요권한이 쓰기권한으로 설정되어 있습니다.
     """
-
     template_name = 'board/post_form.jinja'
     required_permission = PERM_WRITE
 
@@ -178,6 +253,38 @@ class PostWriteView(BoardView):
         post = Post(author=user, board=self.service.board)
         print("Post Write View Files ",str(request.FILES))
         form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save(request.POST, request.FILES)
+            return HttpResponseRedirect(post.get_absolute_url())
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
+
+
+class DebateWriteView(BoardView):
+
+    template_name = 'board/debate/debate_form.jinja'
+    required_permission = PERM_WRITE
+
+    def get_context_data(self, **kwargs):
+        """
+        논의 글 작성 폼을 컨텍스트에 추가하는 메서드.
+        """
+        context = super().get_context_data(**kwargs)
+        context['form'] = DebateForm(self.service.board)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        논의글 등록 요청에 따라 게시글을 저장하는 메서드.
+
+        사용자로부터 제출된 게시글 폼을 평가하여 통과될 시 게시글과 첨부파일을
+        저장합니다. 올바르지 않은 게시글이 제출된 경우 오류정보를 포함한 폼을
+        재전달하여 수정을 요구합니다.
+        """
+        user = request.user if request.user.is_authenticated() else None
+        post = DebatePost(author=user, board=self.service.board)
+        form = DebateForm(self.service.board, request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())
@@ -222,6 +329,40 @@ class PostEditView(PostView):
         context['form'] = form
         return self.render_to_response(context)
 
+class DebateEditView(DebateView):
+    """
+    논의글 수정 뷰
+    기본 필요 권한이 수정 권한으로 설정되어 있습니다. 
+    """
+
+    template_name = 'board/debate/debate_form.jinja'
+    required_permission = PERM_EDIT
+
+    def get_context_data(self, **kwargs):
+        """
+        게시글 작성 폼을 컨텍스트에 추가하는 메서드.
+        """
+        context = super().get_context_data(**kwargs)
+        post = self.post_
+        context['form'] = DebateForm(self.service.board, instance=post)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        게시글 수정 요청에 따라 게시글을 업데이트 하는 메서드.
+
+        사용자로부터 제출된 게시글 폼을 평가하여 통과될 시 게시글과 첨부파일을
+        저장합니다. 올바르지 않은 게시글이 제출된 경우 오류정보를 포함한 폼을
+        재전달하여 수정을 요구합니다.
+        """
+        post = self.post_
+        form = DebateForm(self.service.board, request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save(request.POST, request.FILES)
+            return HttpResponseRedirect(post.get_absolute_url())
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
 
 class PostDeleteView(PostView):
     """

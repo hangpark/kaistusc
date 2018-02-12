@@ -3,6 +3,7 @@
 """
 
 import os
+from datetime import datetime
 
 from django.db import models
 from django.db.models.signals import post_delete
@@ -10,13 +11,9 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from apps.manager.constants import *
+from apps.board.constants import *
 from apps.manager.models import Service, ServiceManager
 from kaistusc.settings import MEDIA_URL
-
-# Post Activities
-ACTIVITY_VIEW = 'VIEW'
-ACTIVITY_VOTE = 'VOTE'
-
 
 class Board(Service):
     """
@@ -31,12 +28,48 @@ class Board(Service):
 
     objects = ServiceManager()
 
+    BOARD_ROLE_CHOICES = (
+        (BOARD_ROLE_DEFAULT, _('기본')),
+        (BOARD_ROLE_PROJECT, _('사업')),
+        (BOARD_ROLE_DEBATE, _('논의')),
+    )
+
+    role = models.IntegerField(
+        _("보드 역할"),
+        choices=BOARD_ROLE_CHOICES, default=BOARD_ROLE_DEFAULT)
+
     class Meta:
         verbose_name = _('게시판')
         verbose_name_plural = _('게시판(들)')
 
     def __str__(self):
         return self.name
+
+    def check_role(self, role):
+        return self.role == role
+
+
+class BoardTab(Service):
+    """
+    게시판의 탭을 구현한 모델.
+
+    :class:`Service` 모델을 상속받아 속해있는 보드를 추가로 저장합니다.
+    """
+
+    parent_board = models.ForeignKey(
+        Board,
+        verbose_name=_("탭이 속한 게시판"))
+
+    #: 커스텀 매니저
+    objects = ServiceManager()
+
+    class Meta:
+        ordering = ['parent_board', 'level']
+        verbose_name = _('탭')
+        verbose_name_plural = _('탭(들)')
+
+    def __str__(self):
+        return self.board.name + "/" + self.name
 
 
 class PostActivity(models.Model):
@@ -263,6 +296,11 @@ class Post(BasePost):
         Board,
         verbose_name=_("등록 게시판"))
 
+    board_tab = models.ManyToManyField(
+        BoardTab,
+        blank=True,
+        verbose_name=_("등록 탭"))
+
     title = models.CharField(
         _("제목"),
         max_length=128)
@@ -333,6 +371,224 @@ class Comment(BasePost):
         """
         return self.parent_post.board.is_permitted(user, permission)
 
+class Banner(BasePost):
+    """
+    배너를 구현한 모델
+    """
+
+    title = models.CharField(
+        _("제목"),
+        max_length=128)
+
+    url = models.URLField(
+        _("링크 URL"),
+        null=True)
+
+    image = models.ImageField(
+        _("이미지"),
+        upload_to='banner')
+
+    class Meta:
+        verbose_name = _('배너')
+        verbose_name_plural = _('배너(들)')
+
+    def __str__(self):
+        return self.title
+
+class BannerCarousel(models.Model):
+    """
+    배너 Carousel을 구현한 모델
+    """
+    banners = models.ManyToManyField(
+        Banner,
+        verbose_name=_("배너"))
+
+    BANNER_CAROUSEL_SECTOR_CHOICES = (
+       (BANNER_CAROUSEL_SECTOR_MAIN, _('메인페이지')),
+    )
+
+    sector = models.IntegerField(
+        _("노출위치"),
+        choices=BANNER_CAROUSEL_SECTOR_CHOICES)
+
+    class Meta:
+        verbose_name = _('배너그룹')
+        verbose_name_plural = _('배너그룹(들)')
+
+    def __str__(self):
+        return self.get_sector_display()
+
+class Link(BasePost):
+    """
+    링크를 구현한 모델
+    """
+
+    url = models.URLField(
+        _("URL"))
+
+    text = models.CharField(
+        _("텍스트"),
+        max_length=128)
+
+    class Meta:
+        verbose_name = _('링크')
+        verbose_name_plural = _('링크(들)')
+
+    def __str__(self):
+        return self.text
+
+class Contact(BasePost):
+    """
+    기구 등의 연락망 (소통창구, 오픈톡방, 전화번호)을 구현한 모델.
+    """
+
+    board = models.ForeignKey(
+        Board,
+        verbose_name=_("등록 게시판"))
+
+    board_tab = models.ManyToManyField(
+        BoardTab,
+        blank=True,
+        verbose_name=_("등록 탭"))
+    
+    name = models.CharField(
+        _("기구명"),
+        max_length=32, unique=True)
+    
+    # 전화번호가 여러개일 경우는 대표 전화번호를 여기에 쓰고 나머지는 content에 적도록 한다.
+    phone = models.CharField(
+        _("전화번호"),
+        blank=True,
+        max_length=32)
+
+    url = models.URLField(
+        _("소통창구 링크"),
+        blank=True,
+        max_length=500)
+
+    class Meta:
+        verbose_name = _('연락망')
+        verbose_name_plural = _('연락망(들)')
+
+    def __str__(self):
+        return self.name
+
+
+class ProductCategory(models.Model):
+
+    name = models.CharField(
+        _("카테고리명"),
+        max_length=32, unique=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class Product(models.Model):
+    """
+    매점/잡화점에서 파는 상품을 구현한 모델.
+    """
+
+    board = models.ForeignKey(
+        Board,
+        verbose_name=_("등록 게시판"))
+
+    board_tab = models.ManyToManyField(
+        BoardTab,
+        blank=True,
+        verbose_name=_("등록 탭"))
+
+    category = models.ForeignKey(
+        ProductCategory,
+        verbose_name=_("상품 카테고리"))
+
+    name = models.CharField(
+        _("상품명"),
+        max_length=32)
+
+    price = models.IntegerField(
+        _("가격"))
+    
+    description = models.TextField(
+        _("상품 설명"))
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = _('상품')
+        verbose_name_plural = _('상품(들)')
+
+    def __str__(self):
+        return self.board_tab.name + "에서 파는 " + self.title
+
+    
+class ProjectPost(Post):
+    
+    PROJECT_STATUS_CHOICES = (
+        (PROJECT_STATUS_ALWAYS, _('항상')),
+        (PROJECT_STATUS_DONE, _('완료')),
+        (PROJECT_STATUS_QUIT, _('파기')),
+        (PROJECT_STATUS_ONGOING, _('진행중')),
+    )
+    
+    status = models.IntegerField(
+        _("프로젝트 진행 상태"),
+        choices=PROJECT_STATUS_CHOICES, default=PROJECT_STATUS_ALWAYS)
+    
+    is_pledge = models.BooleanField(
+        _("공약 여부"),
+        default=False)
+
+    
+    alteration = models.ForeignKey(
+        BasePost,
+        verbose_name=_("프로젝트 일정"))
+    
+    def get_bureau(self):
+        return self.board_tab.name
+
+
+class DebatePost(Post):
+
+    class Meta:
+        verbose_name = _('논의')
+        verbose_name_plural = _('논의(들)')
+    # is_cloased 는 임의로 닫을 수 있는 boolean값 
+    is_closed = models.BooleanField(
+        _("논쟁 종결 여부"),
+        default=False)
+    due_date = models.DateTimeField(
+        _("종결 예정일"),
+        null=True, blank=True)
+
+    def is_over_due(self):
+        return (datetime.now() > self.due_date)
+
+    def is_commentable(self):
+        check_author = (self.author and self.author.is_superuser)
+        return ((check_author or self.vote_up > 2) and  (not self.is_closed) and (not self.is_over_due()))
+
+    def get_absolute_url(self):
+        # return os.path.join(self.board.get_absolute_url(), str(self.id))
+        return self.board.get_absolute_url()+'/debate/'+str(self.id)
+    
+    
+
+class WebDoc(models.Model):
+    """
+    구글 드라이브 문서 등의 웹 문서 뷰를 위한 모델.
+    웹 문서는 html를 말하는 것이 아닙니다.
+    """
+    post = models.ForeignKey(
+        BasePost,
+        verbose_name=_("연결된 포스트"))
+    
+    embed_url = models.TextField(
+        _("웹 문서 삽입 URL"),
+        blank=True)
+
+    class Meta:
+        verbose_name = _('웹문서 링크')
+        verbose_name_plural = _('웹문서 링크(들)')
 
 
 def get_upload_path(instance, filename):
