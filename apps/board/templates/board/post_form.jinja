@@ -68,9 +68,10 @@
     {% endcall %}
     {% if form.board_tab.field.queryset %}
     {% call(field) form_group(form.board_tab) %}
+      <input type="hidden" id="current_tab" value="{{tab.id}}"/>
       <select id="{{ field.id_for_label }}" class="selectpicker" name="board_tab" multiple data-width="auto">
       {% for choice in field.field.queryset %}
-        <option value="{{ choice.id }}"{% if loop.index0 == 0 %} selected="selected"{% endif %}>{{ choice.name }}</option>
+        <option value="{{ choice.id }}"{% if tab == choice %} selected="selected"{% endif %}>{{ choice.name }}</option>
       {% endfor %}
       </select>
     {% endcall %}
