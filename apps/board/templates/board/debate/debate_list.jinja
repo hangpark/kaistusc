@@ -22,7 +22,16 @@
         {{ _('비밀글입니다.') }}
       {%- endif -%}
       {%- else -%}
+        {% if post.is_commentable() %}
+        {{ _('논쟁중입니다.  ') }}
+        {% elif (post.is_closed or post.is_over_due()) %}
+        {{ _('Finshed  ') }}
+        {% else %}
+        {{ _('청원을 기다리고 있습니다  ') }}
+        {%- endif -%}
+
         {{ post.title }}
+        
       {%- endif -%}
       </span>
       <div class="post-list-mobile visible-xs-block">
@@ -31,9 +40,9 @@
       </div>
     </td>
     <td class="hidden-xs text-center">{{ name(post.author) }}</td>
-    <td class="hidden-xs text-center">{{ post.date.strftime('%Y-%m-%d') }}</td>
+    <td class="hidden-xs text-center">{{ post.date.strftime('%y-%m-%d') }} ~ <br/>{{post.due_date.strftime('%y-%m-%d')}}</td>
     <td class="hidden-xs text-center">{{ post.get_hits() }}</td>
-    <td class= "hidden-xs text-center">+{{ post.vote_up }}/-{{ post.vote_down }}</td>
+    <td class= "hidden-xs text-center">{{ post.vote_up }}</td>
   </tr>
 {%- endmacro -%}
 
@@ -43,9 +52,9 @@
       <th class="text-center">{{ _('태그') }}</th>
       <th class="post-list-dom-width text-center">{{ _('제목') }}</th>
       <th class="text-center">{{ _('작성자') }}</th>
-      <th class="text-center">{{ _('작성일') }}</th>
+      <th class="text-center">{{ _('기간') }}</th>
       <th class="text-center">{{ _('조회') }}</th>
-      <th class="text-center">{{ _('추천') }}</th>
+      <th class="text-center">{{ _('참여') }}</th>
     </tr>
   </thead>
   <tbody>
@@ -59,6 +68,9 @@
 </table>
 
 <div id="board-func" class="row">
+  
+  <form action="." method="get" id="search-form">
+  
   <div class="pull-left col-sm-6">
     <ul id="pagination" class="pagination pull-left">
       <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p=1">&lt;&lt;</a></li>
@@ -70,17 +82,31 @@
       <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={{ posts.paginator.num_pages }}">&gt;&gt;</a></li>
     </ul>
   </div>
+  <div class = "filter-checkbox">
+    <span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value="finish" {% if filter_state == 'finish' %} checked{% endif %}> {{ _('종료')}}
+    </span>
+    <span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value='wait' {% if filter_state == 'wait' %} checked{% endif %}> {{ _('대기중')}}
+    </span>
+    <span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value='debate' {% if filter_state == 'debate' %} checked{% endif %}> {{ _('논의중')}}
+    </span>
+    <span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value = 'all' {% if filter_state == 'all' %} checked{% endif %} > {{ _('전체보기')}}
+    </span>
+  </div>
   <div class="pull-right col-sm-5">
-    <form action="." method="get" id="search-form">
       <div class="input-group">
         <input type="text" class="form-control" name="s">
         <span class="input-group-btn">
           <button class="btn btn-default" type="submit">{{ _('검색') }}</button>
         {% if board.is_permitted(request.user, PERM_WRITE) %}
-          <a href="{{ board.get_absolute_url() }}/new/" class="btn btn-primary">{{ _('글쓰기') }}</a>
+          <a href="{{ board.get_absolute_url() }}/new_debate/" class="btn btn-primary">{{ _('글쓰기') }}</a>
         {% endif %}
         </span>
-      </div>
-    </form>
+      </div> 
   </div>
+  
+  </form>
 </div>

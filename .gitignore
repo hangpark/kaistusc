@@ -13,6 +13,7 @@ local_settings.py
 node_modules/
 bower_components/
 static/dist/
+files/
 
 # Sphinx build files
 docs/_*/

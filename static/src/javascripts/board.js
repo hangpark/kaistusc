@@ -86,4 +86,17 @@ $().ready(function() {
                 alert("권한이 없습니다.");
             });
     });
+
+
+    $("#id_due_date").datepicker({
+        altFormat: "yyyy-mm-dd",
+        minDate: new Date(),
+        maxDate: "+15d",
+    });
+    if($("#id_due_date").val() == ''){
+        $("#id_due_date").datepicker("setDate", new Date());
+    }
+    
+   
+    
 });

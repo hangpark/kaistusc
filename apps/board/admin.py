@@ -5,7 +5,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import AttachedFile, Board, Comment, Post, Tag, Banner, BannerCarousel, Link
+from .models import AttachedFile, Board, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost
 
 
 class BoardAdmin(TranslationAdmin):
@@ -40,6 +40,15 @@ class PostAdmin(TranslationAdmin):
 
     pass
 
+class DebatePostAdmin(TranslationAdmin):
+    """
+    :class:`Post` 모델에 대한 커스텀 어드민.
+
+    `django-modeltranslation` 에서 제공하는 :class:TranslationAdmin` 을 상속받아
+    다국어 처리를 사용자 친화적으로 변경하였습니다.
+    """
+
+    pass
 
 class CommentAdmin(TranslationAdmin):
     """
@@ -82,6 +91,7 @@ class LinkAdmin(TranslationAdmin):
 admin.site.register(Board, BoardAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Post, PostAdmin)
+admin.site.register(DebatePost,DebatePostAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Banner, BannerAdmin)
 admin.site.register(BannerCarousel, BannerCarouselAdmin)

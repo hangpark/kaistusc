@@ -3,6 +3,7 @@
 """
 
 import os
+from datetime import datetime
 
 from django.db import models
 from django.db.models.signals import post_delete
@@ -30,6 +31,7 @@ class Board(Service):
     BOARD_ROLE_CHOICES = (
         (BOARD_ROLE_DEFAULT, _('기본')),
         (BOARD_ROLE_PROJECT, _('사업')),
+        (BOARD_ROLE_DEBATE, _('논의')),
     )
 
     role = models.IntegerField(
@@ -42,6 +44,9 @@ class Board(Service):
 
     def __str__(self):
         return self.name
+
+    def check_role(self, role):
+        return self.role == role
 
 
 class BoardTab(Service):
@@ -309,7 +314,8 @@ class Post(BasePost):
         return self.title
 
     def get_absolute_url(self):
-        return os.path.join(self.board.get_absolute_url(), str(self.id))
+        # return os.path.join(self.board.get_absolute_url(), str(self.id))
+        return self.board.get_absolute_url()+'/'+str(self.id)
 
     def pre_permitted(self, user, permission):
         """
@@ -523,6 +529,7 @@ class ProjectPost(Post):
     is_pledge = models.BooleanField(
         _("공약 여부"),
         default=False)
+
     
     alteration = models.ForeignKey(
         BasePost,
@@ -533,17 +540,28 @@ class ProjectPost(Post):
 
 
 class DebatePost(Post):
-    
+
+    class Meta:
+        verbose_name = _('논의')
+        verbose_name_plural = _('논의(들)')
+    # is_cloased 는 임의로 닫을 수 있는 boolean값 
     is_closed = models.BooleanField(
         _("논쟁 종결 여부"),
         default=False)
-    
     due_date = models.DateTimeField(
         _("종결 예정일"),
         null=True, blank=True)
-    
+
+    def is_over_due(self):
+        return (datetime.now() > self.due_date)
+
     def is_commentable(self):
-        return (self.author.is_superuser or self.vote_up > 2)
+        check_author = (self.author and self.author.is_superuser)
+        return ((check_author or self.vote_up > 2) and  (not self.is_closed) and (not self.is_over_due()))
+
+    def get_absolute_url(self):
+        # return os.path.join(self.board.get_absolute_url(), str(self.id))
+        return self.board.get_absolute_url()+'/debate/'+str(self.id)
     
     
 

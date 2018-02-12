@@ -4,7 +4,7 @@
 
 from django.forms import ModelForm
 
-from .models import AttachedFile, Post, Tag
+from .models import AttachedFile, Post, Tag, DebatePost
 
 
 class PostForm(ModelForm):
@@ -42,3 +42,16 @@ class PostForm(ModelForm):
             AttachedFile.objects.create(post=post, file=f)
 
         return post
+
+class DebateForm(PostForm):
+    """
+    논쟁글을 등록 및 수정하는 폼.
+
+    :class:`POSTForm`으로 구현되었습니다 .
+    """
+    
+    class Meta:
+        model = DebatePost
+        fields = (
+            'title_ko', 'title_en', 'content_ko', 'content_en',
+            'is_notice', 'is_closed','tag', 'due_date', )

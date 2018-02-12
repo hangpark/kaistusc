@@ -224,3 +224,12 @@
     width: 100%;
   }
 }
+
+.filter-checkbox{
+  float:right;
+  padding-right: 15px;
+  padding-bottom: 5px;
+  @media (max-width: $screen-sm-min) {
+    margin: $line-height-computed 0;
+  }
+}

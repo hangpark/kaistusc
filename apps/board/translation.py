@@ -6,7 +6,7 @@
 
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import BasePost, Board, Comment, Post, Tag, Banner, BannerCarousel, Link
+from .models import BasePost, Board, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost
 
 
 @register(Board)
@@ -44,6 +44,13 @@ class PostTranslationOptions(TranslationOptions):
 
     fields = ('title',)
 
+@register(DebatePost)
+class DebatePostTranslationOptions(TranslationOptions):
+    """
+    :class:`DebatePost` 모델에 대한 국제화 지원.
+    """
+    fields = ()
+    
 
 @register(Comment)
 class CommentTranslationOptions(TranslationOptions):
