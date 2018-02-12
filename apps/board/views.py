@@ -137,6 +137,66 @@ class PostView(BoardView):
         return context
 
 
+class PdfLatestView(BoardView):
+    """
+    최신 pdf 조회 뷰.
+
+    :class:`BoardView` 를 상속받아 게시판 정보를 자동 저장합니다. 기본
+    필요권한이 읽기권한으로 설정되어 있습니다.
+    """
+
+    template_name = 'board/pdf.jinja'
+    required_permission = PERM_READ
+
+    def has_permission(self, request, *args, **kwargs):
+        """
+        게시판에 대한 접근권한과 게시글에 대한 필요권한을 체크하는 메서드.
+
+        전역변수 :attr:`post_` 에 게시글 인스턴스가 저장되며, 게시글이 존재하지
+        않을 시 404 에러가 발생합니다.
+        """
+        required_permission = self.required_permission
+        self.required_permission = PERM_ACCESS
+        kwargs['url'] = kwargs['url'] + '/latest/'
+        print(kwargs)
+        if not super().has_permission(request, *args, **kwargs):
+            return False
+        self.required_permission = required_permission
+        post = Post.objects.filter(
+            board=self.service.board).latest('date')
+
+        if not post:
+            raise Http404
+        self.post_ = post
+        return post.is_permitted(request.user, self.required_permission)
+
+    def get(self, request, *args, **kwargs):
+        """
+        GET 요청이 왔을 시 게시글 조회수를 증가하는 메서드.
+
+        :meth:`has_permission` 을 통과한 사용자에게만 본 메서드가 실행됩니다.
+        """
+        self.post_.assign_hits(request)
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        """
+        게시글과 관련 정보를 컨텍스트에 저장하는 메서드.
+        """
+        context = super().get_context_data(**kwargs)
+
+        # 게시글 저장
+        context['post'] = self.post_
+
+        # 게시글에 달린 댓글 목록 저장
+        context['comments'] = self.post_.comment_set.all()
+
+        # 게시글에 첨부된 파일 목록 저장
+        context['files'] = self.post_.attachedfile_set.all()
+        
+        return context
+
+
 class PostWriteView(BoardView):
     """
     게시글 등록 뷰.

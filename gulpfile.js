@@ -8,14 +8,17 @@ var watch = require('gulp-watch');
 var livereload = require('gulp-livereload');
 var autoprefixer = require('autoprefixer');
 var merge = require('merge-stream');
+var util = require('gulp-util');
 
 var src = './static/src';
 var dist = './static/dist';
 var bower = './bower_components';
+var npm = './node_modules';
 
 var jquery = bower + '/jquery/dist';
 var bootstrap = bower + '/bootstrap-sass/assets';
 var fontawesome = bower + '/font-awesome';
+var pdfjs = npm + '/pdfjs-dist';
 
 var template = {
 	in : 'apps/**/*.jinja'
@@ -55,7 +58,7 @@ var css = {
 gulp.task('js', function () {
     return gulp.src(js.in)
 		.pipe(concat('main.js'))
-        .pipe(uglify())
+        .pipe(uglify().on('error', util.log))
 		.pipe(gulp.dest(js.out))
 		.pipe(livereload());
 });

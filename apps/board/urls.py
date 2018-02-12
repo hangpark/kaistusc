@@ -6,13 +6,16 @@ from django.conf.urls import url
 
 from apps.board.views import (BoardView, CommentDeleteView, CommentWriteView,
                               PostDeleteView, PostEditView, PostView,
-                              PostVoteView, PostWriteView)
+                              PostVoteView, PostWriteView, PdfLatestView)
 
 url_tag = r'^(?:(?P<tag>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
 
 urlpatterns = [
     url(r'^new/$',
         PostWriteView.as_view()),
+
+    url(r'^latest/$',
+        PdfLatestView.as_view()),
 
     url(url_tag + r'$',
         BoardView.as_view()),

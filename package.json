@@ -18,9 +18,11 @@
     "gulp-postcss": "^6.2.0",
     "gulp-sass": "^3.0.0",
     "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.8",
     "gulp-watch": "^5.0.0"
   },
   "dependencies": {
-    "merge-stream": "^1.0.1"
+    "merge-stream": "^1.0.1",
+    "pdfjs-dist": "^2.0.357"
   }
 }

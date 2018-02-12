@@ -198,9 +198,12 @@ class BasePost(models.Model):
         _("비추천수"),
         default=0)
 
+    def __str__(self):
+        return self.content
+
     class Meta:
         ordering = ['-date']
-
+    
     def is_owned_by(self, user):
         """
         주어진 사용자의 포스트인지 확인하는 메서드.

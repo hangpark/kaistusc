@@ -165,6 +165,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/dist"),
+    os.path.join(BASE_DIR, "node_modules/pdfjs-dist"),
 )
 
 STATIC_ROOT = '/var/www/static'
