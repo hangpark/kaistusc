@@ -1,0 +1,19 @@
+{% from 'ksso/macros.jinja' import name %}
+<form  id="commentAttached-form" action = "{{ post.get_absolute_url() }}/commentAttached/"  method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+<div class = 'comment-wrapper'>
+	<div class= 'comment-input pull-left'>
+	<div><textarea id="comment-area" class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea></div>
+	<div id="attach-file-wrap" class = 'pull-left'>
+      <div class="attach-file">
+        <input type="file" name="files">
+        
+      </div>
+    </div>
+	</div>
+	<div class='comment-button pull-right' >
+	    <button id="btn-commentAttached-form" class="btn btn-sm btn-default" type="submit">{{ _('등록') }}</button>	
+	</div>
+	<div id='clear'></div>
+</div>
+</form>
+<div id="comment-no-input" style="display: none;">{{ _('댓글 내용을 입력해주세요.') }}</div>

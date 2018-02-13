@@ -1,6 +1,6 @@
-{% macro make_tag(board, tag) -%}
+{% macro make_tag(board, tag, tab) -%}
 {% if tag -%}
-<div class="tag-item bg-{{ tag.id % 10 }}" onclick="location.href='{{ board.get_absolute_url() }}/{{ tag.slug }}/';">{{ tag.abbr }}</div>
+<div class="tag-item bg-{{ tag.id % 10 }}" onclick="location.href='{% if tab %}{{ tab.get_absolute_url() }}{% else %}{{ board.get_absolute_url() }}{% endif %}?tag={{ tag.slug }}';">{{ tag.abbr }}</div>
 {%- endif %}
 {%- endmacro %}
 

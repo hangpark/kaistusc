@@ -6,6 +6,11 @@
 //== 기본 레이아웃
 //
 //##
+#clear{
+  clear:both;
+  height: 0;
+  overflow: hidden;
+}
 
 .tag-item {
   padding: 1px;
@@ -37,9 +42,7 @@
 }
 
 #board-tag-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 0;
+  cursor: pointer;
   font-size: $font-size-sm;
   font-weight: bold;
   color: #717071;
@@ -56,8 +59,6 @@
 //##
 
 #post-list {
-  border-top: solid 3px #717071;
-
   thead {
     border-bottom: solid 2px #9f9fa0;
     font-size: 12pt;
@@ -88,6 +89,23 @@
   }
 }
 
+.debate-state{
+  margin-right: 5px;
+  padding: 4px 6px;
+  color:white;
+  font-weight: bold;
+  border-radius: 10%;
+}
+
+.debate-ongoing{
+  background: orange;
+}
+.debate-finished{
+  background: gray;
+}
+.debate-waiting{
+  background: navy;
+}
 
 //== 게시판 기능
 //
@@ -154,6 +172,14 @@
   }
 }
 
+#attached-file-comment {
+  padding: 0px 25px 10px;
+  font-size: 10pt;
+  p {
+    margin-bottom: 5px;
+  }
+}
+
 #comment-list .comment {
   padding-top: 6px;
   border-left: 14px solid #dcdcdd;
@@ -178,6 +204,11 @@
 
 #comment-form {
   margin-top: 28px;
+}
+
+#commentAttached-form {
+  margin-top: 28px;
+  width: 100%;
 }
 
 #post-func {
@@ -219,6 +250,42 @@
   }
 }
 
+.comment-wrapper{
+  border: 1px solid #ccc; 
+  width: 100%;
+  position: relative;
+}
+
+#attach-file-wrap{
+  width: 100%;
+}
+.comment-button{
+  width: 10%;
+  position: absolute;
+  right: 0;
+  height: 100%;
+}
+
+#comment-area{
+  border-radius: 0px;
+  border: none;
+  -webkit-tap-highlight-color:none;
+  border-bottom: 1px solid #ccc; 
+}
+#btn-commentAttached-form{
+  width: 100%;
+  height: 100%;
+  margin-bottom: 10px;
+  border: none;
+  border-left: 1px solid #ccc; 
+  margin-bottom: 0px;
+  border-radius: 0px;
+}
+
+.comment-input{
+  width: 90%;
+}
+
 .banner_carousel {
   img {
     width: 100%;
@@ -231,5 +298,17 @@
   padding-bottom: 5px;
   @media (max-width: $screen-sm-min) {
     margin: $line-height-computed 0;
+  }
+}
+
+#post-list-header-tag {
+  background: none;
+  border: none;
+}
+
+#post-list-header-tag-dropdown {
+  min-width: 0;
+  li {
+    padding: 2px 3px;
   }
 }

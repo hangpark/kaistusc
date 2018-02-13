@@ -47,8 +47,10 @@ $().ready(function() {
         if ($btn.hasClass("disabled"))
             return;
         $btn.addClass("disabled");
+        console.log("Doing JS");
         $.post("./comment/", $("#comment-form").serialize())
             .done(function(data) {
+                console.log("Done",data);
                 $("#comment-list").append(data);
                 $(".comment-content:last").each(function () {
                     $(this).html(convert2html($(this).html()));
@@ -60,6 +62,7 @@ $().ready(function() {
                 $btn.removeClass("disabled");
             });
     });
+
 
     $("#comment-list").on('click', ".comment-remove", function() {
         var $comment = $(this).parents(".comment");
@@ -97,6 +100,23 @@ $().ready(function() {
         $("#id_due_date").datepicker("setDate", new Date());
     }
     
-   
-    
+    $('.tag-item').click(function(e) {
+        e.stopPropagation();
+    })
+
+    $('#id_board_tab').on('changed.bs.select', function (e) {
+        var is_selected = false;
+        var options = e.currentTarget.options;
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                is_selected = true;
+            }
+        }
+        if (!is_selected) {
+            val = $('#current_tab')[0].value || e.currentTarget.options[0].value;
+            $('#id_board_tab option[value=' + val + ']').prop("selected", true);
+        }
+        $('#id_board_tab').selectpicker('refresh')
+    });
+
 });

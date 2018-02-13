@@ -4,7 +4,7 @@
 
 from django.forms import ModelForm
 
-from .models import AttachedFile, Post, Tag, DebatePost
+from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment
 
 
 class PostForm(ModelForm):
@@ -17,13 +17,14 @@ class PostForm(ModelForm):
 
     def __init__(self, board, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['board_tab'].queryset = BoardTab.objects.filter(parent_board=board)
         self.fields['tag'].queryset = Tag.objects.filter(board=board)
 
     class Meta:
         model = Post
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
-            'is_notice', 'is_secret', 'tag')
+            'is_notice', 'is_secret', 'board_tab', 'tag')
 
     def save(self, POST, FILES):
         """
@@ -43,6 +44,34 @@ class PostForm(ModelForm):
 
         return post
 
+
+class CommentForm(ModelForm):
+    """
+    댓글을 등록 및 수정하는 폼.
+
+    :class:`ModelForm`으로 구현되었으며, `save` 메서드에서 첨부파일까지
+    저장합니다.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Comment
+        fields = ('content',)
+
+    def save(self, POST, FILES):
+        """
+        게시글과 그에 첨부된 파일들을 저장하는 메서드.
+        """
+        comment = super().save()
+       
+        files = FILES.getlist('files')
+        for f in files:
+            AttachedFile.objects.create(post=comment, file=f)
+    
+        return comment
+
 class DebateForm(PostForm):
     """
     논쟁글을 등록 및 수정하는 폼.
@@ -55,3 +84,4 @@ class DebateForm(PostForm):
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
             'is_notice', 'is_closed','tag', 'due_date', )
+

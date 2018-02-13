@@ -14,10 +14,22 @@
       <i class="fa fa-lock"></i>
     {%- endif %}
       {{ post.title }}
+      <div class='pull-right'>
+      {% if post.is_commentable() %}
+        <span class="debate-state debate-ongoing">{{ _('논의중') }}</span>
+      {% elif (post.is_closed or post.is_over_due()) %}
+        <span class='debate-state debate-finished'>{{ _('종료') }}</span>
+      {% else %}
+        <span class='debate-state debate-waiting'>{{ _('청원중') }}</span>
+      {%- endif -%}
+      </div>
     </div>
     <div id="post-info">
-      <div class="pull-left">{% if post.tag %}<span class="margin-right">{{ make_tag(board, post.tag) }}</span>{% endif %}{{ name(post.author) }}<span class="margin-both">|</span>
-      {{ post.date.strftime('%y-%m-%d') }} ~ {{ post.due_date.strftime('%y-%m-%d')}}</div>
+      <div class="pull-left">
+        {% if post.tag %}<span class="margin-right">{{ make_tag(board, post.tag) }}</span>{% endif %}
+        {{ name(post.author) }}<span class="margin-both">|</span>
+      {{ post.date.strftime('%y-%m-%d') }} ~ {{ post.due_date.strftime('%y-%m-%d')}}
+    </div>
       <div class="pull-right">{{ _('조회수') }}<span class="margin-both">|</span>{{ post.get_hits() }}</div>
     </div>
   </div>
@@ -48,10 +60,7 @@
   <div id="delete-comment-warning" style="display: none;">{{ _('댓글을 정말 삭제할까요?') }}</div>
 
   {% if post.is_permitted(request.user, PERM_COMMENT) and post.is_commentable() %}
-  <form id="comment-form" class="input-group">{% csrf_token %}
-    <textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
-    <span id="btn-comment-form" class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
-  </form>
+  {% include 'board/comment_form.jinja' %}
   {% endif %}
   <div id="comment-no-input" style="display: none;">{{ _('댓글 내용을 입력해주세요.') }}</div>
 
