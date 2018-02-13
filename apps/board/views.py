@@ -9,8 +9,9 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from apps.manager import Custom404
 from apps.manager.constants import *
 from apps.manager.views import ServiceView
+from apps.board.constants import *
 
-from .forms import PostForm
+from .forms import PostForm, ProjectPostForm
 from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab
 
 
@@ -66,9 +67,9 @@ class BoardView(ServiceView):
 
         # 게시글 목록 조회
         if (tab):
-            post_list = Post.objects.filter(board=board, board_tab=tab)
+            post_list = board.post_set.filter(board_tab=tab)
         else:
-            post_list = Post.objects.filter(board=board)
+            post_list = board.post_set.all()
 
         # 태그 필터링
         tag = self.request.GET.get('tag')
@@ -178,7 +179,7 @@ class PostWriteView(BoardView):
     기본 필요권한이 쓰기권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post_form.jinja'
+    template_name = 'board/post_form/post_form.jinja'
     required_permission = PERM_WRITE
 
     def get_context_data(self, **kwargs):
@@ -186,7 +187,11 @@ class PostWriteView(BoardView):
         게시글 작성 폼을 컨텍스트에 추가하는 메서드.
         """
         context = super().get_context_data(**kwargs)
-        context['form'] = PostForm(self.service.board)
+        board_role = context['board'].role
+        if board_role == BOARD_ROLE_PROJECT:
+            context['form'] = ProjectPostForm(self.service.board)
+        else:
+            context['form'] = PostForm(self.service.board)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -215,7 +220,7 @@ class PostEditView(PostView):
     기본 필요권한이 수정권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post_form.jinja'
+    template_name = 'board/post_form/post_form.jinja'
     required_permission = PERM_EDIT
 
     def get_context_data(self, **kwargs):
@@ -224,7 +229,13 @@ class PostEditView(PostView):
         """
         context = super().get_context_data(**kwargs)
         post = self.post_
-        context['form'] = PostForm(self.service.board, instance=post)
+
+        board_role = context['board'].role
+        if board_role == BOARD_ROLE_PROJECT:
+            context['form'] = ProjectPostForm(self.service.board, instance=post)
+        else:
+            context['form'] = PostForm(self.service.board, instance=post)
+        return context
         return context
 
     def post(self, request, *args, **kwargs):
