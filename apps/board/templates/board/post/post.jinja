@@ -1,0 +1,12 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'ksso/macros.jinja' import name %}
+{% from 'board/macros.jinja' import make_tag %}
+
+{% block content %}
+{% if board.role == BOARD_ROLE_DEBATE %}
+  {% include 'board/post/post_debate.jinja/'%}
+{% else %}
+  {% include 'board/post/post_default.jinja/'%}
+{% endif %}
+{% endblock %}

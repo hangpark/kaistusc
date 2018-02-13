@@ -8,6 +8,7 @@ from modeltranslation.admin import TranslationAdmin
 from .models import AttachedFile, Board, BoardTab,Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost
 
 
+
 class BoardAdmin(TranslationAdmin):
     """
     :class:`Board` 모델에 대한 커스텀 어드민.

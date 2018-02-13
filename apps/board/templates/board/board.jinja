@@ -14,7 +14,7 @@
   </ul>
   {% endif %}
 </div>
-{% if board.check_role(BOARD_ROLE_DEBATE) %}
+{% if board.role == BOARD_ROLE_DEBATE %}
 	{% include 'board/debate/debate_list.jinja' %}
 {% else %}
 	{% include 'board/post_list.jinja' %}

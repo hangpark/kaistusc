@@ -4,22 +4,13 @@
 
 from django.conf.urls import url
 
-from apps.board.views import (BoardView, CommentDeleteView,CommentWriteWithFileView,CommentWriteView,DebateWriteView,DebateView, DebateEditView,PostDeleteView, PostEditView, PostView,PostWriteView,PostVoteView)
+from apps.board.views import (BoardView, CommentDeleteView,CommentWriteWithFileView,CommentWriteView,PostDeleteView, PostEditView, PostView,PostWriteView,PostVoteView)
 
 url_tab = r'^(?:(?P<tab>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
 
 urlpatterns = [
     url(url_tab + r'new/$',
         PostWriteView.as_view()),
-
-    url(url_tab +r'^new_debate/$',
-        DebateWriteView.as_view()),
-
-    url(url_tab + r'^debate/(?P<post>[0-9]+)/$',
-        DebateView.as_view()),
-
-    url(url_tab + r'^debate/(?P<post>[0-9]+)/edit/$',
-        DebateEditView.as_view()),
 
     url(url_tab + r'$',
         BoardView.as_view()),

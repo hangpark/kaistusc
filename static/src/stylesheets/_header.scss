@@ -40,6 +40,7 @@
   .navbar-default {
     background-color: $body-bg;
   }
+  
   #gnb.dropdown .dropdown-menu {
     max-height: 0px;
     overflow: hidden;
@@ -52,6 +53,7 @@
     max-height: 200px;
     transition: max-height 0.2s ease-in-out;
   }
+
   .navbar-header,
   .navbar-brand {
     float: none;
@@ -110,6 +112,17 @@
 
 #gnb-svc-wrapper {
   @include full-jumbotron($main-service-bg);
+  max-height: 0px;
+  overflow: hidden;
+  display: block;
+  box-shadow: none;
+  border: none;
+  transition: max-height 0.2s ease-in-out;
+}
+
+#gnb.dropdown:hover #gnb-svc-wrapper {
+  max-height: 200px;
+  transition: max-height 0.2s ease-in-out;
 }
 
 .gnb-menu {

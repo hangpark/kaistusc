@@ -48,7 +48,6 @@ class Board(Service):
     def check_role(self, role):
         return self.role == role
 
-
 class BoardTab(BaseService):
     """
     게시판의 탭을 구현한 모델.
@@ -336,6 +335,9 @@ class Post(BasePost):
     def get_first_tab(self):
         return self.board_tab.all().first()
 
+    def get_first_tab(self):
+        return self.board_tab.all().first()
+
     def pre_permitted(self, user, permission):
         """
         게시글 권한 확인 이전에 게시판 접근권한을 확인하는 메서드.
@@ -531,27 +533,27 @@ class Product(models.Model):
     def __str__(self):
         return self.board_tab.name + "에서 파는 " + self.title
 
+class Schedule(models.Model):
+    title = models.CharField(
+        _("제목"),
+        max_length=128)
+
+    date = models.DateTimeField(
+        _("날짜"))
     
 class ProjectPost(Post):
-    
-    PROJECT_STATUS_CHOICES = (
-        (PROJECT_STATUS_ALWAYS, _('항상')),
-        (PROJECT_STATUS_DONE, _('완료')),
-        (PROJECT_STATUS_QUIT, _('파기')),
-        (PROJECT_STATUS_ONGOING, _('진행중')),
-    )
-    
-    status = models.IntegerField(
-        _("프로젝트 진행 상태"),
-        choices=PROJECT_STATUS_CHOICES, default=PROJECT_STATUS_ALWAYS)
-    
+    """
+    사업 게시글 구현한 모델.
+    사업 진행사항은 Post 모델의 tag로 대체한다
+    """
+
     is_pledge = models.BooleanField(
-        _("공약 여부"),
+        _("공약"),
         default=False)
 
     
-    alteration = models.ForeignKey(
-        BasePost,
+    schedules = models.ForeignKey(
+        Schedule,
         verbose_name=_("프로젝트 일정"))
     
     def get_bureau(self):
@@ -580,7 +582,7 @@ class DebatePost(Post):
 
     def get_absolute_url(self):
         # return os.path.join(self.board.get_absolute_url(), str(self.id))
-        return self.board.get_absolute_url()+'/debate/'+str(self.id)
+        return self.board.get_absolute_url()+'/'+str(self.id)
     
     
 

@@ -90,7 +90,6 @@ $().ready(function() {
             });
     });
 
-
     $("#id_due_date").datepicker({
         altFormat: "yyyy-mm-dd",
         minDate: new Date(),
@@ -99,7 +98,7 @@ $().ready(function() {
     if($("#id_due_date").val() == ''){
         $("#id_due_date").datepicker("setDate", new Date());
     }
-    
+
     $('.tag-item').click(function(e) {
         e.stopPropagation();
     })
