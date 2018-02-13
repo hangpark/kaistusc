@@ -78,10 +78,10 @@ class DebateForm(PostForm):
 
     :class:`POSTForm`으로 구현되었습니다 .
     """
-    
+        
     class Meta:
         model = DebatePost
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
-            'is_notice', 'is_closed','tag', 'due_date', )
+            'is_notice', 'is_closed','tag', 'board_tab','due_date', )
 

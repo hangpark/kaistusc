@@ -16,7 +16,7 @@ from apps.manager.views import ServiceView
 from apps.board.constants import *
 
 from .forms import PostForm, CommentForm,DebateForm
-from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, ,DebatePost
+from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost
 
 class BoardView(ServiceView):
     """
