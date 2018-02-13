@@ -37,9 +37,7 @@
 }
 
 #board-tag-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 0;
+  cursor: pointer;
   font-size: $font-size-sm;
   font-weight: bold;
   color: #717071;
@@ -56,8 +54,6 @@
 //##
 
 #post-list {
-  border-top: solid 3px #717071;
-
   thead {
     border-bottom: solid 2px #9f9fa0;
     font-size: 12pt;
@@ -222,5 +218,17 @@
 .banner_carousel {
   img {
     width: 100%;
+  }
+}
+
+#post-list-header-tag {
+  background: none;
+  border: none;
+}
+
+#post-list-header-tag-dropdown {
+  min-width: 0;
+  li {
+    padding: 2px 3px;
   }
 }

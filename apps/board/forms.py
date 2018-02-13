@@ -4,7 +4,7 @@
 
 from django.forms import ModelForm
 
-from .models import AttachedFile, Post, Tag
+from .models import AttachedFile, Post, Tag, BoardTab
 
 
 class PostForm(ModelForm):
@@ -17,13 +17,14 @@ class PostForm(ModelForm):
 
     def __init__(self, board, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['board_tab'].queryset = BoardTab.objects.filter(parent_board=board)
         self.fields['tag'].queryset = Tag.objects.filter(board=board)
 
     class Meta:
         model = Post
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
-            'is_notice', 'is_secret', 'tag')
+            'is_notice', 'is_secret', 'board_tab', 'tag')
 
     def save(self, POST, FILES):
         """

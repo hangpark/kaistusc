@@ -59,6 +59,27 @@ class Category(models.Model):
             return s.get_absolute_url()
         return '/'
 
+class TopBanner(models.Model):
+    """
+    탑배너를 구현한 모델
+    """
+    text = models.CharField(
+        _("텍스트"),
+        max_length=128)
+
+    url = models.URLField(
+        _("링크 URL"),
+        blank=True, null=True)
+
+    terminate_at = models.DateTimeField(
+        _("노출종료일시"),
+        blank=True, null=True,
+        help_text=_("공란일경우, 직접 삭제시까지 노출됩니다"))
+        
+    class Meta:
+        verbose_name = _('탑배너')
+        verbose_name_plural = _('탑배너(들)')
+    
 
 class ServiceQuerySet(models.QuerySet):
     """
@@ -102,10 +123,9 @@ class ServiceManager(models.Manager):
         """
         return self.get_queryset().accessible_for(user)
 
-
-class Service(models.Model):
+class BaseService(models.Model):
     """
-    서비스를 구현한 모델.
+    서비스 베이스를 구현한 모델.
 
     서비스는 사이트의 독립된 각 기능입니다. 사용자는 특정 서비스에 대한
     이용권한이 정해져 있으며, 본 모델에는 권한관리 기능이 구현되어 있습니다.
@@ -119,29 +139,16 @@ class Service(models.Model):
     """
 
     name = models.CharField(
-        _("서비스명"),
+        _("타이틀"),
         max_length=32, unique=True)
-
-    category = models.ForeignKey(
-        Category,
-        verbose_name=_("서비스가 속한 카테고리"))
-
-    url = models.CharField(
-        _("서비스 최상위 주소"),
-        max_length=32, default='/',
-        help_text=_("도메인 하위 경로만 적어주세요. /aaa/bbb 형식을 지켜주세요."))
 
     level = models.IntegerField(
         _("노출순서"),
         default=1,
-        help_text=_("같은 카테고리 내 서비스 간의 노출순서"))
-
-    description = models.TextField(
-        _("서비스 설명"),
-        blank=True)
+        help_text=_("같은 카테고리 내 노출순서"))
 
     is_closed = models.BooleanField(
-        _("서비스 중지여부"),
+        _("중지여부"),
         default=False,
         help_text=_("설정 시 관리자를 제외한 모든 유저의 접속이 불가능합니다."))
 
@@ -160,14 +167,6 @@ class Service(models.Model):
 
     #: 커스텀 매니저
     objects = ServiceManager()
-
-    class Meta:
-        ordering = ['category', 'level']
-        verbose_name = _('서비스')
-        verbose_name_plural = _('서비스(들)')
-
-    def __str__(self):
-        return self.category.name + "/" + self.name
 
     def get_absolute_url(self):
         return self.url
@@ -188,6 +187,46 @@ class Service(models.Model):
             groupservicepermission__permission__gte=permission)).exists()
 
 
+class Service(BaseService):
+    """
+    서비스를 구현한 모델.
+
+    서비스는 사이트의 독립된 각 기능입니다. 사용자는 특정 서비스에 대한
+    이용권한이 정해져 있으며, 본 모델에는 권한관리 기능이 구현되어 있습니다.
+    이러한 강력한 권한관리 기능을 이용하기 위해 각 서비스는 본 모델을 상속받아
+    구현될 수 있습니다.
+
+    서비스의 권한에는 `apps.service.constants` 에 정의된 7가지가 있습니다.
+    이들은 상하관계를 갖게 되며, 상위 권한이 있는 사용자는 하위 권한 모두를
+    갖고 있는 것으로 판단합니다. 또한, 사용자가 여러 권한이 있을 경우 그 중 가장
+    높은 권한을 갖고 있는 것으로 판단합니다.
+    """
+
+    url = models.CharField(
+        _("최상위 주소"),
+        max_length=32, default='/',
+        help_text=_("도메인 하위 경로만 적어주세요. /aaa/bbb 형식을 지켜주세요."))
+
+    category = models.ForeignKey(
+        Category,
+        verbose_name=_("카테고리"))
+
+    description = models.TextField(
+        _("설명"),
+        blank=True)
+
+    #: 커스텀 매니저
+    objects = ServiceManager()
+
+    class Meta:
+        ordering = ['category', 'level']
+        verbose_name = _('서비스')
+        verbose_name_plural = _('서비스(들)')
+
+    def __str__(self):
+        return self.category.name + "/" + self.name
+
+
 class GroupServicePermission(models.Model):
     """
     그룹과 서비스 사이의 권한을 관리하는 중간모델.
@@ -202,7 +241,7 @@ class GroupServicePermission(models.Model):
         verbose_name=_("그룹"))
 
     service = models.ForeignKey(
-        Service,
+        BaseService,
         on_delete=models.CASCADE,
         verbose_name=_("서비스"))
 

@@ -6,26 +6,23 @@
 #footer {
     position: relative;
     z-index: $main-high-zindex;
-    border-top: 1px solid $main-default-border;
-    background-color: $body-bg;
+    background-color: $body-black-bg;
   }
   
   #footer-wrapper {
-    padding-top: $footer-margin-top;
+    padding: $footer-margin-top 0 $footer-margin-bot 0;
   }
   
   #footer-container {
     position: relative;
-    margin-bottom: $footer-margin-bot;
+    display: flex;
+    align-items: start;
     img {
-      position: absolute;
-      top: $footer-img-top-pos;
-      left: $footer-img-left-pos;
       width: $footer-img-width;
+      margin-right: $footer-img-gap;
     }
     p {
       margin: 0;
-      padding-left: $footer-img-width + $footer-img-gap;
       font-size: $footer-font-size;
       color: $footer-text-color;
       line-height: $footer-line-height;
