@@ -4,19 +4,25 @@
 {% from 'board/macros.jinja' import make_tag %}
 
 {% block content %}
-<link href="{{ static('css/pdf_viewer.css') }}" rel="stylesheet">
+<link href="{{ static('css/text_layer_builder.css') }}" rel="stylesheet">
+<style>
+  .canvas-container {
+    display: flex;
+  }
+  .page-item {
+    max-width: 1500px;
+  }
+</style>
 <div id="post-wrap">
 
   <div id="post-content">
-    <div>
-      <button id="prev">이전</button>
-      <button id="next">다음</button>
-      &nbsp; &nbsp;
-      <span>페이지: <span id="page_num"></span> / <span id="page_count"></span></span>
-    </div>
-    <div class="page_container">
-      <canvas id="c0"></canvas>
-      <canvas id="c1"></canvas>
+    <button id="pdf-prev" type="button" class="btn" onclick="goToPrevPage()">이전</button>
+    <button id="pdf-next" type="button" class="btn" onclick="goToNextPage()">다음</button>
+    <input type="text" class="form-control" id="pdf-page-num" value="1">
+    <button id="pdf-go-to-page" type="button" class="btn" onclick="goToInputPage()">페이지로 이동</button>
+    <div class="canvas-container">
+      <canvas id="the-canvas"></canvas>
+      <canvas id="the-canvas-2"></canvas>
     </div>
   </div>
 
@@ -30,118 +36,77 @@
 
 </div>
 
-<script src="{{ static('build/pdf.js') }}"></script>
+<script src="{{ static('js/pdf.js') }}"></script>
+<!-- <script src="{{ static('js/text_layer_builder.js') }}"></script> -->
 <script type="text/javascript">
+
 var url = "{{ files[0].get_absolute_url() }}";
 
-// The workerSrc property shall be specified.
-PDFJS.workerSrc = "{{ static('build/pdf.worker.js') }}";
+var currentPdf;
 
-var pdfDoc = null,
-  pageNum = 1,
-  pageRendering = false,
-  pageNumPending = null,
-  scale = 1.0,
-  canvaslst = [],
-  context = [];
-  
-  for (var i=0; i < 2; i++) {
-  	canvaslst.push(document.getElementById('c' + i));
-    context.push(canvaslst[i].getContext('2d'));
+function renderPage(pageIndex) {
+  if (pageIndex > currentPdf.numPages || pageIndex < 1) {
+    return;
   }
+  currentPdf.getPage(pageIndex)
+    .then(function(page) {
 
-/**
- * Get page info from document, resize canvas accordingly, and render page.
- * @param num Page number.
- */
-function renderPage(num) {
-  var index = (num - 1) % 2;
-  var canvas = canvaslst[index];
-  var ctx = context[index];
-  if (num <= pdfDoc.numPages) {
-    pageRendering = true;
-    // Using promise to fetch the page
-    pdfDoc.getPage(num).then(function(page) {
+      var scale = 1.0;
+      
       var viewport = page.getViewport(scale);
+
+      var canvas = pageIndex % 2 === 1 ? document.getElementById('the-canvas') : document.getElementById('the-canvas-2');
+
+      var context = canvas.getContext('2d');
+
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-
-      // Render PDF page into canvas context
+      
       var renderContext = {
-        canvasContext: ctx,
+        canvasContext: context,
         viewport: viewport
       };
-      var renderTask = page.render(renderContext);
-
-      // Wait for rendering to finish
-      renderTask.promise.then(function() {
-        console.log('render task')
-        pageRendering = false;
-        if (pageNumPending !== null) {
-          // New page rendering is pending
-          renderPage(pageNumPending);
-          pageNumPending = null;
-        }
-      });
+    
+      page.render(renderContext);
+    })
+    .catch(function (e) {
+      console.log(e);
     });
-  } else {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  // Update page counters
-  document.getElementById('page_num').textContent = pageNum;
 }
 
-/**
- * If another page rendering in progress, waits until the rendering is
- * finised. Otherwise, executes rendering immediately.
- */
-function queueRenderPage(num) {
-  if (pageRendering) {
-    pageNumPending = num;
-  } else {
-    for (var i = 0; i < 2; i++)
-      renderPage(num + i);
+function goToPage(pageIndex) {
+  pageIndex = pageIndex % 2 === 0 ? pageIndex-1 : pageIndex;
+  document.getElementById('pdf-page-num').value = pageIndex;
+  renderPage(pageIndex)
+  renderPage(pageIndex+1)
+}
+
+function goToInputPage() {
+  var currentPageIndex = Number(document.getElementById('pdf-page-num').value);
+  goToPage(currentPageIndex);
+}
+
+function goToPrevPage() {
+  var currentPageIndex = Number(document.getElementById('pdf-page-num').value);
+  if (currentPageIndex > 1) {
+    goToPage(--currentPageIndex);
   }
 }
 
-/**
- * Displays previous page.
- */
-function onPrevPage() {
-  if (pageNum <= 1) {
-    return;
+function goToNextPage() {
+  var currentPageIndex = Number(document.getElementById('pdf-page-num').value);
+  if (currentPageIndex < currentPdf.numPages) {
+    currentPageIndex += 2;
+    goToPage(currentPageIndex);
   }
-  pageNum -= 2;
-  queueRenderPage(pageNum);
 }
-document.getElementById('prev').addEventListener('click', onPrevPage);
 
-/**
- * Displays next page.
- */
-function onNextPage() {
-  if (pageNum + 2 > pdfDoc.numPages) {
-    return;
-  }
-  pageNum += 2;
-  queueRenderPage(pageNum);
-}
-document.getElementById('next').addEventListener('click', onNextPage);
-
-/**
- * Asynchronously downloads PDF.
- */
-PDFJS.getDocument(url).then(function(pdfDoc_) {
-  pdfDoc = pdfDoc_;
-  document.getElementById('page_count').textContent = pdfDoc.numPages;
-
-  // Initial/first page rendering
-  for (var i = 0; i < 2; i++) {
-    renderPage(1 + i);
-  }
-});
-
+// Asynchronous download PDF
+PDFJS.getDocument(url)
+  .then(function(pdf) {
+    currentPdf = pdf;
+    goToPage(1);
+  })
 </script>
 
 {% endblock %}

@@ -13,12 +13,10 @@ var util = require('gulp-util');
 var src = './static/src';
 var dist = './static/dist';
 var bower = './bower_components';
-var npm = './node_modules';
 
 var jquery = bower + '/jquery/dist';
 var bootstrap = bower + '/bootstrap-sass/assets';
 var fontawesome = bower + '/font-awesome';
-var pdfjs = npm + '/pdfjs-dist';
 
 var template = {
 	in : 'apps/**/*.jinja'
@@ -58,7 +56,7 @@ var css = {
 gulp.task('js', function () {
     return gulp.src(js.in)
 		.pipe(concat('main.js'))
-        .pipe(uglify().on('error', util.log))
+        .pipe(uglify())
 		.pipe(gulp.dest(js.out))
 		.pipe(livereload());
 });
@@ -87,6 +85,6 @@ gulp.task('default', ['js', 'fonts', 'css']);
 gulp.task('watch', function() {
 	livereload.listen();
 	gulp.watch(css.in.scss, ['css']);
-	gulp.watch(css.in.js, ['js']);
+	gulp.watch(js.in, ['js']);
 	gulp.watch([dist + '/**', template.in]).on('change', livereload.changed);
 });
