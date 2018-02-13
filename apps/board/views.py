@@ -78,7 +78,7 @@ class BoardView(ServiceView):
                 post_list = post_list.filter(is_deleted=False).filter(Q(is_closed = True)|Q(due_date__lte = datetime.now()))
             elif filter_state == 'wait':
                 post_list = post_list.filter(is_deleted=False ,is_closed = False, due_date__gte = datetime.now(), vote_up__lte = 2).exclude(author__in = superUser)
-            elif filter_state == 'debate':
+            elif filter_state == 'ongoing':
                 post_list = post_list.filter(is_deleted=False,is_closed = False, due_date__gte = datetime.now()).filter(Q(vote_up__gte = 3)|Q(author__in = superUser))
         else:
             filter_state = 'all'

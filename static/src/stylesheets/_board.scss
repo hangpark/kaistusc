@@ -93,6 +93,23 @@
   }
 }
 
+.debate-state{
+  margin-right: 5px;
+  padding: 4px 6px;
+  color:white;
+  font-weight: bold;
+  border-radius: 10%;
+}
+
+.debate-ongoing{
+  background: orange;
+}
+.debate-finished{
+  background: gray;
+}
+.debate-waiting{
+  background: navy;
+}
 
 //== 게시판 기능
 //
