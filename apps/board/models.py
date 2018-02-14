@@ -57,7 +57,7 @@ class BoardTab(BaseService):
     url = models.CharField(
         _("하위 주소"),
         max_length=32,
-        help_text=_("탭을 나타낼 하위 경로만 적어주세요."))
+        help_text=_("탭을 나타낼 하위 경로만 적어주세요('/'를 포함하면 안됩니다)"))
 
     #: 커스텀 매니저
     objects = ServiceManager()
@@ -515,14 +515,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.board_tab.name + "에서 파는 " + self.title
-
-class Schedule(models.Model):
-    title = models.CharField(
-        _("제목"),
-        max_length=128)
-
-    date = models.DateTimeField(
-        _("날짜"))
     
 class ProjectPost(Post):
     """
@@ -534,13 +526,12 @@ class ProjectPost(Post):
         _("공약"),
         default=False)
     
-    schedules = models.ForeignKey(
-        Schedule,
-        verbose_name=_("프로젝트 일정"))
-    
+    class Meta:
+        verbose_name = _('사업 포스트')
+        verbose_name_plural = _('사업 포스트(들)')
+
     def get_bureau(self):
         return self.board_tab.name
-
 
 class DebatePost(Post):
     
@@ -556,6 +547,22 @@ class DebatePost(Post):
         return (self.author.is_superuser or self.vote_up > 2)
     
     
+class Schedule(models.Model):
+    title = models.CharField(
+        _("일정"),
+        max_length=128)
+
+    date = models.DateTimeField(
+        _("날짜"))
+    
+    post = models.ForeignKey(
+        ProjectPost,
+        verbose_name=_("게시글"))
+
+    class Meta:
+        ordering = ['date']
+        verbose_name = _('일정')
+        verbose_name_plural = _('일정(들)')
 
 class WebDoc(models.Model):
     """

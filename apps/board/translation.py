@@ -6,7 +6,7 @@
 
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import BasePost, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link
+from .models import BasePost, Board, BoardTab, Comment, Post, ProjectPost, Tag, Banner, BannerCarousel, Link, Schedule
 
 
 @register(Board)
@@ -47,6 +47,22 @@ class BasePostTranslationOptions(TranslationOptions):
 class PostTranslationOptions(TranslationOptions):
     """
     :class:`Post` 모델에 대한 국제화 지원.
+    """
+
+    fields = ('title',)
+
+@register(ProjectPost)
+class ProjectPostTranslationOptions(TranslationOptions):
+    """
+    :class:`ProjectPost` 모델에 대한 국제화 지원.
+    """
+
+    fields = ()
+
+@register(Schedule)
+class ScheduleTranslationOptions(TranslationOptions):
+    """
+    :class:`Schedule` 모델에 대한 국제화 지원.
     """
 
     fields = ('title',)

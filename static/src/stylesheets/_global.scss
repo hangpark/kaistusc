@@ -1,0 +1,12 @@
+@import '_variables_custom';
+
+.placeholder {
+    color: $input-color-placeholder;
+    &:hover {
+        color: $input-color-placeholder;
+    }
+}
+
+.selected {
+    background-color: $brand-primary-hover;
+}

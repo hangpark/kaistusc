@@ -16,7 +16,9 @@ var bower = './bower_components';
 var jquery = bower + '/jquery/dist';
 var bootstrap = bower + '/bootstrap-sass/assets';
 var bootstrapSelect = bower + '/bootstrap-select/dist';
+var bootstrapDatetimepicker = bower + '/eonasdan-bootstrap-datetimepicker/build';
 var fontawesome = bower + '/font-awesome';
+var moment = bower + '/moment';
 
 var template = {
 	in : 'apps/**/*.jinja'
@@ -27,6 +29,8 @@ var js = {
 		jquery + '/jquery.js',
 		bootstrap + '/javascripts/bootstrap.js',
 		bootstrapSelect + '/js/bootstrap-select.js',
+		moment + '/min/moment.min.js',
+		bootstrapDatetimepicker + '/js/bootstrap-datetimepicker.min.js',
         src + '/javascripts/**/*'
 	],
 	'out': dist + '/js'
@@ -46,7 +50,8 @@ var css = {
         'main': src + '/stylesheets/main.scss',
         'css': [
 			fontawesome + '/css/font-awesome.css',
-			bootstrapSelect + '/css/bootstrap-select.css'
+			bootstrapSelect + '/css/bootstrap-select.css',
+			bootstrapDatetimepicker + '/css/bootstrap-datetimepicker.min.css',
 		],
     },
 	'out': dist + '/css',

@@ -194,8 +194,10 @@
       margin-right: 12px;
     }
   }
-  .input-group > .form-control {
-    height: 34px;
+  .input-group {
+    .form-control {
+      height: 34px;
+    }
   }
 }
 
@@ -226,12 +228,6 @@
   }
   i {
     padding: 0 10px;
-  }
-}
-
-.banner_carousel {
-  img {
-    width: 100%;
   }
 }
 

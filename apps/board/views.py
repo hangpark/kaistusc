@@ -12,7 +12,7 @@ from apps.manager.views import ServiceView
 from apps.board.constants import *
 
 from .forms import PostForm, ProjectPostForm
-from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab
+from .models import ACTIVITY_VOTE, Comment, Post, ProjectPost, Tag, BoardTab
 
 
 class BoardView(ServiceView):
@@ -137,7 +137,12 @@ class PostView(BoardView):
         if not super().has_permission(request, *args, **kwargs):
             return False
         self.required_permission = required_permission
-        post = Post.objects.filter(
+        
+        if self.service.board.role == BOARD_ROLE_PROJECT:
+            postModel = ProjectPost
+        else:
+            postModel = Post
+        post = postModel.objects.filter(
             board=self.service.board, id=kwargs['post']).first()
 
         if not post:
@@ -169,6 +174,10 @@ class PostView(BoardView):
         # 게시글에 첨부된 파일 목록 저장
         context['files'] = self.post_.attachedfile_set.all()
 
+        # 게시글에 저장된 스케쥴 저장
+        if self.service.board.role == BOARD_ROLE_PROJECT:
+            context['schedules'] = self.post_.schedule_set.all()
+
         return context
 
 
@@ -187,8 +196,7 @@ class PostWriteView(BoardView):
         게시글 작성 폼을 컨텍스트에 추가하는 메서드.
         """
         context = super().get_context_data(**kwargs)
-        board_role = context['board'].role
-        if board_role == BOARD_ROLE_PROJECT:
+        if self.service.board.role == BOARD_ROLE_PROJECT:
             context['form'] = ProjectPostForm(self.service.board)
         else:
             context['form'] = PostForm(self.service.board)
@@ -203,8 +211,13 @@ class PostWriteView(BoardView):
         재전달하여 수정을 요구합니다.
         """
         user = request.user if request.user.is_authenticated() else None
-        post = Post(author=user, board=self.service.board)
-        form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
+
+        if self.service.board.role == BOARD_ROLE_PROJECT:
+            post = ProjectPost(author=user, board=self.service.board)
+            form = ProjectPostForm(self.service.board, request.POST, request.FILES, instance=post)
+        else:
+            post = Post(author=user, board=self.service.board)
+            form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())
@@ -230,12 +243,10 @@ class PostEditView(PostView):
         context = super().get_context_data(**kwargs)
         post = self.post_
 
-        board_role = context['board'].role
-        if board_role == BOARD_ROLE_PROJECT:
+        if self.service.board.role == BOARD_ROLE_PROJECT:
             context['form'] = ProjectPostForm(self.service.board, instance=post)
         else:
             context['form'] = PostForm(self.service.board, instance=post)
-        return context
         return context
 
     def post(self, request, *args, **kwargs):
@@ -248,6 +259,12 @@ class PostEditView(PostView):
         """
         post = self.post_
         form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
+
+        if self.service.board.role == BOARD_ROLE_PROJECT:
+            form = ProjectPostForm(self.service.board, request.POST, request.FILES, instance=post)
+        else:
+            form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
+            
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())

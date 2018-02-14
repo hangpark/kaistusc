@@ -3,9 +3,8 @@
 """
 
 from django.forms import ModelForm
-
-from .models import AttachedFile, Post, Tag, BoardTab, ProjectPost
-
+import json
+from .models import AttachedFile, Post, Tag, BoardTab, ProjectPost, Schedule
 
 class PostForm(ModelForm):
     """
@@ -55,4 +54,30 @@ class ProjectPostForm(PostForm):
         model = ProjectPost
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
-            'is_notice', 'is_secret', 'board_tab', 'tag', 'is_pledge', 'schedules',)
+            'is_notice', 'is_secret', 'board_tab', 'tag', 'is_pledge',)
+
+    def save(self, POST, FILES):
+        """
+        사업 게시글과 사업의 스케쥴을 저장하는 메서드.
+        """
+        post = super().save(POST, FILES)
+
+        schedules = list(map(json.loads, POST.getlist('schedules')))
+        prev_schedules = list(filter(lambda schedule: 'id' in schedule, schedules))
+        original_schedules = post.schedule_set.all()
+        for schedule in original_schedules:
+            target_input_schedule = None
+            for prev_schedule in prev_schedules:
+                if prev_schedule['id'] == schedule.id:
+                    target_input_schedule = prev_schedule
+                    break
+            if not target_input_schedule:
+                schedule.delete()
+            else:
+                schedule.date = prev_schedule['date']
+                schedule.save()
+
+        for schedule in filter(lambda schedule: schedule not in prev_schedules, schedules):
+            Schedule.objects.create(post=post, title_ko=schedule['title_ko'], title_en=schedule['title_en'], date=schedule['date'])
+
+        return post

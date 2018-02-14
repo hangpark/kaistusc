@@ -1,15 +1,55 @@
-<div class="form-inline">
+<div id="post_form_schedules" class="form-inline">
     <div class="input-group">
-      <div class="input-group-btn">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a href="#">Action</a></li>
-          <li><a href="#">Another action</a></li>
-          <li><a href="#">Something else here</a></li>
-          <li role="separator" class="divider"></li>
-          <li><a href="#">Separated link</a></li>
+        <button id="schedule_dropdown_button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <input id="schedule_dropdown_placeholder" type="hidden" value="{{_('일정')}}" />
+            <input id="selected_schedule_index" type="hidden" value="{% if schedules %}0{% else %}-1{% endif %}">
+            <span id="selected_schedule_title_ko" class="selected_schedule_title placeholder">
+                {% if schedules %}
+                {{schedules[0].title_ko}}
+                {% else %}
+                {{_('일정')}}
+                {% endif %}
+            </span>
+            <span id="selected_schedule_title_en" class="selected_schedule_title placeholder">
+                {% if schedules %}
+                {{schedules[0].title_en}}
+                {% else %}
+                {{_('일정')}}
+                {% endif %}
+            </span>
+            <span class="caret"></span>
+        </button>
+        <ul id="schedule_titles" class="dropdown-menu">
+            {% for schedule in schedules %}
+                <li {% if loop.index0 == 0 %}class="selected"{% endif %}>
+                    <input type="hidden" name="schedules" value='{"id":{{schedule.id}}, "title_ko":"{{schedule.title_ko}}", "title_en":"{{schedule.title_en}}", "date":"{{schedule.date}}"}'>
+                    <a class="schedule_title_container">
+                        <span class="schedule_title_ko schedule_title">{{schedule.title_ko}}</span>
+                        <span class="schedule_title_en schedule_title">{{schedule.title_en}}</span>
+                        <i class="schedule_delete fa fa-times"></i>
+                    </a>
+                </li>
+            {% endfor %}
+            <li id="schedule_add_input_li">
+                <input type="text" id="schedule_add_input_ko" class="schedule_add_input form-control" />
+                <input type="hidden" id="schedule_add_input_placeholder_ko" value="{{_('일정 [ko]')}}" />
+                <input type="text" id="schedule_add_input_en" class="schedule_add_input form-control" />
+                <input type="hidden" id="schedule_add_input_placeholder_en" value="{{_('일정 [en]')}}" />
+                <span class="input-group-btn">
+                    <button id="schedule_add_submit" class="btn btn-default" type="button" disabled>
+                        <i class="fa fa-check text-success"></i>
+                    </button>
+                </span>
+            </li>
+            <li id="schedule_add_button_li"><i id="schedule_add_button" class="fa fa-plus"></i></li>
         </ul>
-      </div><!-- /btn-group -->
-      <input type="text" class="form-control" aria-label="...">
-    </div><!-- /input-group -->
+        <div class="form-group">
+            <div class='input-group date' id='schedule_datetimepicker'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>   
   </div>

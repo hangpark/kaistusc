@@ -1,0 +1,102 @@
+#post_form_schedules {
+  &> .input-group {
+    display: flex;
+    button {
+      height: 34px;
+      border-right: none;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  #schedule_titles {
+    overflow: hidden;
+    max-height: 600px;
+    padding: 0;
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+    }
+    li > a {
+      width: 100%;
+      padding: 3px 12px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &:hover {
+        cursor: pointer;
+        .schedule_title {
+          width: 140px;
+        }
+        .schedule_delete {
+          display: block;
+        }
+      }
+    }
+    i {
+      &:hover {
+        color: #999;
+        cursor: pointer;
+      }
+    }
+    .schedule_delete {
+      display: none;
+      float: right
+    }
+    .schedule_title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .schedule_add_input {
+      padding-left: 12px;
+      width: calc(100% - 34px);
+    }
+    #schedule_add_input_li {
+      display: none;
+      #schedule_add_input_ko {
+        border-radius: 0;
+      }
+      #schedule_add_input_en {
+        border-top-left-radius: 0;
+      }
+      #schedule_add_submit {
+        padding: 0;
+        width: 34px;
+        height: 68px;
+        i {
+          cursor: inherit;
+          &:hover {
+            color: #3c763d;
+          }
+        }
+      }
+    }
+    #schedule_add_button {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+      height: 34px;
+    }
+  }
+  #schedule_dropdown_button {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #schedule_datetimepicker {
+    input {
+      border-radius: 0;
+    }
+  }
+
+  .schedule_title_en, #selected_schedule_title_en {
+    display: none;
+  }
+}

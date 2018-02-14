@@ -26,7 +26,8 @@ $().ready(function() {
     });
 
     $(document).on('click', ".file-more", function() {
-        $("#attach-file-wrap").children(":last").clone().appendTo($("#attach-file-wrap"));
+        var attachFileHtml = '<div class="attach-file col-xs-12 nopadding"><input type="file" name="files"><span class="file-more"><i class="fa fa-plus"></i></span></div>'
+        $(attachFileHtml).appendTo($("#attach-file-wrap"));
         $(this).html($("#file-del-desc").html());
         $(this).removeClass("file-more");
         $(this).addClass("file-del");

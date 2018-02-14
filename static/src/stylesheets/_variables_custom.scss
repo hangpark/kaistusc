@@ -31,6 +31,7 @@ $basic-anim-time:         .5s;
 //##
 
 $brand-primary: #69a7db;
+$brand-primary-hover: #ebf6ff;
 
 $color-1:                 #bc8dbe;
 $color-2:                 #5c6cb2;
@@ -134,3 +135,6 @@ $service-lnb-padding:     14px 0 26px 16px;
 $service-lnb-item-gap:    6px;
 $service-lnb-selected-border:    4px;
 
+$dropdown-link-hover-bg: $brand-primary-hover;
+
+$input-color-placeholder: #999 !default;
