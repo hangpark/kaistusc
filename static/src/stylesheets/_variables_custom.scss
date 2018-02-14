@@ -30,8 +30,16 @@ $basic-anim-time:         .5s;
 //
 //##
 
-$brand-primary: #69a7db;
+$brand-primary: #7ebbef;
+$brand-primary-lighter: #a1d4ff;
 $brand-primary-hover: #ebf6ff;
+$bg-primary-lighter : #eaf6ff;
+$bg-primary-light : #f7fcff;
+
+$btn-primary-bg:                 $brand-primary !default;
+$btn-primary-border:             darken($btn-primary-bg, 5%) !default;
+
+
 
 $color-1:                 #bc8dbe;
 $color-2:                 #5c6cb2;
@@ -95,10 +103,10 @@ $header-img-width:        273px;
 $header-vertical-base-margin:     19px;
 $header-vertical-large-margin:    35px;
 
-$header-gnb-width:        560px;
-$header-col-margin:       10px;
+$header-gnb-width:        992px;
+$header-col-margin:       5px;
 $header-col-padding:      15px;
-$main-service-bg:         rgba(80, 80, 80, .9);
+$main-service-bg:        #ffffff;
 
 
 //== Footer

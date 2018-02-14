@@ -70,14 +70,14 @@
     box-sizing: border-box;
     &:hover {
       background-color: $body-bg;
-      border-left: solid $service-lnb-selected-border $color-5;
+      border-left: solid $service-lnb-selected-border $brand-primary-lighter;
       padding-left: 15px - $service-lnb-selected-border;
       transition: border-width 0.1s ease-in, padding 0.1s ease-in;
     }
   }
   .list-group-item.lnb-selected {
-    color: $color-5;
-    border-left: solid $service-lnb-selected-border $color-5;
+    color: $brand-primary;
+    border-left: solid $service-lnb-selected-border $brand-primary-lighter;
     padding-left: 15px - $service-lnb-selected-border;
   }
 }

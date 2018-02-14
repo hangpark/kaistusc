@@ -19,13 +19,13 @@
   <div id="gnb" class="container-fluid dropdown collapse navbar-collapse">
     <div id="gnb-menu-container" class="row dropdown-toggle" data-toggle="dropdown">
     {% for item in navigator[:4] %}
-      <div class="gnb-menu col-xs-3"><a href="{{ item.category.get_absolute_url() }}">{{ item.category }}</a></div>
+      <div class="gnb-menu"><a href="{{ item.category.get_absolute_url() }}">{{ item.category }}</a></div>
     {% endfor %}
     </div>
     <div id="gnb-svc-wrapper" class="dropdown-menu">
       <div id="gnb-svc-container" class="row">
       {% for item in navigator[:4] %}
-        <ul class="gnb-svc-col col-sm-3 list-group">
+        <ul class="gnb-svc-col list-group">
         {% for service in item.services %} 
           <a href="{{ service.get_absolute_url() }}" class="list-group-item">{{ service.name }}</a>
         {% endfor %}

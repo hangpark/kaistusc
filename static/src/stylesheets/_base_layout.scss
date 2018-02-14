@@ -60,7 +60,7 @@ a {
 }
 
 .spot {
-  @include full-jumbotron($body-black-bg);
+  @include full-jumbotron($bg-primary-light);
 }
 
 .margin-left {

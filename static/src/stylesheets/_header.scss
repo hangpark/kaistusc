@@ -90,6 +90,8 @@
 #gnb-svc-container {
   margin: 0 auto;
   max-width: $header-gnb-width;
+  display: flex;
+  justify-content: center;
 }
 
 #gnb-menu-container {
@@ -101,7 +103,6 @@
   max-height: 0px;
   overflow: hidden;
   display: block;
-  box-shadow: none;
   border: none;
   transition: max-height 0.2s ease-in-out;
 }
@@ -114,22 +115,35 @@
 .gnb-menu {
   text-align: center;
   font-weight: bold;
+  width: 140px;
   a {
-    @include disable-effect();
+    @include disable-effect(#555);
   }
 }
 
 .gnb-svc-col {
-  margin: $header-col-margin 0;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: $header-col-margin 0 $header-col-margin*2;
   padding: 0 $header-col-padding;
   font-size: $font-size-small;
   list-style-type: none;
   .list-group-item {
-    @include disable-effect($body-bg);
+    width: 140px;
+    text-align: center;
+    font-weight: 800;
+    @include disable-effect(#555);
     display: list-item;
-    margin: $header-col-margin 0;
-    padding: 0;
+    padding: $header-col-margin 0;
     border: 0;
     border-radius: 0;
+    &:hover {
+      color: $brand-primary;
+      border-left: solid 3px $brand-primary-lighter;
+      border-right: solid 3px $brand-primary-lighter;
+      transition: border-width 0.2s ease-in-out;
+    }
   }
 }
