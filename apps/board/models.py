@@ -76,7 +76,7 @@ class BoardTab(BaseService):
         return self.parent_board.name + "/" + self.name
 
     def get_absolute_url(self):
-        url = '/' + os.path.join(self.parent_board.url.strip('/'), self.url.strip('/'))
+        url = '/' + self.parent_board.url.strip('/')+'/'+ self.url.strip('/')
         return url
 
 class PostActivity(models.Model):
@@ -331,9 +331,6 @@ class Post(BasePost):
     def get_absolute_url(self):
         # return os.path.join(self.board.get_absolute_url(), str(self.id))
         return self.board.get_absolute_url()+'/'+str(self.id)
-
-    def get_first_tab(self):
-        return self.board_tab.all().first()
 
     def get_first_tab(self):
         return self.board_tab.all().first()

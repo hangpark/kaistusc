@@ -27,8 +27,5 @@ docs/_*/
 venv/
 .env
 
-#local
-local_settings.py
-
 # Python mode
 **/.ropeproject/

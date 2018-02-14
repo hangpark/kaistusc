@@ -1,5 +1,4 @@
-{% from 'ksso/macros.jinja' import name %}
-<form  id="commentAttached-form" action = "{{ post.get_absolute_url() }}/commentAttached/"  method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+<form  id="commentAttached-form" action = "{{ post.get_absolute_url() }}/commentAttached/"  method="post" enctype="multipart/form-data" >{% csrf_token %}
 <div class = 'comment-wrapper'>
 	<div class= 'comment-input pull-left'>
 	<div><textarea id="comment-area" class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea></div>

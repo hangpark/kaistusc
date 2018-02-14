@@ -147,12 +147,15 @@
   padding: 0 10px;
 }
 
-#post-vote {
-  padding: 30px 0;
+#post-func {
+  padding: 30px 0px 40px 0px;
   border-bottom: 1px solid #dcdcdd;
   form {
     display: inline-block;
   }
+}
+#post-vote{
+  display: inline;
 }
 
 #post-up button {
@@ -203,7 +206,7 @@
 }
 
 #comment-form {
-  margin-top: 28px;
+  margin: 28px 0px;
 }
 
 #commentAttached-form {
@@ -211,9 +214,6 @@
   width: 100%;
 }
 
-#post-func {
-  margin-top: 58px;
-}
 
 
 //== 포스트 폼

@@ -4,9 +4,22 @@
 {% from 'board/macros.jinja' import make_tag %}
 
 {% block content %}
+
+<div id="post-wrap">
+	{% csrf_token %}
+	{% include 'board/post/post_header.jinja' %}
+  	<div id="post-content">{{ post.content }}</div>
+	{% include 'board/post/post_func.jinja' %}
+	{% include 'board/post/post_files.jinja' %}
+	{% include 'board/post/post_comment.jinja' %}
+</div>
+
 {% if board.role == BOARD_ROLE_DEBATE %}
-  {% include 'board/post/post_debate.jinja/'%}
+  {% include 'board/debate/post_list_debate.jinja' %}
 {% else %}
-  {% include 'board/post/post_default.jinja/'%}
+  {% include 'board/post_list.jinja' %}
 {% endif %}
+
+
+
 {% endblock %}

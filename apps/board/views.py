@@ -69,7 +69,6 @@ class BoardView(ServiceView):
 
         # 태그 목록 저장
         context['tags'] = Tag.objects.filter(board=board)
-
         # 검색어 저장
         search = self.request.GET.get('s')
         context['search'] = search
@@ -77,16 +76,16 @@ class BoardView(ServiceView):
 
         # 게시글 목록 조회
         if (board.role == BOARD_ROLE_PROJECT):
-            post_list = ProjectPost.objects
+            post_model = ProjectPost
         elif (board.role == BOARD_ROLE_DEBATE):
-            post_list = DebatePost.objects
+            post_model = DebatePost
         else:
-            post_list = Post.objects
+            post_model = Post
 
         if (tab):
-            post_list = post_list.filter(board=board, board_tab=tab)
+            post_list = post_model.objects.filter(board=board, board_tab=tab)
         else:
-            post_list = post_list.filter(board=board)
+            post_list = post_model.objects.filter(board=board)
 
         context['notices'] = post_list.filter(is_notice=True)        
 
@@ -171,14 +170,16 @@ class PostView(BoardView):
         self.required_permission = required_permission
 
         board_role = self.service.board.role
-
+        
         if (board_role == BOARD_ROLE_PROJECT):
-            post = ProjectPost.objects.filter(board=self.service.board, id=kwargs['post']).first()    
+            post_model = ProjectPost
         elif (board_role == BOARD_ROLE_DEBATE):
-            post = DebatePost.objects.filter(board=self.service.board, id=kwargs['post']).first()
+            post_model = DebatePost
         else:
-            post = Post.objects.filter(board=self.service.board, id=kwargs['post']).first()
+            post_model = Post
 
+        post=post_model.objects.filter(board=self.service.board, id=kwargs['post']).first()
+        
         if not post:
             raise Http404
         
@@ -232,12 +233,16 @@ class PostWriteView(BoardView):
         """
         context = super().get_context_data(**kwargs)
         board_role = context['board'].role
+
         if board_role == BOARD_ROLE_PROJECT:
-            context['form'] = ProjectPostForm(self.service.board)
+            post_form = ProjectPostForm
         elif board_role == BOARD_ROLE_DEBATE:
-            context['form'] = DebateForm(self.service.board)
+            post_form = DebateForm
         else:
-            context['form'] = PostForm(self.service.board)
+            post_form = PostForm
+        
+        context['form'] =post_form(self.service.board)
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -253,15 +258,18 @@ class PostWriteView(BoardView):
         board_role = self.service.board.role
 
         if board_role == BOARD_ROLE_PROJECT:
-            post = ProjectPost(author=user, board=self.service.board)
-            form = ProjectPostForm(self.service.board, request.POST, request.FILES, instance=post)
+            post_model = ProjectPost
+            post_form = ProjectPostForm
         elif board_role == BOARD_ROLE_DEBATE:
-            post = DebatePost(author=user, board=self.service.board)
-            form = DebateForm(self.service.board, request.POST, request.FILES, instance=post)
+            post_model = DebatePost
+            post_form = DebateForm
         else:
-            post = Post(author=user, board=self.service.board)
-            form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
+            post_model = Post
+            post_form = PostForm
         
+        post = post_model(author=user, board=self.service.board)
+        form = post_form(self.service.board, request.POST, request.FILES, instance=post)
+
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())
@@ -289,12 +297,16 @@ class PostEditView(PostView):
         post = self.post_
 
         board_role = context['board'].role
+
         if board_role == BOARD_ROLE_PROJECT:
-            context['form'] = ProjectPostForm(self.service.board, instance=post)
+            post_form = ProjectPostForm
         elif board_role == BOARD_ROLE_DEBATE:
-            context['form'] = DebateForm(self.service.board, instance=post)
+            post_form = DebateForm
         else:
-            context['form'] = PostForm(self.service.board, instance=post)
+            post_form = PostForm
+        
+        context['form'] =post_form(self.service.board, instance=post)
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -309,11 +321,13 @@ class PostEditView(PostView):
         board_role = self.service.board.role
 
         if board_role == BOARD_ROLE_PROJECT:
-            form = ProjectPostForm(self.service.board, request.POST, request.FILES, instance=post)
+            post_form = ProjectPostForm
         elif board_role == BOARD_ROLE_DEBATE:
-            form = DebateForm(self.service.board, request.POST, request.FILES, instance=post)
+            post_form = DebateForm
         else:
-            form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
+            post_form = PostForm
+        
+        form = post_form(self.service.board, request.POST, request.FILES, instance=post)
         
         if form.is_valid():
             form.save(request.POST, request.FILES)
@@ -364,7 +378,6 @@ class CommentWriteView(PostView):
         작성이 정상적으로 완료되면 댓글 HTML 소스를 사용자에게 전달합니다.
         """
         user = request.user if request.user.is_authenticated() else None
-        print('request FILES',str(request))
         comment = Comment.objects.create(
             author=user,
             content=request.POST.get('content'),
@@ -381,7 +394,6 @@ class CommentWriteWithFileView(PostView):
     기본 필요권한이 댓글권한으로 설정되어 있습니다. AJAX 통신에 응답하는
     뷰입니다.
     """
-    template_name = 'board/comment_form.jinja'
     required_permission = PERM_COMMENT
    
     def get_context_data(self, **kwargs):
@@ -407,17 +419,18 @@ class CommentWriteWithFileView(PostView):
 
         user = request.user if request.user.is_authenticated() else None
         
-        comment = Comment(author=user, parent_post = self.post_)
-        
+        comment = Comment(
+            author=user,
+            parent_post=self.post_)
         form = CommentForm(request.POST, request.FILES, instance=comment)
 
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(self.post_.get_absolute_url())
+
         context = self.get_context_data(**kwargs)
         context['form'] = form
-        context = {'comment': comment}
-        return self.render_to_response(context)
+        return self.render_to_response(self.get_permission_context(context))
 
 
 

@@ -1,5 +1,5 @@
 {% from 'ksso/macros.jinja' import name %}
-{% from 'board/macros.jinja' import make_tag %}
+{% from 'board/macros.jinja' import make_tag, debate_state %}
 
 {% macro post_info(post, class='') -%}
   <tr class="{{ class }}" onclick="location.href='{{ post.get_absolute_url() }}';">
@@ -22,13 +22,7 @@
           {{ _('비밀글입니다.') }}
         {%- endif -%}
       {%- else -%}
-        {% if post.is_commentable() %}
-        <span class="debate-state debate-ongoing">{{ _('논의중') }}</span>
-        {% elif (post.is_closed or post.is_over_due()) %}
-        <span class='debate-state debate-finished'>{{ _('종료') }}</span>
-        {% else %}
-        <span class='debate-state debate-waiting'>{{ _('청원중') }}</span>
-        {%- endif -%}
+        {{ debate_state(post)}}
         {{ post.title }}
         
       {%- endif -%}

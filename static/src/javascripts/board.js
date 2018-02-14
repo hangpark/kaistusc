@@ -47,10 +47,8 @@ $().ready(function() {
         if ($btn.hasClass("disabled"))
             return;
         $btn.addClass("disabled");
-        console.log("Doing JS");
         $.post("./comment/", $("#comment-form").serialize())
             .done(function(data) {
-                console.log("Done",data);
                 $("#comment-list").append(data);
                 $(".comment-content:last").each(function () {
                     $(this).html(convert2html($(this).html()));
@@ -63,6 +61,13 @@ $().ready(function() {
             });
     });
 
+    $("#btn-commentAttached-form").click(function() {
+        var $btn = $(this);
+        if (!$("#commentAttached-form textarea").val()) {
+            alert($("#comment-no-input").html());
+            return;
+        }
+    });
 
     $("#comment-list").on('click', ".comment-remove", function() {
         var $comment = $(this).parents(".comment");
@@ -75,6 +80,7 @@ $().ready(function() {
                     alert("Error");
                 });
         }
+
     });
 
     $("#post-vote form").click(function() {
