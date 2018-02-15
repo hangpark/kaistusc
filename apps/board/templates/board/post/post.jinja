@@ -1,0 +1,53 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'ksso/macros.jinja' import name %}
+{% from 'board/macros.jinja' import make_tag %}
+
+{% block content %}
+<div id="post-wrap">
+  {% include 'board/post/post_header.jinja' %}
+  <div id="post-content">{{ post.content }}</div>
+  
+  {% if post.board.check_role(BOARD_ROLE_PROJECT) %}
+    {% if post.schedule_set.all() %}
+      {% include 'board/post/post_project_timeline.jinja' %}
+    {% endif %}
+  {% endif %}
+  {% include 'board/post/post_vote.jinja' %}
+
+  {% if files %}
+    {% include 'board/post/post_files.jinja' %}
+  {% endif %}
+
+  <div id="comment-list">
+    {% for comment in comments %}
+      {% include 'board/comment.jinja' %}
+    {% endfor %}
+  </div>
+
+  {% if post.is_permitted(request.user, PERM_COMMENT) %}
+  {% include 'board/post/post_comment_form.jinja' %}
+  {% endif %}
+  <div id="comment-no-input" style="display: none;">{{ _('댓글 내용을 입력해주세요.') }}</div>
+
+  {% if post.is_permitted(request.user, PERM_EDIT) -%}
+  <div id="post-func">
+    <div class="pull-right">
+      <a href="{{ post.get_absolute_url() }}/edit/" class="btn btn-sm btn-default">{{ _('수정') }}</a>
+      {% if post.is_permitted(request.user, PERM_DELETE) -%}
+      <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#delete-modal">{{ _('삭제') }}</a>
+      {%- endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% include 'board/post_list.jinja' %}
+
+{% if post.is_permitted(request.user, PERM_DELETE) %}
+{% include 'board/post/post_delete_confirm.jinja' %}
+{% endif %}
+
+<input type="hidden" id="deleted-comment-content" value="{{ _('삭제되었습니다.') }}"/>
+<input type="hidden" id="delete-comment-warning" value="{{ _('댓글을 정말 삭제할까요?') }}"/>
+{% endblock %}

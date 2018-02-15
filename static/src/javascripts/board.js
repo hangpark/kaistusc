@@ -65,10 +65,10 @@ $().ready(function() {
     $("#comment-list").on('click', ".comment-remove", function() {
         var $comment = $(this).parents(".comment");
         var $form = $(this).parent();
-        if (confirm($("#delete-comment-warning").text())) {
+        if (confirm($("#delete-comment-warning").val())) {
             $.post($form.attr('action'), $form.serialize())
                 .done(function(data) {
-                    $comment.find(".comment-content").html($("#deleted-comment-content").html());
+                    $comment.find(".comment-content").html($("#deleted-comment-content").val());
                 }).fail(function() {
                     alert("Error");
                 });

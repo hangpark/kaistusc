@@ -11,7 +11,7 @@
   padding: 1px;
   width: 52px;
   display: inline-block;
-  border: 1px solid #dcdcdd;
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: $font-size-xm;
   font-weight: bold;
@@ -60,8 +60,8 @@
   }
 
   tbody tr {
-    border-top: solid 1px #dcdcdd;
-    border-bottom: solid 1px #dcdcdd;
+    border-top: solid 1px #ddd;
+    border-bottom: solid 1px #ddd;
     font-size: $font-size-sm;
     cursor: pointer;
 
@@ -108,9 +108,9 @@
 #post-header {
   margin-bottom: 20px;
   padding: 10px 12px 7px 13px;
-  border-top: 3px solid #717071;
-  border-bottom: 2px solid #9f9fa0;
-  background-color: #f7f7f7;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: $bg-primary-light;
 }
 
 #post-title {
@@ -127,7 +127,7 @@
 
 #post-vote {
   padding: 30px 0;
-  border-bottom: 1px solid #dcdcdd;
+  border-bottom: 1px solid #ddd;
   form {
     display: inline-block;
   }
@@ -143,7 +143,7 @@
 
 #attached-file {
   padding: 10px 10px 25px;
-  border-bottom: 1px solid #dcdcdd;
+  border-bottom: 1px solid #ddd;
   font-size: 10pt;
   p {
     margin-bottom: 5px;
@@ -152,11 +152,11 @@
 
 #comment-list .comment {
   padding-top: 6px;
-  border-left: 14px solid #dcdcdd;
+  border-left: 14px solid $bg-primary;
   &:nth-child(even) {
-    border-left-color: #eeefef;
+    border-left-color: $bg-primary-lighter;
   }
-  border-bottom: 1px solid #dcdcdd;
+  border-bottom: 1px solid #ddd;
   .comment-header {
     margin: 0 12px 12px;
   }
@@ -198,6 +198,16 @@
     .form-control {
       height: 34px;
     }
+  }
+}
+
+#btn-comment-form {
+  color: #fff;
+  background-color: $brand-primary;
+  &:hover {
+    border: 1px solid #ccc;
+    border-left: none;
+    background-color: $brand-primary-hover;
   }
 }
 

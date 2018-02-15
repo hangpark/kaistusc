@@ -46,6 +46,9 @@ class BoardView(ServiceView):
 
         context = super().get_context_data(**kwargs)
 
+        context['BOARD_ROLE_DEFAULT'] = BOARD_ROLE_DEFAULT
+        context['BOARD_ROLE_PROJECT'] = BOARD_ROLE_PROJECT
+
         # 게시판 저장
         board = self.service.board
         board.tabs = board.boardtab_set.all()
@@ -65,11 +68,17 @@ class BoardView(ServiceView):
         search = self.request.GET.get('s')
         context['search'] = search
 
+        # 포스트 모델 설정
+        if (board.role ==BOARD_ROLE_PROJECT):
+            post_model = ProjectPost
+        else:
+            post_model = Post
+    
         # 게시글 목록 조회
         if (tab):
-            post_list = board.post_set.filter(board_tab=tab)
+            post_list = post_model.objects.filter(board=board, board_tab=tab)
         else:
-            post_list = board.post_set.all()
+            post_list = post_model.objects.filter(board=board)
 
         # 태그 필터링
         tag = self.request.GET.get('tag')
@@ -122,7 +131,7 @@ class PostView(BoardView):
     필요권한이 읽기권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post.jinja'
+    template_name = 'board/post/post.jinja'
     required_permission = PERM_READ
 
     def has_permission(self, request, *args, **kwargs):

@@ -91,5 +91,10 @@
   }
   .list-group-item.lnb-selected {
     color: $brand-primary;
+
+    &:after {
+      opacity: 1;
+      border-left: 4px solid $brand-primary-lighter;
+    }
   }
 }
