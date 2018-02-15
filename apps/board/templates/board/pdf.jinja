@@ -6,9 +6,17 @@
 {% block content %}
 <link href="{{ static('css/text_layer_builder.css') }}" rel="stylesheet">
 <style>
+  .col {
+    margin-right: 7px;
+  }
+  .page-controller {
+    display: flex;
+  }
+  
   .canvas-container {
     display: flex;
   }
+  
   .page-item {
     max-width: 1500px;
   }
@@ -16,14 +24,26 @@
 <div id="post-wrap">
 
   <div id="post-content">
-    <button id="pdf-prev" type="button" class="btn" onclick="goToPrevPage()">이전</button>
-    <button id="pdf-next" type="button" class="btn" onclick="goToNextPage()">다음</button>
-    <input type="text" class="form-control" id="pdf-page-num" value="1">
-    <button id="pdf-go-to-page" type="button" class="btn" onclick="goToInputPage()">페이지로 이동</button>
-    <div class="canvas-container">
+    <div class="page-controller row">
+      <div class="col">
+        <button id="pdf-prev" type="button" class="btn" onclick="goToPrevPage()">이전</button>
+      </div>
+      <div class="col">
+        <button id="pdf-next" type="button" class="btn" onclick="goToNextPage()">다음</button>
+      </div>
+      <div class="col">
+        <input type="text" size="6" class="form-control" id="pdf-page-num" value="1">
+      </div>
+      <div class="col">
+        <button id="pdf-go-to-page" type="button" class="btn col" onclick="goToInputPage()">페이지로 이동</button>
+      </div>
+    </div>
+    
+    <div class="canvas-container row">
       <canvas id="the-canvas"></canvas>
       <canvas id="the-canvas-2"></canvas>
     </div>
+
   </div>
 
   <div id="post-func">
@@ -51,11 +71,12 @@ function renderPage(pageIndex) {
   currentPdf.getPage(pageIndex)
     .then(function(page) {
 
-      var scale = 1.0;
-      
-      var viewport = page.getViewport(scale);
-
       var canvas = pageIndex % 2 === 1 ? document.getElementById('the-canvas') : document.getElementById('the-canvas-2');
+
+      var canvasContainer = document.getElementsByClassName('canvas-container')[0]
+      var canvasWidth = canvasContainer.offsetWidth / 2;
+      
+      var viewport = page.getViewport(canvasWidth / page.getViewport(1.0).width);
 
       var context = canvas.getContext('2d');
 
@@ -107,6 +128,7 @@ PDFJS.getDocument(url)
     currentPdf = pdf;
     goToPage(1);
   })
+
 </script>
 
 {% endblock %}
