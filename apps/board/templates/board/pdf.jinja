@@ -1,10 +1,6 @@
-{% extends 'manager/app_base.jinja' %}
-
 {% from 'ksso/macros.jinja' import name %}
 {% from 'board/macros.jinja' import make_tag %}
 
-{% block content %}
-<link href="{{ static('css/text_layer_builder.css') }}" rel="stylesheet">
 <style>
   .col {
     margin-right: 7px;
@@ -17,50 +13,59 @@
     display: flex;
   }
   
+  /*
   .page-item {
     max-width: 1500px;
   }
+  */
+  .well {
+    padding: 0;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
 </style>
-<div id="post-wrap">
 
-  <div id="post-content">
+<div id="post-content">
+  {% if posts.object_list and posts.object_list[0].attachedfile_set.all() %}
     <div class="page-controller row">
       <div class="col">
-        <button id="pdf-prev" type="button" class="btn" onclick="goToPrevPage()">이전</button>
+          <button id="pdf-prev" type="button" class="btn" onclick="goToPrevPage()">이전</button>
       </div>
       <div class="col">
-        <button id="pdf-next" type="button" class="btn" onclick="goToNextPage()">다음</button>
+          <button id="pdf-next" type="button" class="btn" onclick="goToNextPage()">다음</button>
       </div>
       <div class="col">
-        <input type="text" size="6" class="form-control" id="pdf-page-num" value="1">
+          <input type="text" size="6" class="form-control" id="pdf-page-num" value="1">
       </div>
       <div class="col">
-        <button id="pdf-go-to-page" type="button" class="btn col" onclick="goToInputPage()">페이지로 이동</button>
+          <button id="pdf-go-to-page" type="button" class="btn col" onclick="goToInputPage()">페이지로 이동</button>
       </div>
     </div>
-    
-    <div class="canvas-container row">
+      
+    <div class="canvas-container row well">
       <canvas id="the-canvas"></canvas>
       <canvas id="the-canvas-2"></canvas>
     </div>
+  {% else %}
+      공약 및 정책자료집이 업로드 되지 않았습니다.
+  {% endif %}
+</div>
 
+<div id="board-func" class="row">
+  <div class="pull-right col-sm-1">
+    {% if board.is_permitted(request.user, PERM_WRITE) %}
+        <a href="{{current_path}}/new/" class="btn btn-primary">{{ _('업로드') }}</a>
+    {% endif %}
   </div>
-
-  <div id="post-func">
-    <div class="pull-right">
-      {% if board.is_permitted(request.user, PERM_WRITE) %}
-        <a href="{{ board.get_absolute_url() }}/new/" class="btn btn-primary">{{ _('글쓰기') }}</a>
-      {% endif %}
-    </div>
-  </div>
-
 </div>
 
 <script src="{{ static('js/pdf.js') }}"></script>
-<!-- <script src="{{ static('js/text_layer_builder.js') }}"></script> -->
+
+{% if posts.object_list and posts.object_list[0].attachedfile_set.all() %}
 <script type="text/javascript">
 
-var url = "{{ files[0].get_absolute_url() }}";
+var url = "{{ posts.object_list[0].attachedfile_set.all()[0].get_absolute_url() }}";
 
 var currentPdf;
 
@@ -116,8 +121,11 @@ function goToPrevPage() {
 
 function goToNextPage() {
   var currentPageIndex = Number(document.getElementById('pdf-page-num').value);
+  if (currentPageIndex % 2 === 1) {
+    currentPageIndex++;
+  }
   if (currentPageIndex < currentPdf.numPages) {
-    currentPageIndex += 2;
+    currentPageIndex++;
     goToPage(currentPageIndex);
   }
 }
@@ -130,5 +138,5 @@ PDFJS.getDocument(url)
   })
 
 </script>
+{% endif %}
 
-{% endblock %}

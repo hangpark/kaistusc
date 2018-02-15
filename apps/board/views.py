@@ -8,6 +8,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 
 from apps.manager import Custom404
 from apps.manager.constants import *
+from apps.board.constants import *
 from apps.manager.views import ServiceView
 
 from .forms import PostForm
@@ -44,6 +45,10 @@ class BoardView(ServiceView):
         """
 
         context = super().get_context_data(**kwargs)
+
+        context['BOARD_ROLE_DEFAULT'] = BOARD_ROLE_DEFAULT
+        context['BOARD_ROLE_PROJECT'] = BOARD_ROLE_PROJECT
+        context['BOARD_ROLE_PLANBOOK'] = BOARD_ROLE_PLANBOOK
 
         # 게시판 저장
         board = self.service.board
@@ -262,6 +267,8 @@ class PostWriteView(BoardView):
         form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save(request.POST, request.FILES)
+            if self.service.board.role == BOARD_ROLE_PLANBOOK:
+                return HttpResponseRedirect(self.service.get_absolute_url())
             return HttpResponseRedirect(post.get_absolute_url())
         context = self.get_context_data(**kwargs)
         context['form'] = form

@@ -9,7 +9,9 @@ $().ready(function() {
 
     $("#post-lang-func button.post-lang").click(function() {
         var lang = $(this).attr('post-lang');
+        $(".post-form-lang").prop('required', false);
         $(".post-form-lang").hide();
+        $("#post-form-lang-" + lang).prop('required', true);
         $("#post-form-lang-" + lang).show();
 
         var $btns = $("#post-lang-func button.post-lang");

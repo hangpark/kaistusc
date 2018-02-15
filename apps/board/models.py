@@ -30,6 +30,7 @@ class Board(Service):
     BOARD_ROLE_CHOICES = (
         (BOARD_ROLE_DEFAULT, _('기본')),
         (BOARD_ROLE_PROJECT, _('사업')),
+        (BOARD_ROLE_PLANBOOK, _('정책자료집')),
     )
 
     role = models.IntegerField(

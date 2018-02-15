@@ -15,6 +15,10 @@
   {% endif %}
 </div>
 
-{% include 'board/post_list.jinja' %}
+{% if board.role == BOARD_ROLE_PLANBOOK %}
+	{% include 'board/pdf.jinja' %}
+{% else %}
+	{% include 'board/post_list.jinja' %}
+{% endif %}
   
 {% endblock %}

@@ -3,7 +3,7 @@
 {% from 'board/macros.jinja' import form_group %}
 
 {% block content %}
-<form id="post-form" method="post" enctype="multipart/form-data" novalidate>
+<form id="post-form" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div id="post-form-lang-ko" class="post-form-lang">
     {% call(field) form_group(form.title_ko) %}
@@ -15,10 +15,10 @@
   </div>
   <div id="post-form-lang-en" class="post-form-lang" style="display: none;">
     {% call(field) form_group(form.title_en) %}
-    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
+    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" />
     {% endcall %}
     {% call(field) form_group(form.content_en) %}
-      <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=18 class="form-control" style="resize: none;" required>{{ field.value() or '' }}</textarea>
+      <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=18 class="form-control" style="resize: none;">{{ field.value() or '' }}</textarea>
     {% endcall %}
   </div>
   <div id="post-lang-func" class="row">
@@ -47,7 +47,11 @@
   {% endfor %}
     <div id="attach-file-wrap">
       <div class="attach-file">
+        {% if board.role == BOARD_ROLE_PLANBOOK %}
+        <input type="file" name="files" required>
+        {% else %}
         <input type="file" name="files">
+        {% endif %}
         <span class="file-more">{{ _('더 첨부하기') }}</span>
       </div>
     </div>
