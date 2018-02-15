@@ -10,14 +10,12 @@ local_settings.py
 
 # Swap files
 *.swp
-media/
 
 # NPM files
 node_modules/
 bower_components/
 
 static/dist/
-files/
 media/
 
 # Sphinx build files

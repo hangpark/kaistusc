@@ -24,7 +24,7 @@
     {% if form.__class__.__name__ == 'DebateForm' %}
     {% call(field) form_group(form.due_date) %}
       {{ field.label }} 
-      <input type="text" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value() or '' }}" required> 
+      <input type="text" id="{{ field.id_for_label }}" name="{{ field.html_name }}" {% if field.value() %} value = {{field.value()}} {% else %} value = ''{% endif %}  required> 
     {% endcall %}
     {% endif %}
 </div>

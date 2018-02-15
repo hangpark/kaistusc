@@ -1,6 +1,7 @@
 """
 게시판 뷰.
 """
+from datetime import date
 from datetime import datetime
 
 import os
@@ -15,6 +16,7 @@ from apps.manager.views import ServiceView
 from apps.board.constants import *
 
 from apps.board.constants import *
+from apps.board.constants_mapping import *
 from .forms import PostForm, ProjectPostForm,CommentForm, DebateForm
 from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab,DebatePost, ProjectPost
 
@@ -75,12 +77,8 @@ class BoardView(ServiceView):
         filter_state = self.request.GET.get('filter_state')
 
         # 게시글 목록 조회
-        if (board.role == BOARD_ROLE_PROJECT):
-            post_model = ProjectPost
-        elif (board.role == BOARD_ROLE_DEBATE):
-            post_model = DebatePost
-        else:
-            post_model = Post
+    
+        post_model = mapping_model[board.role]
 
         if (tab):
             post_list = post_model.objects.filter(board=board, board_tab=tab)
@@ -101,12 +99,13 @@ class BoardView(ServiceView):
         
         if filter_state:
             superUser = User.objects.all().filter(is_superuser = True)
+            today = datetime.combine(date.today(),datetime.min.time())
             if filter_state == 'finish':
-                post_list = post_list.filter(is_deleted=False).filter(Q(is_closed = True)|Q(due_date__lte = datetime.now()))
+                post_list = post_list.filter(is_deleted=False).filter(Q(is_closed = True)|Q(due_date__lt = today))
             elif filter_state == 'wait':
-                post_list = post_list.filter(is_deleted=False ,is_closed = False, due_date__gte = datetime.now(), vote_up__lte = 2).exclude(author__in = superUser)
+                post_list = post_list.filter(is_deleted=False ,is_closed = False, due_date__gte = today, vote_up__lte = 2).exclude(author__in = superUser)
             elif filter_state == 'ongoing':
-                post_list = post_list.filter(is_deleted=False,is_closed = False, due_date__gte = datetime.now()).filter(Q(vote_up__gte = 3)|Q(author__in = superUser))
+                post_list = post_list.filter(is_deleted=False,is_closed = False, due_date__gte = today).filter(Q(vote_up__gte = 3)|Q(author__in = superUser))
         else:
             filter_state = 'all'
          
@@ -168,16 +167,8 @@ class PostView(BoardView):
         if not super().has_permission(request, *args, **kwargs):
             return False
         self.required_permission = required_permission
-
-        board_role = self.service.board.role
         
-        if (board_role == BOARD_ROLE_PROJECT):
-            post_model = ProjectPost
-        elif (board_role == BOARD_ROLE_DEBATE):
-            post_model = DebatePost
-        else:
-            post_model = Post
-
+        post_model = mapping_model[self.service.board.role]
         post=post_model.objects.filter(board=self.service.board, id=kwargs['post']).first()
         
         if not post:
@@ -206,8 +197,8 @@ class PostView(BoardView):
         context['comments'] = self.post_.comment_set.all()
         comments_files = {}
         for comment in context['comments']:
-            if(comment.attached_file()):
-                comments_files[comment.id] = comment.attached_file()
+            if(comment.attached_files()):
+                comments_files[comment.id] = comment.attached_files()
         context['comments_files'] =comments_files
 
         # 게시글에 첨부된 파일 목록 저장
@@ -232,15 +223,7 @@ class PostWriteView(BoardView):
         게시글 작성 폼을 컨텍스트에 추가하는 메서드.
         """
         context = super().get_context_data(**kwargs)
-        board_role = context['board'].role
-
-        if board_role == BOARD_ROLE_PROJECT:
-            post_form = ProjectPostForm
-        elif board_role == BOARD_ROLE_DEBATE:
-            post_form = DebateForm
-        else:
-            post_form = PostForm
-        
+        post_form = mapping_form[self.service.board.role]
         context['form'] =post_form(self.service.board)
 
         return context
@@ -257,15 +240,8 @@ class PostWriteView(BoardView):
 
         board_role = self.service.board.role
 
-        if board_role == BOARD_ROLE_PROJECT:
-            post_model = ProjectPost
-            post_form = ProjectPostForm
-        elif board_role == BOARD_ROLE_DEBATE:
-            post_model = DebatePost
-            post_form = DebateForm
-        else:
-            post_model = Post
-            post_form = PostForm
+        post_model = mapping_model[board_role]
+        post_form = mapping_form[board_role]
         
         post = post_model(author=user, board=self.service.board)
         form = post_form(self.service.board, request.POST, request.FILES, instance=post)
@@ -295,16 +271,7 @@ class PostEditView(PostView):
         """
         context = super().get_context_data(**kwargs)
         post = self.post_
-
-        board_role = context['board'].role
-
-        if board_role == BOARD_ROLE_PROJECT:
-            post_form = ProjectPostForm
-        elif board_role == BOARD_ROLE_DEBATE:
-            post_form = DebateForm
-        else:
-            post_form = PostForm
-        
+        post_form = mapping_form[self.service.board.role]
         context['form'] =post_form(self.service.board, instance=post)
 
         return context
@@ -318,14 +285,7 @@ class PostEditView(PostView):
         재전달하여 수정을 요구합니다.
         """
         post = self.post_
-        board_role = self.service.board.role
-
-        if board_role == BOARD_ROLE_PROJECT:
-            post_form = ProjectPostForm
-        elif board_role == BOARD_ROLE_DEBATE:
-            post_form = DebateForm
-        else:
-            post_form = PostForm
+        post_form = mapping_form[self.service.board.role]
         
         form = post_form(self.service.board, request.POST, request.FILES, instance=post)
         

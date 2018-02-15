@@ -3,6 +3,7 @@
 """
 
 import os
+from datetime import date
 from datetime import datetime
 
 from django.db import models
@@ -286,7 +287,7 @@ class BasePost(models.Model):
         """
         self.assign_activity(request, ACTIVITY_VIEW)
 
-    def attached_file(self):
+    def attached_files(self):
         """
         포스트에 첨부된 첨부파일을 리턴하는 메서드.
         """
@@ -571,7 +572,8 @@ class DebatePost(Post):
         null=True, blank=True)
 
     def is_over_due(self):
-        return (datetime.now() > self.due_date)
+        d = date.today()
+        return (datetime.combine(d,datetime.min.time()) > self.due_date)
 
     def is_commentable(self):
         check_author = (self.author and self.author.is_superuser)

@@ -97,12 +97,12 @@ $().ready(function() {
     });
 
     $("#id_due_date").datepicker({
-        altFormat: "yyyy-mm-dd",
+        altFormat: "mm/dd/yyyy",
         minDate: new Date(),
         maxDate: "+15d",
     });
     if($("#id_due_date").val() == ''){
-        $("#id_due_date").datepicker("setDate", new Date());
+        $("#id_due_date").datepicker({ dateFormat: 'mm/dd/yyyy'}).datepicker("setDate", new Date());
     }
 
     $('.tag-item').click(function(e) {
