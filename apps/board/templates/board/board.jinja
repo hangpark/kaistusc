@@ -4,17 +4,17 @@
 
 {% block content %}
 <div id="board-header">
-  <h1 id="board-title" class="pull-left">{{ board.name }}</h1>
-  <div id="board-tag-btn" class="pull-right" data-toggle="collapse" href="#board-tag-list">{{ _('태그별 검색') }}<span class="caret"></span></div>
-</div>
-<div id="board-tag-list" class="collapse">
-  <ul class="pull-right">
-  {% for tag in tags %}
-    <li class="pull-left">{{ make_tag(board, tag) }}</li>
-  {% endfor %}
+  <h1 id="board-title" class="text-center">{{ board.name }}</h1>
+
+  {% if board.tabs %}
+  <ul class="nav nav-tabs">
+    {% for _tab in board.tabs %}
+      <li role="presentation" {% if tab == _tab %}class="active"{% endif %}><a href="{{_tab.get_absolute_url()}}">{{_tab.name}}</a></li>
+    {% endfor %}
   </ul>
+  {% endif %}
 </div>
 
 {% include 'board/post_list.jinja' %}
-
+  
 {% endblock %}

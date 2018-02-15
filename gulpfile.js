@@ -16,6 +16,7 @@ var bower = './bower_components';
 
 var jquery = bower + '/jquery/dist';
 var bootstrap = bower + '/bootstrap-sass/assets';
+var bootstrapSelect = bower + '/bootstrap-select/dist';
 var fontawesome = bower + '/font-awesome';
 
 var template = {
@@ -26,6 +27,7 @@ var js = {
 	'in': [
 		jquery + '/jquery.js',
 		bootstrap + '/javascripts/bootstrap.js',
+		bootstrapSelect + '/js/bootstrap-select.js',
         src + '/javascripts/**/*'
 	],
 	'out': dist + '/js'
@@ -43,7 +45,10 @@ var css = {
 	'in': {
 		'scss': src + '/stylesheets/*.scss',
         'main': src + '/stylesheets/main.scss',
-        'css': fontawesome + '/css/font-awesome.css',
+        'css': [
+			fontawesome + '/css/font-awesome.css',
+			bootstrapSelect + '/css/bootstrap-select.css'
+		],
     },
 	'out': dist + '/css',
 	'opts': {
@@ -82,7 +87,7 @@ gulp.task('css', function() {
 
 gulp.task('default', ['js', 'fonts', 'css']);
 
-gulp.task('watch', function() {
+gulp.task('watch', ['default'], function() {
 	livereload.listen();
 	gulp.watch(css.in.scss, ['css']);
 	gulp.watch(js.in, ['js']);

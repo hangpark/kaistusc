@@ -86,4 +86,24 @@ $().ready(function() {
                 alert("권한이 없습니다.");
             });
     });
+
+    $('.tag-item').click(function(e) {
+        e.stopPropagation();
+    })
+
+    $('#id_board_tab').on('changed.bs.select', function (e) {
+        var is_selected = false;
+        var options = e.currentTarget.options;
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                is_selected = true;
+            }
+        }
+        if (!is_selected) {
+            val = $('#current_tab')[0].value || e.currentTarget.options[0].value;
+            $('#id_board_tab option[value=' + val + ']').prop("selected", true);
+        }
+        $('#id_board_tab').selectpicker('refresh')
+    });
+
 });

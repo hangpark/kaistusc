@@ -16,7 +16,7 @@
       {{ post.title }}
     </div>
     <div id="post-info">
-      <div class="pull-left">{% if post.tag %}<span class="margin-right">{{ make_tag(board, post.tag) }}</span>{% endif %}{{ name(post.author) }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+      <div class="pull-left">{% if post.tag %}<span class="margin-right">{{ make_tag(board, post.tag, post.get_first_tab()) }}</span>{% endif %}{{ name(post.author) }}<span class="margin-both">|</span>{{ post.date.strftime('%Y-%m-%d %H:%M:%S') }}</div>
       <div class="pull-right">{{ _('조회수') }}<span class="margin-both">|</span>{{ post.get_hits() }}</div>
     </div>
   </div>

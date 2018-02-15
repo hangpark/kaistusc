@@ -2,9 +2,11 @@
 고정 페이지 뷰.
 """
 from django.db import models
+from apps.manager.models import TopBanner
 from apps.board.models import Board, BannerCarousel
 from apps.board.constants import *
 from .base import PageView
+from datetime import datetime
 
 
 class MainPageView(PageView):
@@ -26,6 +28,10 @@ class MainPageView(PageView):
         try:
             context['bannerCarousel'] = BannerCarousel.objects.get(sector=BANNER_CAROUSEL_SECTOR_MAIN)
         except BannerCarousel.DoesNotExist:
+            pass
+        try:
+            context['topBanner'] = TopBanner.objects.get(terminate_at__gte=datetime.now())
+        except TopBanner.DoesNotExist:
             pass
         return context
 

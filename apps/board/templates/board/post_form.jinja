@@ -66,8 +66,18 @@
         <input type="checkbox" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{% if field.value() %} checked{% endif %}> {{ field.label }}
       </label>
     {% endcall %}
+    {% if form.board_tab.field.queryset %}
+    {% call(field) form_group(form.board_tab) %}
+      <input type="hidden" id="current_tab" value="{{tab.id}}"/>
+      <select id="{{ field.id_for_label }}" class="selectpicker" name="board_tab" multiple data-width="auto">
+      {% for choice in field.field.queryset %}
+        <option value="{{ choice.id }}"{% if tab == choice %} selected="selected"{% endif %}>{{ choice.name }}</option>
+      {% endfor %}
+      </select>
+    {% endcall %}
+    {% endif %}
     {% call(field) form_group(form.tag) %}
-      <select id="{{ field.id_for_label }}" class="form-control" name="tag">
+      <select id="{{ field.id_for_label }}" class="selectpicker" name="tag" data-width="auto">
         <option value{% if not form.initial.tag %} selected="selected"{% endif %} >---- {{ _('태그') }} ----</option>
       {% for choice in field.field.queryset %}
         <option value="{{ choice.id }}"{% if choice.id == form.initial.tag %} selected="selected"{% endif %}>{{ choice }}</option>

@@ -1,7 +1,7 @@
 """
 게시판 뷰.
 """
-
+import os
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect
@@ -11,7 +11,7 @@ from apps.manager.constants import *
 from apps.manager.views import ServiceView
 
 from .forms import PostForm
-from .models import ACTIVITY_VOTE, Comment, Post, Tag
+from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab
 
 
 class BoardView(ServiceView):
@@ -20,20 +20,42 @@ class BoardView(ServiceView):
 
     태그와 검색어, 페이지 등이 설정된 경우 이에 맞춰 게시글을 필터링합니다.
     """
-
     template_name = 'board/board.jinja'
 
+    def dispatch(self, request, *args, **kwargs):
+        dispatch = super().dispatch(request, *args, **kwargs)
+        # 탭이있을경우 리다이렉트
+        board = self.service.board
+        tab = kwargs.get('tab', None)
+        post = kwargs.get('post', None)
+        if not post and not tab and board.boardtab_set.exists() :
+            # 포스트와 탭의 경로가아니고, 보드에 탭이있을경우 
+            # 첫번째탭으로 리다이렉트
+            query = request.META['QUERY_STRING']
+            url = self.get_tab(**kwargs).get_absolute_url() + (query and '?' + query)
+            return HttpResponseRedirect(url)
+        return dispatch
+        
     def get_context_data(self, **kwargs):
         """
         게시판 정보를 컨텍스트에 저장하는 메서드.
 
         게시판, 태그 목록, 검색어, 게시글 목록, 페이지네이션 등을 저장합니다.
         """
+
         context = super().get_context_data(**kwargs)
 
         # 게시판 저장
         board = self.service.board
+        board.tabs = board.boardtab_set.all()
         context['board'] = board
+
+        # 현재탭 저장
+        tab = self.get_tab(**kwargs)
+        context['tab'] = tab
+
+        # 현재 위치 저장
+        context['current_path'] = tab and tab.get_absolute_url() or board.get_absolute_url()
 
         # 태그 목록 저장
         context['tags'] = Tag.objects.filter(board=board)
@@ -43,11 +65,17 @@ class BoardView(ServiceView):
         context['search'] = search
 
         # 게시글 목록 조회
-        post_list = Post.objects.filter(board=board)
-        if kwargs.get('tag', None):
-            if kwargs['tag'] not in [tag.slug for tag in context['tags']]:
+        if (tab):
+            post_list = Post.objects.filter(board=board, board_tab=tab)
+        else:
+            post_list = Post.objects.filter(board=board)
+
+        # 태그 필터링
+        tag = self.request.GET.get('tag')
+        if tag:
+            if tag not in [tag.slug for tag in context['tags']]:
                 raise Custom404
-            post_list = post_list.filter(tag__slug=kwargs['tag'])
+            post_list = post_list.filter(tag__slug=tag)
         if search:
             post_list = post_list.filter(is_deleted=False).filter(
                 Q(title__icontains=search) | Q(content__icontains=search))
@@ -78,6 +106,12 @@ class BoardView(ServiceView):
             3 * (page < 3) or (num_pages - 2) * (page > num_pages - 2) or page)
         return range(pivot - 2, pivot + 3)
 
+    def get_tab(self,  **kwargs):
+        # if self.service.board.exists()
+        if (kwargs.get('tab', None)):
+            url = kwargs['tab']
+            return BoardTab.objects.filter(url=url).first()
+        return BoardTab.objects.filter(parent_board=self.service.board).first()
 
 class PostView(BoardView):
     """
