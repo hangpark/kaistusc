@@ -118,6 +118,11 @@
   width: 140px;
   a {
     @include disable-effect(#555);
+    padding: 20px;
+    position: relative;
+    &:hover {
+      color: $brand-primary;
+    }
   }
 }
 
@@ -126,24 +131,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
   margin: $header-col-margin 0 $header-col-margin*2;
-  padding: 0 $header-col-padding;
-  font-size: $font-size-small;
   list-style-type: none;
   .list-group-item {
-    width: 140px;
-    text-align: center;
-    font-weight: 800;
+    font-weight: bold;
+    border: 0;
     @include disable-effect(#555);
     display: list-item;
-    padding: $header-col-margin 0;
-    border: 0;
-    border-radius: 0;
+    padding: $header-col-margin 20px;
+    font-size: 14px;
     &:hover {
       color: $brand-primary;
-      border-left: solid 3px $brand-primary-lighter;
-      border-right: solid 3px $brand-primary-lighter;
-      transition: border-width 0.2s ease-in-out;
     }
   }
 }

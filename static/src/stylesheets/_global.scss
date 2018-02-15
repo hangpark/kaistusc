@@ -7,6 +7,33 @@
     }
 }
 
-.selected {
+.dropdown_item_selected {
     background-color: $brand-primary-hover;
+}
+
+.text_selected {
+    color: $brand-primary !important;
+}
+
+.effect-underline {
+    transition: color 0.2s ease-in-out;
+}
+
+.effect-underline:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    display: inline-block;
+    height: 1em;
+    width: 100%;
+    border-bottom: 1px solid;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s ease-in-out;
+    transform: scaleX(0);
+}
+
+.effect-underline:hover:after {
+    opacity: 1;
+    transform: scaleX(1);
 }

@@ -94,8 +94,8 @@ $(document).on('click', '.schedule_title_container', function(e) {
     $('#schedule_datetimepicker').data("DateTimePicker").date(new Date(schedule.date));
     $('#selected_schedule_title_ko').html(schedule.title_ko);
     $('#selected_schedule_title_en').html(schedule.title_en);
-    $('#schedule_titles > li').removeClass('selected');
-    $(this).closest('li').addClass('selected');
+    $('#schedule_titles > li').removeClass('dropdown_item_selected');
+    $(this).closest('li').addClass('dropdown_item_selected');
 })
 
 // 일정 정보 input
@@ -112,9 +112,9 @@ function addSchedule() {
     })
     var data = '<input type="hidden" name="schedules" value=\''+scheduleJsonStr+'\'>'
     var currentIndex = $('#schedule_add_input_li').index();
-    var scheduleDropdownListItem = '<li class="selected">'+data+'<a class="schedule_title_container"><span class="schedule_title_ko schedule_title">'+scheduleTitleKo+'</span><span class="schedule_title_en schedule_title">'+scheduleTitleEn+'</span><i class="schedule_delete fa fa-times"></i></a></li>'
+    var scheduleDropdownListItem = '<li class="dropdown_item_selected">'+data+'<a class="schedule_title_container"><span class="schedule_title_ko schedule_title">'+scheduleTitleKo+'</span><span class="schedule_title_en schedule_title">'+scheduleTitleEn+'</span><i class="schedule_delete fa fa-times"></i></a></li>'
     $('#selected_schedule_index').val(currentIndex);
-    $('#schedule_titles > li').removeClass('selected');
+    $('#schedule_titles > li').removeClass('dropdown_item_selected');
     $(scheduleDropdownListItem).insertBefore("#schedule_add_input_li");
     $('#schedule_datetimepicker').data("DateTimePicker").date(new Date());
     $("#schedule_add_input_ko").val("");
