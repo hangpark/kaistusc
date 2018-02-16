@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 
 from apps.manager import Custom404
 from apps.manager.constants import *
+from apps.board.constants import *
 from apps.manager.views import ServiceView
 from apps.board.constants import *
 
@@ -54,9 +55,9 @@ class BoardView(ServiceView):
         #게시판 역할 상수 저장
         context['BOARD_ROLE_DEFAULT'] = BOARD_ROLE_DEFAULT
         context['BOARD_ROLE_PROJECT'] = BOARD_ROLE_PROJECT
+        context['BOARD_ROLE_PLANBOOK'] = BOARD_ROLE_PLANBOOK
         context['BOARD_ROLE_DEBATE'] = BOARD_ROLE_DEBATE
 
-        
         # 게시판 저장
         board = self.service.board
         board.tabs = board.boardtab_set.all()
@@ -78,7 +79,7 @@ class BoardView(ServiceView):
 
         # 게시글 목록 조회
     
-        post_model = mapping_model[board.role]
+        post_model = mapping_post_model[board.role]
 
         if (tab):
             post_list = post_model.objects.filter(board=board, board_tab=tab)
@@ -168,7 +169,7 @@ class PostView(BoardView):
             return False
         self.required_permission = required_permission
         
-        post_model = mapping_model[self.service.board.role]
+        post_model = mapping_post_model[self.service.board.role]
         post=post_model.objects.filter(board=self.service.board, id=kwargs['post']).first()
         
         if not post:
@@ -207,6 +208,65 @@ class PostView(BoardView):
         return context
 
 
+class PdfPostView(BoardView):
+    """
+    최신 pdf 조회 뷰.
+
+    :class:`BoardView` 를 상속받아 게시판 정보를 자동 저장합니다. 기본
+    필요권한이 읽기권한으로 설정되어 있습니다.
+    """
+
+    template_name = 'board/post/pdf_post.jinja'
+    required_permission = PERM_READ
+
+    def has_permission(self, request, *args, **kwargs):
+        """
+        게시판에 대한 접근권한과 게시글에 대한 필요권한을 체크하는 메서드.
+
+        전역변수 :attr:`post_` 에 게시글 인스턴스가 저장되며, 게시글이 존재하지
+        않을 시 404 에러가 발생합니다.
+        """
+        required_permission = self.required_permission
+        self.required_permission = PERM_ACCESS
+        kwargs['url'] = kwargs['url'] + '/latest/'
+        print(kwargs)
+        if not super().has_permission(request, *args, **kwargs):
+            return False
+        self.required_permission = required_permission
+        post = Post.objects.filter(
+            board=self.service.board).latest('date')
+
+        if not post:
+            raise Http404
+        self.post_ = post
+        return post.is_permitted(request.user, self.required_permission)
+
+    def get(self, request, *args, **kwargs):
+        """
+        GET 요청이 왔을 시 게시글 조회수를 증가하는 메서드.
+
+        :meth:`has_permission` 을 통과한 사용자에게만 본 메서드가 실행됩니다.
+        """
+        self.post_.assign_hits(request)
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        """
+        게시글과 관련 정보를 컨텍스트에 저장하는 메서드.
+        """
+        context = super().get_context_data(**kwargs)
+
+        # 게시글 저장
+        context['post'] = self.post_
+
+        # 게시글에 달린 댓글 목록 저장
+        context['comments'] = self.post_.comment_set.all()
+
+        # 게시글에 첨부된 파일 목록 저장
+        context['files'] = self.post_.attachedfile_set.all()
+        
+        return context
+
 
 class PostWriteView(BoardView):
     """
@@ -223,7 +283,7 @@ class PostWriteView(BoardView):
         게시글 작성 폼을 컨텍스트에 추가하는 메서드.
         """
         context = super().get_context_data(**kwargs)
-        post_form = mapping_form[self.service.board.role]
+        post_form = mapping_post_form[self.service.board.role]
         context['form'] =post_form(self.service.board)
 
         return context
@@ -240,14 +300,16 @@ class PostWriteView(BoardView):
 
         board_role = self.service.board.role
 
-        post_model = mapping_model[board_role]
-        post_form = mapping_form[board_role]
+        post_model = mapping_post_model[board_role]
+        post_form = mapping_post_form[board_role]
         
         post = post_model(author=user, board=self.service.board)
         form = post_form(self.service.board, request.POST, request.FILES, instance=post)
 
         if form.is_valid():
             form.save(request.POST, request.FILES)
+            if self.service.board.check_role(BOARD_ROLE_PLANBOOK):
+                return HttpResponseRedirect(self.service.get_absolute_url())
             return HttpResponseRedirect(post.get_absolute_url())
         context = self.get_context_data(**kwargs)
         context['form'] = form
@@ -271,7 +333,7 @@ class PostEditView(PostView):
         """
         context = super().get_context_data(**kwargs)
         post = self.post_
-        post_form = mapping_form[self.service.board.role]
+        post_form = mapping_post_form[self.service.board.role]
         context['form'] =post_form(self.service.board, instance=post)
 
         return context
@@ -285,7 +347,7 @@ class PostEditView(PostView):
         재전달하여 수정을 요구합니다.
         """
         post = self.post_
-        post_form = mapping_form[self.service.board.role]
+        post_form = mapping_post_form[self.service.board.role]
         
         form = post_form(self.service.board, request.POST, request.FILES, instance=post)
         

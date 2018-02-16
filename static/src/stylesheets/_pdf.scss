@@ -1,0 +1,14 @@
+#pdf-page-controller {
+  display: flex;
+  & > div {
+    margin-right: 7px;
+  }
+}
+
+#pdf-canvas-container {
+  display: flex;
+  padding: 0;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+}

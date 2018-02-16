@@ -27,3 +27,6 @@ venv/
 
 # Python mode
 **/.ropeproject/
+
+# VS Code
+.vscode/
