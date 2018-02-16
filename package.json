@@ -21,10 +21,10 @@
     "gulp-sass": "^3.0.0",
     "gulp-uglify": "^2.1.2",
     "gulp-watch": "^5.0.0",
+    "gulp-rev-collector": "^1.2.4",
     "merge-stream": "^1.0.1"
   },
   "dependencies": {
-    "gulp-rev-collector": "^1.2.4",
     "merge-stream": "^1.0.1",
     "pdfjs-dist": "^2.0.357"
   }
