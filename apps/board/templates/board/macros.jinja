@@ -23,12 +23,12 @@
 {% if post.content_en and post.content_ko %}
   <i class="fa fa-globe"></i>
 {% endif %}
-{% if post.board.check_role('PROJECT') %}
+{% if post.__class__.__name__ == 'ProjectPost' %}
   {% if post.is_pledge %}
     <i class="fa fa-handshake-o" title="{{_('공약')}}"></i>
   {% endif %}
 {% endif %}
-{% if post.board.check_role('DEBATE') %}
+{% if post.__class__.__name__ == 'DebatePost' %}
   {% if post.is_commentable() %}
   <span class="debate-state debate-ongoing">{{ _('논의중') }}</span>
   {% elif (post.is_closed or post.is_over_due()) %}

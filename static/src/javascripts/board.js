@@ -62,14 +62,6 @@ $().ready(function() {
             });
     });
 
-    $("#btn-commentAttached-form").click(function() {
-        var $btn = $(this);
-        if (!$("#commentAttached-form textarea").val()) {
-            alert($("#comment-no-input").val());
-            return;
-        }
-    });
-
     $("#comment-list").on('click', ".comment-remove", function() {
         var $comment = $(this).parents(".comment");
         var $form = $(this).parent();

@@ -1,18 +1,14 @@
-<form  id="commentAttached-form" action = "{{ post.get_absolute_url() }}/commentAttached/"  method="post" enctype="multipart/form-data" >{% csrf_token %}
-<div class = 'comment-wrapper'>
-	<div class= 'comment-input pull-left'>
-	<div><textarea id="comment-area" class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea></div>
-	<div id="attach-file-wrap" class = 'pull-left'>
-      <div class="attach-file">
-        <input type="file" name="files">
-        
-      </div>
-    </div>
-	</div>
-	<div class='comment-button pull-right' >
-	    <button id="btn-commentAttached-form" class="btn btn-sm btn-default" type="submit">{{ _('등록') }}</button>	
-	</div>
-	<div id='clear'></div>
-</div>
-</form>
+{% if board.check_role('DEBATE') %}
+	<form  id="comment-form" class="comment-form-attached input-group" action="{{ post.get_absolute_url() }}/commentAttached/"  method="post" enctype="multipart/form-data" >{% csrf_token %}
+		<textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
+		<input id="comment-form-file" type="file" name="files">
+		<span id="btn-comment-form" class="input-group-addon btn btn-primary" type="submit">{{ _('등록') }}</span>
+	</form>
+{% else %}
+	<form id="comment-form" class="input-group">{% csrf_token %}
+			<textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
+			<span id="btn-comment-form" class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
+	</form>
+{% endif %}
+
 <input type="hidden" id="comment-no-input" value="{{ _('댓글 내용을 입력해주세요.') }}"/>
