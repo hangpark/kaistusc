@@ -18,6 +18,7 @@ $().ready(function(){
         collapse: false,
         format: 'MM/DD/YYYY',
     });
+    validateCurrentSchedule();
 
     // datetimepicker 날짜선택
     $('#schedule_datetimepicker').on('dp.change', function(e) {
@@ -80,9 +81,11 @@ $(document).on('click', '.schedule_delete', function (e) {
     if(selectedIndex === targetIndex) {
         $('#schedule_datetimepicker').data("DateTimePicker").date(null);
         $('#selected_schedule_title_ko, #selected_schedule_title_en').html($('#schedule_dropdown_placeholder').val());
+        $('#selected_schedule_index').val(-1);
     } else if(targetIndex < selectedIndex) {
         $('#selected_schedule_index').val(selectedIndex - 1);
     }
+    validateCurrentSchedule();
 });
 
 // 일정 선택
@@ -96,6 +99,7 @@ $(document).on('click', '.schedule_title_container', function(e) {
     $('#selected_schedule_title_en').html(schedule.title_en);
     $('#schedule_titles > li').removeClass('dropdown_item_selected');
     $(this).closest('li').addClass('dropdown_item_selected');
+    validateCurrentSchedule();
 })
 
 // 일정 정보 input
@@ -122,6 +126,7 @@ function addSchedule() {
     $('#selected_schedule_title_ko').html(scheduleTitleKo);
     $('#selected_schedule_title_en').html(scheduleTitleEn);
     validateScheduleAddInput();
+    validateCurrentSchedule();
 }
 
 // 일정타이틀 validate
@@ -132,5 +137,15 @@ function validateScheduleAddInput() {
     }
     else {
         $('#schedule_add_submit').prop("disabled",false);
+    }
+}
+
+function validateCurrentSchedule() {
+    if(!$('#selected_schedule_index').length) return;
+    
+    if($('#selected_schedule_index').val() > -1) {
+        $('#schedule_datetimepicker').data("DateTimePicker").enable();
+    } else {
+        $('#schedule_datetimepicker').data("DateTimePicker").disable();
     }
 }

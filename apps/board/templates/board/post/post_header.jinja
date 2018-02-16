@@ -29,7 +29,7 @@
       {% if board.role == BOARD_ROLE_DEBATE %}
       {{ post.date.strftime('%Y/%-m/%-d') }} ~ {{ post.due_date.strftime('%Y/%-m/%-d')}}
       {% else %}
-      {{ post.date.strftime('%Y/%-m/%-d %H:%M:%S') }}
+      {{ post.date.strftime('%Y/%-m/%-d %H:%M') }}
       {% endif %}
     </div>
     <div class="pull-right">{{ _('조회수') }}<span class="margin-both">|</span>{{ post.get_hits() }}</div>

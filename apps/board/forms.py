@@ -4,8 +4,10 @@
 
 from django.forms import ModelForm
 import json
+from django.conf import settings
+from dateutil.parser import parse
 from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule
-
+import pytz
 
 class PostForm(ModelForm):
     """
@@ -80,7 +82,7 @@ class DebateForm(PostForm):
             'is_notice', 'is_closed','tag', 'board_tab', )
     def save(self, POST, FILES):
         post = super().save(POST, FILES)
-        post.due_date = POST['due_date']
+        post.due_date = parse_date_string(POST['due_date'])
         post.save()
         return post
 
@@ -115,10 +117,17 @@ class ProjectPostForm(PostForm):
             if not target_input_schedule:
                 schedule.delete()
             else:
-                schedule.date = prev_schedule['date']
+                schedule.date = parse_date_string(prev_schedule['date'])
                 schedule.save()
 
         for schedule in filter(lambda schedule: schedule not in prev_schedules, schedules):
-            Schedule.objects.create(post=post, title_ko=schedule['title_ko'], title_en=schedule['title_en'], date=schedule['date'])
+            Schedule.objects.create(post=post, title_ko=schedule['title_ko'], title_en=schedule['title_en'], date=parse_date_string(schedule['date']))
 
         return post
+
+def parse_date_string(date_string):
+    local_time_zone = pytz.timezone(settings.TIME_ZONE)
+    date = parse(date_string)
+    if(date.tzinfo is None):
+        return date
+    return date.astimezone(local_time_zone).replace(tzinfo=None)
