@@ -19,8 +19,9 @@
     "gulp-postcss": "^6.2.0",
     "gulp-rev": "^8.1.1",
     "gulp-sass": "^3.0.0",
-    "gulp-uglify": "^2.0.0",
-    "gulp-watch": "^5.0.0"
+    "gulp-uglify": "^2.1.2",
+    "gulp-watch": "^5.0.0",
+    "merge-stream": "^1.0.1"
   },
   "dependencies": {
     "gulp-rev-collector": "^1.2.4",

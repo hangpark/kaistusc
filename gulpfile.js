@@ -17,6 +17,7 @@ var dist = './static/dist';
 var bower = './bower_components';
 
 var jquery = bower + '/jquery/dist';
+var jquery_ui = bower + '/jquery-ui';
 var bootstrap = bower + '/bootstrap-sass/assets';
 var bootstrapSelect = bower + '/bootstrap-select/dist';
 var fontawesome = bower + '/font-awesome';
@@ -28,6 +29,7 @@ var template = {
 var js = {
 	'in': [
 		jquery + '/jquery.js',
+		jquery_ui + '/jquery-ui.min.js',
 		bootstrap + '/javascripts/bootstrap.js',
 		bootstrapSelect + '/js/bootstrap-select.js',
     src + '/javascripts/**/*',
@@ -57,6 +59,7 @@ var css = {
 	'in': {
 		'scss': src + '/stylesheets/*.scss',
     'main': src + '/stylesheets/main.scss',
+    'jquery_ui': jquery_ui + '/themes/base/jquery-ui.css', 
     'css': [
 			fontawesome + '/css/font-awesome.css',
 			bootstrapSelect + '/css/bootstrap-select.css'
@@ -69,6 +72,13 @@ var css = {
 	}
 };
 
+var images = {
+	'in':[
+		jquery_ui+'/themes/base/images/*',
+	],
+	'out':dist+'/css/images/'
+};
+
 // process JS files and return the stream.
 gulp.task('js', ['clean-js'], function () {
     return gulp.src(js.in)
@@ -79,19 +89,18 @@ gulp.task('js', ['clean-js'], function () {
 });
 
 gulp.task('fonts', ['clean-fonts'], function() {
-	return gulp.src(fonts.in)
-		.pipe(gulp.dest(fonts.out));
+  return gulp.src(fonts.in)
+    .pipe(gulp.dest(fonts.out));
 });
 
 gulp.task('css', ['clean-css'], function() {
   var scss_stream = gulp.src(css.in.main)
     .pipe(sass(css.opts));
-  
-
   var css_stream = gulp.src(css.in.css);
-    
-	return merge(scss_stream, css_stream)
-    .pipe(concat('main.css'))
+  var css_stream2 = gulp.src(css.in.jquery_ui);
+
+	return merge(scss_stream, css_stream,css_stream2)
+        .pipe(concat('main.css'))
 		.pipe(postcss([ autoprefixer() ]))
 		.pipe(minifycss())
 		.pipe(gulp.dest(css.out))
@@ -142,7 +151,13 @@ gulp.task('default', [
   'css', 
   'revision:rename', 
   'revision:updateReferences', 
+  'images',
 ]);
+
+gulp.task('images', ['revision:updateReferences'], function() {
+    return gulp.src(images.in)
+           .pipe(gulp.dest(images.out));
+});
 
 gulp.task('watch', ['default'], function() {
 	livereload.listen();

@@ -154,3 +154,11 @@ a {
   background-color: $side-nav-overlay;
   z-index: $side-nav-zindex - 1;
 }
+
+.nopadding {
+  padding: 0 !important;
+}
+
+.nomargin {
+  margin: 0 !important;
+}

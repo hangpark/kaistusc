@@ -63,6 +63,14 @@ $().ready(function() {
             });
     });
 
+    $("#btn-commentAttached-form").click(function() {
+        var $btn = $(this);
+        if (!$("#commentAttached-form textarea").val()) {
+            alert($("#comment-no-input").html());
+            return;
+        }
+    });
+
     $("#comment-list").on('click', ".comment-remove", function() {
         var $comment = $(this).parents(".comment");
         var $form = $(this).parent();
@@ -74,6 +82,7 @@ $().ready(function() {
                     alert("Error");
                 });
         }
+
     });
 
     $("#post-vote form").click(function() {
@@ -88,6 +97,15 @@ $().ready(function() {
                 alert("권한이 없습니다.");
             });
     });
+
+    $("#id_due_date").datepicker({
+        altFormat: "mm/dd/yyyy",
+        minDate: new Date(),
+        maxDate: "+15d",
+    });
+    if($("#id_due_date").val() == ''){
+        $("#id_due_date").datepicker({ dateFormat: 'mm/dd/yyyy'}).datepicker("setDate", new Date());
+    }
 
     $('.tag-item').click(function(e) {
         e.stopPropagation();

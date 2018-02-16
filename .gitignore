@@ -4,7 +4,9 @@ __pycache__/
 
 # Django
 db.sqlite3
+
 local_settings.py
+
 
 # Swap files
 *.swp
@@ -12,7 +14,9 @@ local_settings.py
 # NPM files
 node_modules/
 bower_components/
+
 static/dist/
+media/
 
 # Sphinx build files
 docs/_*/
