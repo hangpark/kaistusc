@@ -6,6 +6,11 @@
 //== 기본 레이아웃
 //
 //##
+#clear{
+  clear:both;
+  height: 0;
+  overflow: hidden;
+}
 
 .tag-item {
   padding: 1px;
@@ -84,6 +89,23 @@
   }
 }
 
+.debate-state{
+  margin-right: 5px;
+  padding: 4px 6px;
+  color:white;
+  font-weight: bold;
+  border-radius: 10%;
+}
+
+.debate-ongoing{
+  background: orange;
+}
+.debate-finished{
+  background: gray;
+}
+.debate-waiting{
+  background: navy;
+}
 
 //== 게시판 기능
 //
@@ -125,8 +147,8 @@
   padding: 0 10px;
 }
 
-#post-vote {
-  padding: 30px 0;
+#post-func {
+  padding: 30px 0 40px 0;
   border-bottom: 1px solid #ddd;
   form {
     display: inline-block;
@@ -144,6 +166,14 @@
 #attached-file {
   padding: 10px 10px 25px;
   border-bottom: 1px solid #ddd;
+  font-size: 10pt;
+  p {
+    margin-bottom: 5px;
+  }
+}
+
+#attached-file-comment {
+  padding: 0px 25px 10px;
   font-size: 10pt;
   p {
     margin-bottom: 5px;
@@ -173,12 +203,14 @@
 }
 
 #comment-form {
-  margin-top: 28px;
+  margin: 28px 0px;
 }
 
-#post-func {
-  margin-top: 58px;
+#commentAttached-form {
+  margin-top: 28px;
+  width: 100%;
 }
+
 
 
 //== 포스트 폼
@@ -241,6 +273,57 @@
   }
 }
 
+.comment-wrapper{
+  border: 1px solid #ccc; 
+  width: 100%;
+  position: relative;
+}
+
+#attach-file-wrap{
+  width: 100%;
+}
+.comment-button{
+  width: 10%;
+  position: absolute;
+  right: 0;
+  height: 100%;
+}
+
+#comment-area{
+  border-radius: 0px;
+  border: none;
+  -webkit-tap-highlight-color:none;
+  border-bottom: 1px solid #ccc; 
+}
+#btn-commentAttached-form{
+  width: 100%;
+  height: 100%;
+  margin-bottom: 10px;
+  border: none;
+  border-left: 1px solid #ccc; 
+  margin-bottom: 0px;
+  border-radius: 0px;
+}
+
+.comment-input{
+  width: 90%;
+}
+
+.banner_carousel {
+  img {
+    width: 100%;
+  }
+}
+
+.filter-checkbox{
+  float:right;
+  padding-right: 15px;
+  padding-bottom: 5px;
+  @media (max-width: $screen-sm-min) {
+    margin: $line-height-computed 0;
+  }
+}
+
 #post-list-header-tag {
   background: none;
   border: none;
@@ -252,3 +335,4 @@
     padding: 2px 3px;
   }
 }
+

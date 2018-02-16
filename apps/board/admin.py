@@ -5,7 +5,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import AttachedFile, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, ProjectPost, Schedule
+from .models import AttachedFile, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule
 
 
 class BoardAdmin(TranslationAdmin):
@@ -55,12 +55,21 @@ class ScheduleInline(admin.TabularInline):
 class ProjectPostAdmin(TranslationAdmin):
     """
     :class:`ProjectPost` 모델에 대한 커스텀 어드민.
-
+        
     `django-modeltranslation` 에서 제공하는 :class:TranslationAdmin` 을 상속받아
     다국어 처리를 사용자 친화적으로 변경하였습니다.
     """
     inlines = (ScheduleInline,)
-    
+
+class DebatePostAdmin(TranslationAdmin):
+    """
+    :class:`Post` 모델에 대한 커스텀 어드민.
+    `django-modeltranslation` 에서 제공하는 :class:TranslationAdmin` 을 상속받아
+    다국어 처리를 사용자 친화적으로 변경하였습니다.
+    """
+
+    pass
+
 
 class CommentAdmin(TranslationAdmin):
     """
@@ -105,6 +114,7 @@ admin.site.register(BoardTab, BoardTabAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(ProjectPost, ProjectPostAdmin)
+admin.site.register(DebatePost,DebatePostAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Banner, BannerAdmin)
 admin.site.register(BannerCarousel, BannerCarouselAdmin)

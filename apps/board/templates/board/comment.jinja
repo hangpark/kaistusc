@@ -11,11 +11,25 @@
     </form>
     {% endif %}
   </div>
-  <div class="comment-content">
   {%- if comment.is_permitted(request.user, PERM_READ) -%}
-    {{ comment.content }}
+    <div class="comment-content">
+      {{ comment.content }}
+    </div>
+    {% if comments_files %}
+    {% if comments_files[comment.id] %}
+      <div id="attached-file-comment">
+      {{ _('첨부파일') }}
+      <p></p>
+      {% for file in comments_files[comment.id] %}
+        <p><a href="{{ file.get_absolute_url() }}">{{ file }} ({{ file.get_file_size()|filesizeformat }})</a></p>
+      {% endfor %}
+      </div>
+    {% endif %}
+    {% endif %}
+
   {%- else -%}
-    {{ _("삭제되었습니다.") }}
+  <div class="comment-content">{{ _("삭제되었습니다.") }}</div>
   {%- endif -%}
-  </div>
+  
 </div>
+

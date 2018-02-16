@@ -13,7 +13,7 @@
       {% include 'board/post/post_project_timeline.jinja' %}
     {% endif %}
   {% endif %}
-  {% include 'board/post/post_vote.jinja' %}
+  {% include 'board/post/post_func.jinja' %}
 
   {% if files %}
     {% include 'board/post/post_files.jinja' %}
@@ -28,26 +28,19 @@
   {% if post.is_permitted(request.user, PERM_COMMENT) %}
   {% include 'board/post/post_comment_form.jinja' %}
   {% endif %}
-  <div id="comment-no-input" style="display: none;">{{ _('댓글 내용을 입력해주세요.') }}</div>
-
-  {% if post.is_permitted(request.user, PERM_EDIT) -%}
-  <div id="post-func">
-    <div class="pull-right">
-      <a href="{{ post.get_absolute_url() }}/edit/" class="btn btn-sm btn-default">{{ _('수정') }}</a>
-      {% if post.is_permitted(request.user, PERM_DELETE) -%}
-      <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#delete-modal">{{ _('삭제') }}</a>
-      {%- endif %}
-    </div>
-  </div>
-  {% endif %}
 </div>
 
-{% include 'board/post_list.jinja' %}
+{% if board.role == BOARD_ROLE_DEBATE %}
+  {% include 'board/debate/post_list_debate.jinja' %}
+{% else %}
+  {% include 'board/post_list.jinja' %}
+{% endif %}
 
 {% if post.is_permitted(request.user, PERM_DELETE) %}
 {% include 'board/post/post_delete_confirm.jinja' %}
 {% endif %}
 
+<input type="hidden" id="comment-no-input" value="{{ _('댓글 내용을 입력해주세요.') }}"/>
 <input type="hidden" id="deleted-comment-content" value="{{ _('삭제되었습니다.') }}"/>
 <input type="hidden" id="delete-comment-warning" value="{{ _('댓글을 정말 삭제할까요?') }}"/>
 {% endblock %}

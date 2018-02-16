@@ -1,8 +1,0 @@
-<div id="post-vote" class="text-center">
-    <form action="{{ post.get_absolute_url() }}/vote/up/" id="post-up">{% csrf_token %}
-        <button type="button" class="btn btn-default"><i class="fa fa-thumbs-o-up"></i> <span class="vote-status">{{ post.vote_up }}</span>명</button>
-    </form>
-    <form action="{{ post.get_absolute_url() }}/vote/down/" id="post-down">{% csrf_token %}
-        <button type="button" class="btn btn-default"><i class="fa fa-thumbs-o-down"></i> <span class="vote-status">{{ post.vote_down }}</span>명</button>
-    </form>
-</div>
