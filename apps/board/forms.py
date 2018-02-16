@@ -4,7 +4,7 @@
 
 from django.forms import ModelForm
 
-from .models import AttachedFile, Post, Tag, BoardTab
+from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment,ProjectPost
 
 
 class PostForm(ModelForm):
@@ -43,3 +43,50 @@ class PostForm(ModelForm):
             AttachedFile.objects.create(post=post, file=f)
 
         return post
+
+
+class CommentForm(ModelForm):
+    """
+    댓글을 등록 및 수정하는 폼.
+
+    :class:`ModelForm`으로 구현되었으며, `save` 메서드에서 첨부파일까지
+    저장합니다.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Comment
+        fields = ('content',)
+
+    def save(self, POST, FILES):
+        """
+        게시글과 그에 첨부된 파일들을 저장하는 메서드.
+        """
+        comment = super().save()
+       
+        files = FILES.getlist('files')
+        for f in files:
+            AttachedFile.objects.create(post=comment, file=f)
+    
+        return comment
+
+class DebateForm(PostForm):
+    class Meta:
+        model = DebatePost
+        fields = (
+            'title_ko', 'title_en', 'content_ko', 'content_en',
+            'is_notice', 'is_closed','tag', 'board_tab','due_date', )
+
+class ProjectPostForm(PostForm):
+    """
+    논쟁글을 등록 및 수정하는 폼.
+
+    :class:`POSTForm`으로 구현되었습니다 .
+    """
+    class Meta:
+        model = ProjectPost
+        fields = (
+            'title_ko', 'title_en', 'content_ko', 'content_en',
+            'is_notice', 'is_secret', 'board_tab', 'tag', 'is_pledge', 'schedules',)

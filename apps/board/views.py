@@ -1,18 +1,24 @@
 """
 게시판 뷰.
 """
+from datetime import date
+from datetime import datetime
+
 import os
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.contrib.auth.models import User
 
 from apps.manager import Custom404
 from apps.manager.constants import *
 from apps.manager.views import ServiceView
+from apps.board.constants import *
 
-from .forms import PostForm
-from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab
-
+from apps.board.constants import *
+from apps.board.constants_mapping import *
+from .forms import PostForm, ProjectPostForm,CommentForm, DebateForm
+from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab,DebatePost, ProjectPost
 
 class BoardView(ServiceView):
     """
@@ -45,6 +51,12 @@ class BoardView(ServiceView):
 
         context = super().get_context_data(**kwargs)
 
+        #게시판 역할 상수 저장
+        context['BOARD_ROLE_DEFAULT'] = BOARD_ROLE_DEFAULT
+        context['BOARD_ROLE_PROJECT'] = BOARD_ROLE_PROJECT
+        context['BOARD_ROLE_DEBATE'] = BOARD_ROLE_DEBATE
+
+        
         # 게시판 저장
         board = self.service.board
         board.tabs = board.boardtab_set.all()
@@ -59,16 +71,21 @@ class BoardView(ServiceView):
 
         # 태그 목록 저장
         context['tags'] = Tag.objects.filter(board=board)
-
         # 검색어 저장
         search = self.request.GET.get('s')
         context['search'] = search
+        filter_state = self.request.GET.get('filter_state')
 
         # 게시글 목록 조회
+    
+        post_model = mapping_model[board.role]
+
         if (tab):
-            post_list = Post.objects.filter(board=board, board_tab=tab)
+            post_list = post_model.objects.filter(board=board, board_tab=tab)
         else:
-            post_list = Post.objects.filter(board=board)
+            post_list = post_model.objects.filter(board=board)
+
+        context['notices'] = post_list.filter(is_notice=True)        
 
         # 태그 필터링
         tag = self.request.GET.get('tag')
@@ -79,6 +96,20 @@ class BoardView(ServiceView):
         if search:
             post_list = post_list.filter(is_deleted=False).filter(
                 Q(title__icontains=search) | Q(content__icontains=search))
+        
+        if filter_state:
+            superUser = User.objects.all().filter(is_superuser = True)
+            today = datetime.combine(date.today(),datetime.min.time())
+            if filter_state == 'finish':
+                post_list = post_list.filter(is_deleted=False).filter(Q(is_closed = True)|Q(due_date__lt = today))
+            elif filter_state == 'wait':
+                post_list = post_list.filter(is_deleted=False ,is_closed = False, due_date__gte = today, vote_up__lte = 2).exclude(author__in = superUser)
+            elif filter_state == 'ongoing':
+                post_list = post_list.filter(is_deleted=False,is_closed = False, due_date__gte = today).filter(Q(vote_up__gte = 3)|Q(author__in = superUser))
+        else:
+            filter_state = 'all'
+         
+        context['filter_state'] = filter_state
 
         # 페이지네이션 생성
         paginator = Paginator(post_list, 15)
@@ -95,8 +126,8 @@ class BoardView(ServiceView):
 
         # 게시글 목록 저장
         context['posts'] = posts
-        context['notices'] = Post.objects.filter(board=board, is_notice=True)
-
+        
+        
         return context
 
     def _get_pagination_list(self, page, num_pages):
@@ -113,6 +144,7 @@ class BoardView(ServiceView):
             return BoardTab.objects.filter(url=url).first()
         return BoardTab.objects.filter(parent_board=self.service.board).first()
 
+
 class PostView(BoardView):
     """
     특정 게시글 조회 뷰.
@@ -120,10 +152,9 @@ class PostView(BoardView):
     :class:`BoardView` 를 상속받아 게시판 정보를 자동 저장합니다. 기본
     필요권한이 읽기권한으로 설정되어 있습니다.
     """
-
-    template_name = 'board/post.jinja'
     required_permission = PERM_READ
-
+    template_name = 'board/post/post.jinja'
+    
     def has_permission(self, request, *args, **kwargs):
         """
         게시판에 대한 접근권한과 게시글에 대한 필요권한을 체크하는 메서드.
@@ -136,11 +167,13 @@ class PostView(BoardView):
         if not super().has_permission(request, *args, **kwargs):
             return False
         self.required_permission = required_permission
-        post = Post.objects.filter(
-            board=self.service.board, id=kwargs['post']).first()
-
+        
+        post_model = mapping_model[self.service.board.role]
+        post=post_model.objects.filter(board=self.service.board, id=kwargs['post']).first()
+        
         if not post:
             raise Http404
+        
         self.post_ = post
         return post.is_permitted(request.user, self.required_permission)
 
@@ -158,17 +191,21 @@ class PostView(BoardView):
         게시글과 관련 정보를 컨텍스트에 저장하는 메서드.
         """
         context = super().get_context_data(**kwargs)
-
         # 게시글 저장
         context['post'] = self.post_
-
         # 게시글에 달린 댓글 목록 저장
         context['comments'] = self.post_.comment_set.all()
+        comments_files = {}
+        for comment in context['comments']:
+            if(comment.attached_files()):
+                comments_files[comment.id] = comment.attached_files()
+        context['comments_files'] =comments_files
 
         # 게시글에 첨부된 파일 목록 저장
         context['files'] = self.post_.attachedfile_set.all()
 
         return context
+
 
 
 class PostWriteView(BoardView):
@@ -178,7 +215,7 @@ class PostWriteView(BoardView):
     기본 필요권한이 쓰기권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post_form.jinja'
+    template_name = 'board/post_form/post_form.jinja'
     required_permission = PERM_WRITE
 
     def get_context_data(self, **kwargs):
@@ -186,7 +223,9 @@ class PostWriteView(BoardView):
         게시글 작성 폼을 컨텍스트에 추가하는 메서드.
         """
         context = super().get_context_data(**kwargs)
-        context['form'] = PostForm(self.service.board)
+        post_form = mapping_form[self.service.board.role]
+        context['form'] =post_form(self.service.board)
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -198,14 +237,22 @@ class PostWriteView(BoardView):
         재전달하여 수정을 요구합니다.
         """
         user = request.user if request.user.is_authenticated() else None
-        post = Post(author=user, board=self.service.board)
-        form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
+
+        board_role = self.service.board.role
+
+        post_model = mapping_model[board_role]
+        post_form = mapping_form[board_role]
+        
+        post = post_model(author=user, board=self.service.board)
+        form = post_form(self.service.board, request.POST, request.FILES, instance=post)
+
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())
         context = self.get_context_data(**kwargs)
         context['form'] = form
         return self.render_to_response(context)
+
 
 
 class PostEditView(PostView):
@@ -215,7 +262,7 @@ class PostEditView(PostView):
     기본 필요권한이 수정권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post_form.jinja'
+    template_name = 'board/post_form/post_form.jinja'
     required_permission = PERM_EDIT
 
     def get_context_data(self, **kwargs):
@@ -224,7 +271,9 @@ class PostEditView(PostView):
         """
         context = super().get_context_data(**kwargs)
         post = self.post_
-        context['form'] = PostForm(self.service.board, instance=post)
+        post_form = mapping_form[self.service.board.role]
+        context['form'] =post_form(self.service.board, instance=post)
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -236,7 +285,10 @@ class PostEditView(PostView):
         재전달하여 수정을 요구합니다.
         """
         post = self.post_
-        form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
+        post_form = mapping_form[self.service.board.role]
+        
+        form = post_form(self.service.board, request.POST, request.FILES, instance=post)
+        
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(post.get_absolute_url())
@@ -267,6 +319,7 @@ class PostDeleteView(PostView):
         return HttpResponseRedirect(post.board.get_absolute_url())
 
 
+
 class CommentWriteView(PostView):
     """
     댓글 등록 뷰.
@@ -277,7 +330,7 @@ class CommentWriteView(PostView):
 
     template_name = 'board/comment.jinja'
     required_permission = PERM_COMMENT
-
+   
     def post(self, request, *args, **kwargs):
         """
         사용자로부터 제출된 댓글을 작성하는 메서드.
@@ -290,7 +343,55 @@ class CommentWriteView(PostView):
             content=request.POST.get('content'),
             parent_post=self.post_)
         context = {'comment': comment}
+
         return self.render_to_response(self.get_permission_context(context))
+
+
+class CommentWriteWithFileView(PostView):
+    """
+    첨부 가능한 댓글 등록 뷰.
+
+    기본 필요권한이 댓글권한으로 설정되어 있습니다. AJAX 통신에 응답하는
+    뷰입니다.
+    """
+    required_permission = PERM_COMMENT
+   
+    def get_context_data(self, **kwargs):
+        """
+        댓글 작성 폼을 컨텍스트에 추가하는 메서드.
+        """
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentForm()
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+
+        """
+        댓글 등록 요청에 따라 게시글을 저장하는 메서드.
+
+        사용자로부터 제출된 댓글 폼을 평가하여 통과될 시 게시글과 첨부파일을
+        저장합니다. 올바르지 않은 댓글이 제출된 경우 오류정보를 포함한 폼을
+        재전달하여 수정을 요구합니다.
+
+        작성이 정상적으로 완료되면 댓글 HTML 소스를 사용자에게 전달합니다.
+        """
+
+        user = request.user if request.user.is_authenticated() else None
+        
+        comment = Comment(
+            author=user,
+            parent_post=self.post_)
+        form = CommentForm(request.POST, request.FILES, instance=comment)
+
+        if form.is_valid():
+            form.save(request.POST, request.FILES)
+            return HttpResponseRedirect(self.post_.get_absolute_url())
+
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(self.get_permission_context(context))
+
 
 
 class CommentDeleteView(PostView):

@@ -3,6 +3,8 @@
 """
 
 import os
+from datetime import date
+from datetime import datetime
 
 from django.db import models
 from django.db.models.signals import post_delete
@@ -30,6 +32,7 @@ class Board(Service):
     BOARD_ROLE_CHOICES = (
         (BOARD_ROLE_DEFAULT, _('기본')),
         (BOARD_ROLE_PROJECT, _('사업')),
+        (BOARD_ROLE_DEBATE, _('논의')),
     )
 
     role = models.IntegerField(
@@ -42,6 +45,9 @@ class Board(Service):
 
     def __str__(self):
         return self.name
+
+    def check_role(self, role):
+        return self.role == role
 
 class BoardTab(BaseService):
     """
@@ -71,7 +77,7 @@ class BoardTab(BaseService):
         return self.parent_board.name + "/" + self.name
 
     def get_absolute_url(self):
-        url = '/' + os.path.join(self.parent_board.url.strip('/'), self.url.strip('/'))
+        url = '/' + self.parent_board.url.strip('/')+'/'+ self.url.strip('/')
         return url
 
 class PostActivity(models.Model):
@@ -251,6 +257,7 @@ class BasePost(models.Model):
     def get_activity_count(self, activity):
         """
         특정 활동을 진행한 사용자 총수를 반환하는 메서드.
+
         """
         return PostActivity.objects.filter(
             post=self, activity=activity).count()
@@ -279,6 +286,13 @@ class BasePost(models.Model):
         포스트 조회 활동을 등록하는 메서드.
         """
         self.assign_activity(request, ACTIVITY_VIEW)
+
+    def attached_files(self):
+        """
+        포스트에 첨부된 첨부파일을 리턴하는 메서드.
+        """
+        return AttachedFile.objects.filter(post=self)
+
 
 
 class Post(BasePost):
@@ -316,7 +330,8 @@ class Post(BasePost):
         return self.title
 
     def get_absolute_url(self):
-        return os.path.join(self.board.get_absolute_url(), str(self.id))
+        # return os.path.join(self.board.get_absolute_url(), str(self.id))
+        return self.board.get_absolute_url()+'/'+str(self.id)
 
     def get_first_tab(self):
         return self.board_tab.all().first()
@@ -516,26 +531,27 @@ class Product(models.Model):
     def __str__(self):
         return self.board_tab.name + "에서 파는 " + self.title
 
+class Schedule(models.Model):
+    title = models.CharField(
+        _("제목"),
+        max_length=128)
+
+    date = models.DateTimeField(
+        _("날짜"))
     
 class ProjectPost(Post):
-    
-    PROJECT_STATUS_CHOICES = (
-        (PROJECT_STATUS_ALWAYS, _('항상')),
-        (PROJECT_STATUS_DONE, _('완료')),
-        (PROJECT_STATUS_QUIT, _('파기')),
-        (PROJECT_STATUS_ONGOING, _('진행중')),
-    )
-    
-    status = models.IntegerField(
-        _("프로젝트 진행 상태"),
-        choices=PROJECT_STATUS_CHOICES, default=PROJECT_STATUS_ALWAYS)
-    
+    """
+    사업 게시글 구현한 모델.
+    사업 진행사항은 Post 모델의 tag로 대체한다
+    """
+
     is_pledge = models.BooleanField(
-        _("공약 여부"),
+        _("공약"),
         default=False)
+
     
-    alteration = models.ForeignKey(
-        BasePost,
+    schedules = models.ForeignKey(
+        Schedule,
         verbose_name=_("프로젝트 일정"))
     
     def get_bureau(self):
@@ -543,17 +559,29 @@ class ProjectPost(Post):
 
 
 class DebatePost(Post):
-    
+
+    class Meta:
+        verbose_name = _('논의')
+        verbose_name_plural = _('논의(들)')
+    # is_cloased 는 임의로 닫을 수 있는 boolean값 
     is_closed = models.BooleanField(
         _("논쟁 종결 여부"),
         default=False)
-    
     due_date = models.DateTimeField(
         _("종결 예정일"),
         null=True, blank=True)
-    
+
+    def is_over_due(self):
+        d = date.today()
+        return (datetime.combine(d,datetime.min.time()) > self.due_date)
+
     def is_commentable(self):
-        return (self.author.is_superuser or self.vote_up > 2)
+        check_author = (self.author and self.author.is_superuser)
+        return ((check_author or self.vote_up > 2) and  (not self.is_closed) and (not self.is_over_due()))
+
+    def get_absolute_url(self):
+        # return os.path.join(self.board.get_absolute_url(), str(self.id))
+        return self.board.get_absolute_url()+'/'+str(self.id)
     
     
 
@@ -574,6 +602,7 @@ class WebDoc(models.Model):
         verbose_name = _('웹문서 링크')
         verbose_name_plural = _('웹문서 링크(들)')
 
+
 def get_upload_path(instance, filename):
     """
     첨부파일이 업로드 되는 경로를 반환하는 함수.
@@ -585,7 +614,7 @@ def get_upload_path(instance, filename):
 
 class AttachedFile(models.Model):
     """
-    포스트 첨부파일을 구현한 모델.
+    포스트, 댓글 첨부파일을 구현한 모델.
     """
 
     post = models.ForeignKey(

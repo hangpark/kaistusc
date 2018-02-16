@@ -38,6 +38,11 @@ CSRF_TRUSTED_ORIGINS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr'
 # Application definition
 
 INSTALLED_APPS = [
+    'apps.manager',
+    'apps.ksso',
+    'apps.board',
+    'apps.rule',
+    'apps.ot',
     'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,11 +53,7 @@ INSTALLED_APPS = [
     'django_jinja',
     'rest_framework',
     'rest_framework.authtoken',
-    'apps.manager',
-    'apps.ksso',
-    'apps.board',
-    'apps.rule',
-    'apps.ot',
+    
 ]
 
 MIDDLEWARE = [

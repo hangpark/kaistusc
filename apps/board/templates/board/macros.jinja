@@ -15,3 +15,13 @@
   {{ caller(field) }}
 </div>
 {%- endmacro %}
+
+{% macro debate_state(post) %}
+{% if post.is_commentable() %}
+<span class="debate-state debate-ongoing">{{ _('논의중') }}</span>
+{% elif (post.is_closed or post.is_over_due()) %}
+<span class='debate-state debate-finished'>{{ _('종료') }}</span>
+{% else %}
+<span class='debate-state debate-waiting'>{{ _('청원중') }}</span>
+{%- endif -%}
+{% endmacro %}
