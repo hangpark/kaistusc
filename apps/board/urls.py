@@ -6,7 +6,7 @@ from django.conf.urls import url
 
 from apps.board.views import (BoardView, CommentDeleteView, CommentWriteView,
                               PostDeleteView, PostEditView, PostView,
-                              PostVoteView, PostWriteView, PdfLatestView)
+                              PostVoteView, PostWriteView)
 
 url_tab = r'^(?:(?P<tab>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
 

@@ -43,6 +43,9 @@ class Board(Service):
 
     def __str__(self):
         return self.name
+    
+    def check_role(self, role):
+        return self.role == role
 
 class BoardTab(BaseService):
     """

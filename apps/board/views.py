@@ -126,7 +126,7 @@ class PostView(BoardView):
     필요권한이 읽기권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post.jinja'
+    template_name = 'board/post/post.jinja'
     required_permission = PERM_READ
 
     def has_permission(self, request, *args, **kwargs):
@@ -176,7 +176,7 @@ class PostView(BoardView):
         return context
 
 
-class PdfLatestView(BoardView):
+class PdfPostView(BoardView):
     """
     최신 pdf 조회 뷰.
 
@@ -184,7 +184,7 @@ class PdfLatestView(BoardView):
     필요권한이 읽기권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/pdf.jinja'
+    template_name = 'board/post/pdf_post.jinja'
     required_permission = PERM_READ
 
     def has_permission(self, request, *args, **kwargs):
@@ -243,7 +243,7 @@ class PostWriteView(BoardView):
     기본 필요권한이 쓰기권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post_form.jinja'
+    template_name = 'board/post_form/post_form.jinja'
     required_permission = PERM_WRITE
 
     def get_context_data(self, **kwargs):
@@ -267,7 +267,7 @@ class PostWriteView(BoardView):
         form = PostForm(self.service.board, request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save(request.POST, request.FILES)
-            if self.service.board.role == BOARD_ROLE_PLANBOOK:
+            if self.service.board.check_role(BOARD_ROLE_PLANBOOK):
                 return HttpResponseRedirect(self.service.get_absolute_url())
             return HttpResponseRedirect(post.get_absolute_url())
         context = self.get_context_data(**kwargs)
@@ -282,7 +282,7 @@ class PostEditView(PostView):
     기본 필요권한이 수정권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post_form.jinja'
+    template_name = 'board/post_form/post_form.jinja'
     required_permission = PERM_EDIT
 
     def get_context_data(self, **kwargs):

@@ -47,7 +47,7 @@
   {% endfor %}
     <div id="attach-file-wrap">
       <div class="attach-file">
-        {% if board.role == BOARD_ROLE_PLANBOOK %}
+        {% if board.check_role(BOARD_ROLE_PLANBOOK) %}
         <input type="file" name="files" required>
         {% else %}
         <input type="file" name="files">
