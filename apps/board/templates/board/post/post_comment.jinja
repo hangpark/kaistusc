@@ -6,7 +6,7 @@
 <div id="deleted-comment-content" style="display: none;">{{ _('삭제되었습니다.') }}</div>
 <div id="delete-comment-warning" style="display: none;">{{ _('댓글을 정말 삭제할까요?') }}</div>
 
-{% if board.role == BOARD_ROLE_DEBATE %}
+{% if board.role == 'DEBATE' %}
 	{% if post.is_permitted(request.user, PERM_COMMENT) and post.is_commentable() %}
 	{% include 'board/comment_form.jinja' %}
 	{% endif %}

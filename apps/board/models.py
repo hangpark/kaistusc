@@ -35,8 +35,9 @@ class Board(Service):
         (BOARD_ROLE_DEBATE, _('논의')),
     )
 
-    role = models.IntegerField(
+    role = models.CharField(
         _("보드 역할"),
+        max_length=32,
         choices=BOARD_ROLE_CHOICES, default=BOARD_ROLE_DEFAULT)
 
     class Meta:
@@ -543,8 +544,8 @@ class ProjectPost(Post):
 
     
     class Meta:
-        verbose_name = _('사업 포스트')
-        verbose_name_plural = _('사업 포스트(들)')
+        verbose_name = _('사업')
+        verbose_name_plural = _('사업(들)')
 
     def get_bureau(self):
         return self.board_tab.name

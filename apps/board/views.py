@@ -16,7 +16,7 @@ from apps.manager.views import ServiceView
 from apps.board.constants import *
 
 from apps.board.constants_mapping import *
-from .forms import PostForm, ProjectPostForm,CommentForm, DebateForm
+from .forms import PostForm, ProjectPostForm,CommentForm, DebatePostForm
 from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost
 
 class BoardView(ServiceView):
@@ -50,11 +50,6 @@ class BoardView(ServiceView):
 
         context = super().get_context_data(**kwargs)
 
-        #게시판 역할 상수 저장
-        context['BOARD_ROLE_DEFAULT'] = BOARD_ROLE_DEFAULT
-        context['BOARD_ROLE_PROJECT'] = BOARD_ROLE_PROJECT
-        context['BOARD_ROLE_DEBATE'] = BOARD_ROLE_DEBATE
-
         # 게시판 저장
         board = self.service.board
         board.tabs = board.boardtab_set.all()
@@ -75,14 +70,11 @@ class BoardView(ServiceView):
         filter_state = self.request.GET.get('filter_state')
 
         # 포스트 모델 설정
-        if (board.role ==BOARD_ROLE_PROJECT):
-            post_model = ProjectPost
-        else:
-            post_model = Post
+        post_model = MAP_MODEL_POST[board.role]
     
         # 게시글 목록 조회
     
-        post_model = mapping_model[board.role]
+        post_model = MAP_MODEL_POST[board.role]
 
         if (tab):
             post_list = post_model.objects.filter(board=board, board_tab=tab)
@@ -172,7 +164,7 @@ class PostView(BoardView):
             return False
         self.required_permission = required_permission
         
-        post_model = mapping_model[self.service.board.role]
+        post_model = MAP_MODEL_POST[self.service.board.role]
         post = post_model.objects.filter(board=self.service.board, id=kwargs['post']).first()
         
         if not post:
@@ -209,7 +201,7 @@ class PostView(BoardView):
         context['files'] = self.post_.attachedfile_set.all()
 
         # 게시글에 저장된 스케쥴 저장
-        if self.service.board.role == BOARD_ROLE_PROJECT:
+        if self.service.board.check_role(BOARD_ROLE_PROJECT):
             context['schedules'] = self.post_.schedule_set.all()
 
         return context
@@ -230,7 +222,7 @@ class PostWriteView(BoardView):
         게시글 작성 폼을 컨텍스트에 추가하는 메서드.
         """
         context = super().get_context_data(**kwargs)
-        post_form = mapping_form[self.service.board.role]
+        post_form = MAP_FORM_POST[self.service.board.role]
         context['form'] =post_form(self.service.board)
 
         return context
@@ -247,8 +239,8 @@ class PostWriteView(BoardView):
 
         board_role = self.service.board.role
 
-        post_model = mapping_model[board_role]
-        post_form = mapping_form[board_role]
+        post_model = MAP_MODEL_POST[board_role]
+        post_form = MAP_FORM_POST[board_role]
         
         post = post_model(author=user, board=self.service.board)
         form = post_form(self.service.board, request.POST, request.FILES, instance=post)
@@ -277,7 +269,7 @@ class PostEditView(PostView):
         """
         context = super().get_context_data(**kwargs)
         post = self.post_
-        post_form = mapping_form[self.service.board.role]
+        post_form = MAP_FORM_POST[self.service.board.role]
         context['form'] = post_form(self.service.board, instance=post)
 
         return context
@@ -292,7 +284,7 @@ class PostEditView(PostView):
         """
         post = self.post_
 
-        post_form = mapping_form[self.service.board.role]
+        post_form = MAP_FORM_POST[self.service.board.role]
         
         form = post_form(self.service.board, request.POST, request.FILES, instance=post)
 

@@ -21,7 +21,7 @@
         {% endfor %}
         </select>
     {% endcall %}
-    {% if form.__class__.__name__ == 'DebateForm' %}
+    {% if form.__class__.__name__ == 'DebatePostForm' %}
     {{_('종결 예정일')}} :&nbsp;
     <div class="form-group">
         <div class='input-group date' id='debate_due_date_datetimepicker'>
