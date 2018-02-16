@@ -32,6 +32,7 @@ class Board(Service):
     BOARD_ROLE_CHOICES = (
         (BOARD_ROLE_DEFAULT, _('기본')),
         (BOARD_ROLE_PROJECT, _('사업')),
+        (BOARD_ROLE_PLANBOOK, _('정책자료집')),
         (BOARD_ROLE_DEBATE, _('논의')),
     )
 
@@ -46,6 +47,9 @@ class Board(Service):
 
     def __str__(self):
         return self.name
+    
+    def check_role(self, role):
+        return self.role == role
 
     def check_role(self, role):
         return self.role == role
@@ -212,9 +216,12 @@ class BasePost(models.Model):
         _("비추천수"),
         default=0)
 
+    def __str__(self):
+        return self.content
+
     class Meta:
         ordering = ['-date']
-
+    
     def is_owned_by(self, user):
         """
         주어진 사용자의 포스트인지 확인하는 메서드.

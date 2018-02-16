@@ -3,7 +3,7 @@
 {% from 'board/macros.jinja' import form_group %}
 
 {% block content %}
-<form id="post-form" method="post" enctype="multipart/form-data" novalidate >
+<form id="post-form" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {% include 'board/post_form/post_form_text_contents.jinja' %}
   {% include 'board/post_form/post_form_files.jinja' %}

@@ -12,15 +12,19 @@
     "autoprefixer": "^6.6.0",
     "bower": "^1.8.0",
     "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
     "gulp-livereload": "^3.8.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-postcss": "^6.2.0",
+    "gulp-rev": "^8.1.1",
     "gulp-sass": "^3.0.0",
     "gulp-uglify": "^2.1.2",
     "gulp-watch": "^5.0.0",
+    "gulp-rev-collector": "^1.2.4",
     "merge-stream": "^1.0.1"
   },
   "dependencies": {
+    "pdfjs-dist": "^2.0.357"
   }
 }
