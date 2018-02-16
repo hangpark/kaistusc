@@ -3,8 +3,8 @@
 """
 
 import os
-from datetime import date
 from datetime import datetime
+from django.utils import timezone
 
 from django.db import models
 from django.db.models.signals import post_delete
@@ -563,8 +563,7 @@ class DebatePost(Post):
         null=True, blank=True)
 
     def is_over_due(self):
-        d = date.today()
-        return (datetime.combine(d,datetime.min.time()) > self.due_date)
+        return self.due_date < timezone.now()
 
     def is_commentable(self):
         check_author = (self.author and self.author.is_superuser)

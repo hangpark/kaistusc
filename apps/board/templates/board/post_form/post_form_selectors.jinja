@@ -22,9 +22,15 @@
         </select>
     {% endcall %}
     {% if form.__class__.__name__ == 'DebateForm' %}
-    {% call(field) form_group(form.due_date) %}
-      {{ field.label }} 
-      <input type="text" id="{{ field.id_for_label }}" name="{{ field.html_name }}" {% if field.value() %} value = {{field.value()}} {% else %} value = ''{% endif %}  required> 
-    {% endcall %}
+    {{_('종결 예정일')}} :&nbsp;
+    <div class="form-group">
+        <div class='input-group date' id='debate_due_date_datetimepicker'>
+            <input type='text' class="form-control" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <input type='hidden' id="id_due_date" name="due_date"/>
+    </div>
     {% endif %}
 </div>

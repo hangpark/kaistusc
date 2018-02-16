@@ -77,7 +77,12 @@ class DebateForm(PostForm):
         model = DebatePost
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
-            'is_notice', 'is_closed','tag', 'board_tab','due_date', )
+            'is_notice', 'is_closed','tag', 'board_tab', )
+    def save(self, POST, FILES):
+        post = super().save(POST, FILES)
+        post.due_date = POST['due_date']
+        post.save()
+        return post
 
 class ProjectPostForm(PostForm):
     """

@@ -14,7 +14,6 @@ var dist = './static/dist';
 var bower = './bower_components';
 
 var jquery = bower + '/jquery/dist';
-var jquery_ui = bower + '/jquery-ui';
 var bootstrap = bower + '/bootstrap-sass/assets';
 var bootstrapSelect = bower + '/bootstrap-select/dist';
 var bootstrapDatetimepicker = bower + '/eonasdan-bootstrap-datetimepicker/build';
@@ -28,7 +27,6 @@ var template = {
 var js = {
 	'in': [
 		jquery + '/jquery.js',
-		jquery_ui + '/jquery-ui.min.js',
 		bootstrap + '/javascripts/bootstrap.js',
 		bootstrapSelect + '/js/bootstrap-select.js',
 		moment + '/min/moment.min.js',
@@ -50,7 +48,6 @@ var css = {
 	'in': {
 		'scss': src + '/stylesheets/*.scss',
         'main': src + '/stylesheets/main.scss',
-        'jquery_ui': jquery_ui + '/themes/base/jquery-ui.css', 
         'css': [
 			fontawesome + '/css/font-awesome.css',
 			bootstrapSelect + '/css/bootstrap-select.css',
@@ -62,13 +59,6 @@ var css = {
 		errLogToConsole: true,
 		includePaths: [bootstrap + '/stylesheets']
 	}
-};
-
-var images = {
-	'in':[
-		jquery_ui+'/themes/base/images/*',
-	],
-	'out':dist+'/css/images/'
 };
 
 // process JS files and return the stream.
@@ -91,8 +81,7 @@ gulp.task('css', function() {
         .pipe(sass(css.opts));
 
     var css_stream = gulp.src(css.in.css);
- 	var css_stream2 = gulp.src(css.in.jquery_ui);
-	return merge(scss_stream, css_stream,css_stream2)
+	return merge(scss_stream, css_stream)
         .pipe(concat('main.css'))
 		.pipe(postcss([ autoprefixer() ]))
 		.pipe(minifycss())
@@ -100,12 +89,7 @@ gulp.task('css', function() {
 		.pipe(livereload());
 });
 
-gulp.task('images', function() {
-    return gulp.src(images.in)
-           .pipe(gulp.dest(images.out));
-});
-
-gulp.task('default', ['js', 'fonts', 'css','images']);
+gulp.task('default', ['js', 'fonts', 'css']);
 
 gulp.task('watch', ['default'], function() {
 	livereload.listen();
