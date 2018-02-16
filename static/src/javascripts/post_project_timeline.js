@@ -48,10 +48,10 @@ function postProjectTimelineInitialize() {
         return;
     }
     for(var i=0; i<dates.length - 1; i++) {
-        var before = dates[i]
+        var prev = dates[i]
         var next = dates[i+1]
         if(now < next) {
-            var shiftingRatio = (now - before) / (next - now);
+            var shiftingRatio = (now - prev) / (next - prev);
             _slidePostTimeline(-(20 * (i - 2 + shiftingRatio)));
             return;
         }
