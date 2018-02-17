@@ -32,7 +32,7 @@
         {% if item.services %}
           <ul class="gnb-svc-col list-group">
           {% for item_service in item.services %} 
-            <a href="{{ item_service.get_absolute_url() }}" class="{% if service == item_service %}text_selected{% endif %} effect-underline list-group-item">{{ item_service.name }}</a>
+            <a href="{{ item_service.get_absolute_url() }}" class="{% if service == item_service %}text-selected{% endif %} effect-underline list-group-item">{{ item_service.name }}</a>
           {% endfor %}
         {% endif %}
         </ul>

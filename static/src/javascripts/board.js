@@ -107,7 +107,7 @@ $().ready(function() {
             }
         }
         if (!is_selected) {
-            val = $('#current_tab')[0].value || e.currentTarget.options[0].value;
+            val = $('#current-tab')[0].value || e.currentTarget.options[0].value;
             $('#id_board_tab option[value=' + val + ']').prop("selected", true);
         }
         $('#id_board_tab').selectpicker('refresh')

@@ -8,7 +8,7 @@
   {% include 'board/post/post_header.jinja' %}
   <div id="post-content">{{ post.content }}</div>
   
-  {% if post.board.check_role('PROJECT') %}
+  {% if post.board.check_role(BOARD_ROLE['PROJECT']) %}
     {% if post.schedule_set.all() %}
       {% include 'board/post/post_project_timeline.jinja' %}
     {% endif %}
@@ -30,7 +30,7 @@
   {% endif %}
 </div>
 
-{% if board.role == 'DEBATE' %}
+{% if board.check_role(BOARD_ROLE['DEBATE']) %}
   {% include 'board/debate/post_list_debate.jinja' %}
 {% else %}
   {% include 'board/post_list.jinja' %}

@@ -1,9 +1,9 @@
-$project_timeline_point-radius: 9px;
-$project_timeline_point-interval: 20%;
+$project-timeline-point-radius: 9px;
+$project-timeline-point-interval: 20%;
 
 
 
-@mixin project_timeline_top() {
+@mixin project-timeline-top() {
     position: absolute;
     text-align: center;
     bottom: 100%;
@@ -11,7 +11,7 @@ $project_timeline_point-interval: 20%;
     width: 100%;
 }
 
-@mixin project_timeline_bottom() {
+@mixin project-timeline-bottom() {
     position: absolute;
     text-align: center;
     top: 100%;
@@ -19,7 +19,7 @@ $project_timeline_point-interval: 20%;
     width: 100%;
 }
 
-@mixin project_timeline_line() {
+@mixin project-timeline-line() {
     &:before {
         content:"";
         width: 100%;
@@ -47,7 +47,7 @@ $project_timeline_point-interval: 20%;
     }
 }
 
-#project_timeline {
+#project-timeline {
     margin-top: 30px;
     width: 100%;
     height: 140px;
@@ -55,9 +55,9 @@ $project_timeline_point-interval: 20%;
     display: flex;
     align-items: center;
     position: relative;
-    @include project_timeline_line();
+    @include project-timeline-line();
 
-    .project_timeline_nav_button {
+    .project-timeline-nav-button {
         position: absolute;
         align-self: baseline;
         z-index: 2;
@@ -78,7 +78,7 @@ $project_timeline_point-interval: 20%;
     }
 }
 
-#project_timeline_slider {
+#project-timeline-slider {
     width: 100%;
     height: 100%;
     display: flex;
@@ -86,7 +86,7 @@ $project_timeline_point-interval: 20%;
     position: absolute;
 }
 
-#project_timeline_points {
+#project-timeline-points {
     width: 100%;
     height: 100%;
     display: flex;
@@ -94,7 +94,7 @@ $project_timeline_point-interval: 20%;
     position: relative;
 }  
 
-#project_timeline_current {
+#project-timeline-current {
     position: absolute;
     z-index: 2;
     left: calc(50% - 10px);
@@ -107,49 +107,49 @@ $project_timeline_point-interval: 20%;
     }
 }
 
-.project_timeline_point {
+.project-timeline-point {
     z-index: 1;
     flex-shrink: 0;
-    width: $project_timeline_point-interval;
+    width: $project-timeline-point-interval;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    @include project_timeline_line();
+    @include project-timeline-line();
     &:after {
         content:"";
-        width: $project_timeline_point-radius*2;
-        height: $project_timeline_point-radius*2;
-        border-radius: $project_timeline_point-radius;
+        width: $project-timeline-point-radius*2;
+        height: $project-timeline-point-radius*2;
+        border-radius: $project-timeline-point-radius;
         border: 2px solid $brand-primary;
         background-color: white;
         position: absolute;
     }
-    .project_timeline_date {
+    .project-timeline-date {
         font-size: 18px;
         font-weight: bold;
         color: $brand-primary;
         line-height: 20px;
     }
-    .project_timeline_title {
+    .project-timeline-title {
         font-size: 16px;
         line-height: 20px;
         color: $gray-2;
     }
     &:nth-child(odd) {
-        .project_timeline_date {
-            @include project_timeline_bottom();
+        .project-timeline-date {
+            @include project-timeline-bottom();
         }
-        .project_timeline_title {
-            @include project_timeline_top();
+        .project-timeline-title {
+            @include project-timeline-top();
         }
     }
     &:nth-child(even) {
-        .project_timeline_date {
-            @include project_timeline_top();
+        .project-timeline-date {
+            @include project-timeline-top();
         }
-        .project_timeline_title {
-            @include project_timeline_bottom();
+        .project-timeline-title {
+            @include project-timeline-bottom();
         }
     }
 }

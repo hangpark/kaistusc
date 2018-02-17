@@ -51,6 +51,9 @@ class BoardView(ServiceView):
 
         context = super().get_context_data(**kwargs)
 
+        # 상수 저장
+        context['BOARD_ROLE'] = BOARD_ROLE
+        
         # 게시판 저장
         board = self.service.board
         board.tabs = board.boardtab_set.all()
@@ -74,9 +77,6 @@ class BoardView(ServiceView):
         post_model = MAP_MODEL_POST[board.role]
     
         # 게시글 목록 조회
-    
-        post_model = MAP_MODEL_POST[board.role]
-
         if (tab):
             post_list = post_model.objects.filter(board=board, board_tab=tab)
         else:
@@ -202,7 +202,7 @@ class PostView(BoardView):
         context['files'] = self.post_.attachedfile_set.all()
 
         # 게시글에 저장된 스케쥴 저장
-        if self.service.board.check_role(BOARD_ROLE_PROJECT):
+        if self.service.board.check_role(BOARD_ROLE['PROJECT']):
             context['schedules'] = self.post_.schedule_set.all()
 
         return context
@@ -307,7 +307,7 @@ class PostWriteView(BoardView):
 
         if form.is_valid():
             form.save(request.POST, request.FILES)
-            if self.service.board.check_role(BOARD_ROLE_PLANBOOK):
+            if self.service.board.check_role(BOARD_ROLE['PLANBOOK']):
                 return HttpResponseRedirect(self.service.get_absolute_url())
             return HttpResponseRedirect(post.get_absolute_url())
         context = self.get_context_data(**kwargs)

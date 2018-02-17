@@ -114,19 +114,20 @@ class ProjectPostForm(PostForm):
         prev_schedules = list(filter(lambda schedule: 'id' in schedule, schedules))
         original_schedules = post.schedule_set.all()
         for schedule in original_schedules:
-            target_input_schedule = None
-            for prev_schedule in prev_schedules: # schedule에 해당하는 input data search
-                if prev_schedule['id'] == schedule.id:
-                    target_input_schedule = prev_schedule
-                    break
+            target_input_schedule = next((s for s in prev_schedules if s['id'] == schedule.id), None)
             if not target_input_schedule: # 기존 스케줄 삭제
                 schedule.delete()
             else: # 기존 스케줄 날짜 수정
-                schedule.date = parse_date_string(prev_schedule['date'])
+                schedule.date = parse_date_string(target_input_schedule['date'])
                 schedule.save()
 
-        for schedule in filter(lambda schedule: schedule not in prev_schedules, schedules): # 새 스캐줄 생성
-            Schedule.objects.create(post=post, title_ko=schedule['title_ko'], title_en=schedule['title_en'], date=parse_date_string(schedule['date']))
+        for schedule in filter(lambda s: s not in prev_schedules, schedules): # 새 스캐줄 생성
+            Schedule.objects.create(
+                post=post,
+                title_ko=schedule['title_ko'],
+                title_en=schedule['title_en'],
+                date=parse_date_string(schedule['date']),
+            )
 
         return post
 

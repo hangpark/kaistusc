@@ -30,16 +30,16 @@ class Board(Service):
     objects = ServiceManager()
 
     BOARD_ROLE_CHOICES = (
-        (BOARD_ROLE_DEFAULT, _('기본')),
-        (BOARD_ROLE_PROJECT, _('사업')),
-        (BOARD_ROLE_PLANBOOK, _('정책자료집')),
-        (BOARD_ROLE_DEBATE, _('논의')),
+        (BOARD_ROLE['DEFAULT'], _('기본')),
+        (BOARD_ROLE['PROJECT'], _('사업')),
+        (BOARD_ROLE['PLANBOOK'], _('정책자료집')),
+        (BOARD_ROLE['DEBATE'], _('논의')),
     )
 
     role = models.CharField(
         _("보드 역할"),
         max_length=32,
-        choices=BOARD_ROLE_CHOICES, default=BOARD_ROLE_DEFAULT)
+        choices=BOARD_ROLE_CHOICES, default=BOARD_ROLE['DEFAULT'])
 
     class Meta:
         verbose_name = _('게시판')
@@ -423,7 +423,7 @@ class BannerCarousel(models.Model):
         verbose_name=_("배너"))
 
     BANNER_CAROUSEL_SECTOR_CHOICES = (
-       (BANNER_CAROUSEL_SECTOR_MAIN, _('메인페이지')),
+       (BANNER_CAROUSEL_SECTOR['MAIN'], _('메인페이지')),
     )
 
     sector = models.IntegerField(

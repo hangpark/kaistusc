@@ -1,4 +1,4 @@
-{% if board.check_role('DEBATE') %}
+{% if board.check_role(BOARD_ROLE['DEBATE']) %}
 	<form  id="comment-form" class="comment-form-attached input-group" action="{{ post.get_absolute_url() }}/commentAttached/"  method="post" enctype="multipart/form-data" >{% csrf_token %}
 		<textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
 		<input id="comment-form-file" type="file" name="files">

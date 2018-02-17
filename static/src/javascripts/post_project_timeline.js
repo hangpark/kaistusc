@@ -1,23 +1,23 @@
 
 $().ready(function(){
-    if($('#project_timeline').length) {
+    if($('#project-timeline').length) {
         postProjectTimelineInitialize();
 
-        $('#project_timeline_nav_button_right').on('click', function(e) {
-            var sliderLeft = $('#project_timeline_slider').position().left;
-            var firstPoint = $('.project_timeline_point').first();
-            var lastPoint = $('.project_timeline_point').last();
-            var timelineWidth = $('#project_timeline').width();
+        $('#project-timeline-nav-button-right').on('click', function(e) {
+            var sliderLeft = $('#project-timeline-slider').position().left;
+            var firstPoint = $('.project-timeline-point').first();
+            var lastPoint = $('.project-timeline-point').last();
+            var timelineWidth = $('#project-timeline').width();
             var left = sliderLeft + firstPoint.position().left;
             var right = sliderLeft + lastPoint.position().left + lastPoint.width();
             var vector = right - timelineWidth > timelineWidth ? -timelineWidth : -right + timelineWidth;
             _movePostTimelineSlider(vector);
         })
 
-        $('#project_timeline_nav_button_left').on('click', function(e) {
-            var sliderLeft = $('#project_timeline_slider').position().left;
-            var firstPoint = $('.project_timeline_point').first();
-            var timelineWidth = $('#project_timeline').width();
+        $('#project-timeline-nav-button-left').on('click', function(e) {
+            var sliderLeft = $('#project-timeline-slider').position().left;
+            var firstPoint = $('.project-timeline-point').first();
+            var timelineWidth = $('#project-timeline').width();
             var left = sliderLeft + firstPoint.position().left;
             var vector = left < -timelineWidth ? timelineWidth : -left;
             _movePostTimelineSlider(vector);
@@ -26,17 +26,17 @@ $().ready(function(){
 })
 
 function _movePostTimelineSlider(vector) {
-    $( "#project_timeline_slider" ).animate({
+    $( "#project-timeline-slider" ).animate({
         left: "+=" + vector,
       }, 500, _renderPostTimelineNvigateButton);
-    $( "#project_timeline_current" ).animate({
+    $( "#project-timeline-current" ).animate({
         left: "+=" + vector,
     }, 500, _renderPostTimelineNvigateButton);
     _renderPostTimelineNvigateButton();
 }
 
 function postProjectTimelineInitialize() {
-    var date_datas = $('.project_timeline_date_date');
+    var date_datas = $('.project-timeline-date-data');
     var dates = date_datas.map(function(e){
         return new Date($(this).val());
     });
@@ -60,27 +60,27 @@ function postProjectTimelineInitialize() {
 }
 
 function _slidePostTimeline(percentage) {
-    $('#project_timeline_slider').css('left', percentage + '%');
+    $('#project-timeline-slider').css('left', percentage + '%');
     _renderPostTimelineNvigateButton();
 }
 
 function _renderPostTimelineNvigateButton() {
-    var sliderLeft = $('#project_timeline_slider').position().left;
-    var firstPoint = $('.project_timeline_point').first();
+    var sliderLeft = $('#project-timeline-slider').position().left;
+    var firstPoint = $('.project-timeline-point').first();
     if(!firstPoint.length) return;
-    var lastPoint = $('.project_timeline_point').last();
-    var timelineWidth = $('#project_timeline').width();
+    var lastPoint = $('.project-timeline-point').last();
+    var timelineWidth = $('#project-timeline').width();
     var left = sliderLeft + firstPoint.position().left;
     var right = sliderLeft + lastPoint.position().left + lastPoint.width();
     if(left <= -1) {
-        $('#project_timeline_nav_button_left').show();
+        $('#project-timeline-nav-button-left').show();
     } else {
-        $('#project_timeline_nav_button_left').hide();
+        $('#project-timeline-nav-button-left').hide();
     }
     if(right >= timelineWidth+1) {
-        $('#project_timeline_nav_button_right').show();
+        $('#project-timeline-nav-button-right').show();
     } else {
-        $('#project_timeline_nav_button_right').hide();
+        $('#project-timeline-nav-button-right').hide();
     }
 }
     

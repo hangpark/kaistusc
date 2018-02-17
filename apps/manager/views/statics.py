@@ -26,7 +26,7 @@ class MainPageView(PageView):
         context['boards'] = Board.objects.accessible_for(
             self.request.user).filter(is_main=True)
         try:
-            context['bannerCarousel'] = BannerCarousel.objects.get(sector=BANNER_CAROUSEL_SECTOR_MAIN)
+            context['bannerCarousel'] = BannerCarousel.objects.get(sector=BANNER_CAROUSEL_SECTOR['MAIN'])
         except BannerCarousel.DoesNotExist:
             pass
         try:
