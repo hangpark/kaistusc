@@ -32,7 +32,7 @@ $().ready(function() {
             $("#comment-form textarea").val("");
             $("#comment-form-file").val("");
         }).fail(function(e) {
-            alert("Error");
+            alert("Request Failed");
         }).always(function() {
             $btn.removeClass("disabled");
         });
@@ -74,7 +74,7 @@ $(document).on('click', ".comment-remove", function() {
             .done(function(data) {
                 $comment.replaceWith(data);
             }).fail(function() {
-                alert("Error");
+                alert("Request Failed");
             });
     }
 });

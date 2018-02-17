@@ -109,7 +109,7 @@ class BoardView(ServiceView):
         context['filter_state'] = filter_state
 
         # 페이지네이션 생성
-        paginator = Paginator(post_list, 15)
+        paginator = Paginator(post_list, POST_PER_PAGE)
         page_num = self.request.GET.get('p')
         try:
             posts = paginator.page(page_num)
@@ -195,7 +195,7 @@ class PostView(BoardView):
         # 게시글에 달린 댓글 목록 저장
         # 페이지네이션 생성
         comment_list = self.post_.comment_set.all()
-        comment_paginator = Paginator(comment_list, 15)
+        comment_paginator = Paginator(comment_list, COMMENT_PER_PAGE)
         comments = comment_paginator.page(1)
 
         context['comments'] = comments
@@ -395,7 +395,7 @@ class CommentView(PostView):
     def get(self, request, *args, **kwargs):
         # 페이지네이션 생성
         comment_list = self.post_.comment_set.all()
-        comment_paginator = Paginator(comment_list, 15)
+        comment_paginator = Paginator(comment_list, COMMENT_PER_PAGE)
         page_num = self.request.GET.get('p')
         comments_page = comment_paginator.page(page_num)
         if comments_page.has_next():
