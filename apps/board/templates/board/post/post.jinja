@@ -19,15 +19,15 @@
     {% include 'board/post/post_files.jinja' %}
   {% endif %}
 
+  {% if post.is_permitted(request.user, PERM_COMMENT) %}
+  {% include 'board/comment_form.jinja' %}
+  {% endif %}
+
   <div id="comment-list">
     {% for comment in comments %}
       {% include 'board/comment.jinja' %}
     {% endfor %}
   </div>
-
-  {% if post.is_permitted(request.user, PERM_COMMENT) %}
-  {% include 'board/comment_form.jinja' %}
-  {% endif %}
 </div>
 
 {% if board.check_role(BOARD_ROLE['DEBATE']) %}

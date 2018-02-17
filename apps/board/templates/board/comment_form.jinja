@@ -1,5 +1,7 @@
 <form id="comment-form" class="input-group">{% csrf_token %}
-	<textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
+	<div id="comment-form-content-wrap">
+		<textarea class="form-control custom-control" name="content"></textarea>
+	</div>
 	{% if board.check_role(BOARD_ROLE['DEBATE']) %}
 	<input id="comment-form-file" type="file" name="files">
 	{% endif %}

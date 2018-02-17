@@ -367,7 +367,7 @@ class Comment(BasePost):
         verbose_name=_("상위 포스트"))
 
     class Meta:
-        ordering = ['date']
+        ordering = ['-date']
         verbose_name = _('댓글')
         verbose_name_plural = _('댓글(들)')
 

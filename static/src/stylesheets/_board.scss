@@ -149,7 +149,6 @@
 
 #post-func {
   padding: 30px 0 40px 0;
-  border-bottom: 1px solid #ddd;
   form {
     display: inline-block;
   }
@@ -184,10 +183,13 @@
   .comment {
     padding: 6px 0 15px 0;
     border-left: 14px solid $bg-primary;
+    border-bottom: 1px solid #ddd;
     &:nth-child(even) {
       border-left-color: $bg-primary-lighter;
     }
-    border-bottom: 1px solid #ddd;
+    &:first-child {
+      border-top: 1px solid #ddd;
+    }
     .comment-header {
       margin: 0 12px 12px;
     }
@@ -209,7 +211,15 @@
 }
 
 #comment-form {
-  margin: 28px 0px;
+  margin-bottom: 28px;
+  #comment-form-content-wrap {
+    textarea {
+      height: auto;
+      resize: none;
+      overflow-y: auto;
+      max-height: 300px;
+    }
+  }
   #comment-form-file {
     width: 100%;
     z-index: 3;

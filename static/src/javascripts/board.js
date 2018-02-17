@@ -3,7 +3,7 @@ $().ready(function() {
         return "<p>" + str.replace(/^\n+/g, "").replace(/\n+$/g, "").replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") + "</p>";
     }
 
-    $("#post-content, .comment-content").each(function() {
+    $("#post-content").each(function() {
         $(this).html(convert2html($(this).html()));
     });
 
@@ -43,37 +43,6 @@ $().ready(function() {
         e.remove();
     });
 
-    $("#btn-comment-form").click(function() {
-        var $btn = $(this);
-        if (!$("#comment-form textarea").val()) {
-            alert($("#comment-no-input").val());
-            return;
-        }
-        if ($btn.hasClass("disabled"))
-            return;
-        $btn.addClass("disabled");
-        $.ajax({
-            url: './comment/',
-            type: 'POST',
-            data: new FormData($("#comment-form")[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-        })
-        .done(function(data) {
-            $("#comment-list").append(data);
-            $(".comment-content:last").each(function () {
-                $(this).html(convert2html($(this).html()));
-            });
-            $("#comment-form textarea").val("");
-            $("#comment-form-file").val("");
-        }).fail(function(e) {
-            alert("Error");
-        }).always(function() {
-            $btn.removeClass("disabled");
-        });
-    });
-
     $("#post-vote form").click(function() {
         $vote = $(this).find(".vote-status");
         $.post($(this).attr('action'), $(this).serialize())
@@ -106,17 +75,4 @@ $().ready(function() {
         $('#id_board_tab').selectpicker('refresh')
     });
 
-});
-
-$(document).on('click', ".comment-remove", function() {
-    var $comment = $(this).parents(".comment");
-    var $form = $(this).parent();
-    if (confirm($("#delete-comment-warning").val())) {
-        $.post($form.attr('action'), $form.serialize())
-            .done(function(data) {
-                $comment.replaceWith(data);
-            }).fail(function() {
-                alert("Error");
-            });
-    }
 });
