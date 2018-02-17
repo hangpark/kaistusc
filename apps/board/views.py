@@ -410,7 +410,7 @@ class CommentDeleteView(PostView):
     뷰입니다.
     """
 
-    template_name = None
+    template_name = 'board/comment.jinja'
     required_permission = PERM_DELETE
 
     def has_permission(self, request, *args, **kwargs):
@@ -441,7 +441,8 @@ class CommentDeleteView(PostView):
         """
         self.comment.is_deleted = True
         self.comment.save()
-        return HttpResponse()
+        context = {'comment': self.comment}
+        return self.render_to_response(self.get_permission_context(context))
 
 
 class PostVoteView(PostView):

@@ -1,5 +1,5 @@
 $().ready(function() {
-    function convert2html(str) {
+    function convert2html(str, withP) {
         return "<p>" + str.replace(/^\n+/g, "").replace(/\n+$/g, "").replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") + "</p>";
     }
 
@@ -74,20 +74,6 @@ $().ready(function() {
         });
     });
 
-    $("#comment-list").on('click', ".comment-remove", function() {
-        var $comment = $(this).parents(".comment");
-        var $form = $(this).parent();
-        if (confirm($("#delete-comment-warning").val())) {
-            $.post($form.attr('action'), $form.serialize())
-                .done(function(data) {
-                    $comment.find(".comment-content").html($("#deleted-comment-content").val());
-                }).fail(function() {
-                    alert("Error");
-                });
-        }
-
-    });
-
     $("#post-vote form").click(function() {
         $vote = $(this).find(".vote-status");
         $.post($(this).attr('action'), $(this).serialize())
@@ -120,4 +106,17 @@ $().ready(function() {
         $('#id_board_tab').selectpicker('refresh')
     });
 
+});
+
+$(document).on('click', ".comment-remove", function() {
+    var $comment = $(this).parents(".comment");
+    var $form = $(this).parent();
+    if (confirm($("#delete-comment-warning").val())) {
+        $.post($form.attr('action'), $form.serialize())
+            .done(function(data) {
+                $comment.replaceWith(data);
+            }).fail(function() {
+                alert("Error");
+            });
+    }
 });
