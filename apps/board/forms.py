@@ -46,34 +46,6 @@ class PostForm(ModelForm):
 
         return post
 
-
-class CommentForm(ModelForm):
-    """
-    댓글을 등록 및 수정하는 폼.
-
-    :class:`ModelForm`으로 구현되었으며, `save` 메서드에서 첨부파일까지
-    저장합니다.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    class Meta:
-        model = Comment
-        fields = ('content',)
-
-    def save(self, POST, FILES):
-        """
-        게시글과 그에 첨부된 파일들을 저장하는 메서드.
-        """
-        comment = super().save()
-       
-        files = FILES.getlist('files')
-        for f in files:
-            AttachedFile.objects.create(post=comment, file=f)
-    
-        return comment
-
 class DebatePostForm(PostForm):
     class Meta:
         model = DebatePost

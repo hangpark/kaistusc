@@ -17,8 +17,7 @@ from apps.manager.views import ServiceView
 from apps.board.constants import *
 
 from apps.board.constants_mapping import *
-from .forms import PostForm, ProjectPostForm,CommentForm, DebatePostForm
-from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost
+from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost, AttachedFile
 
 class BoardView(ServiceView):
     """
@@ -192,11 +191,6 @@ class PostView(BoardView):
         context['post'] = self.post_
         # 게시글에 달린 댓글 목록 저장
         context['comments'] = self.post_.comment_set.all()
-        comments_files = {}
-        for comment in context['comments']:
-            if(comment.attached_files()):
-                comments_files[comment.id] = comment.attached_files()
-        context['comments_files'] =comments_files
 
         # 게시글에 첨부된 파일 목록 저장
         context['files'] = self.post_.attachedfile_set.all()
@@ -228,7 +222,6 @@ class PdfPostView(BoardView):
         required_permission = self.required_permission
         self.required_permission = PERM_ACCESS
         kwargs['url'] = kwargs['url'] + '/latest/'
-        print(kwargs)
         if not super().has_permission(request, *args, **kwargs):
             return False
         self.required_permission = required_permission
@@ -402,49 +395,11 @@ class CommentWriteView(PostView):
             author=user,
             content=request.POST.get('content'),
             parent_post=self.post_)
+        for f in request.FILES.getlist('files'):
+            AttachedFile.objects.create(post=comment, file=f)
+
         context = {'comment': comment}
-        return self.render_to_response(self.get_permission_context(context))
 
-class CommentWriteWithFileView(PostView):
-    """
-    첨부 가능한 댓글 등록 뷰.
-    기본 필요권한이 댓글권한으로 설정되어 있습니다. AJAX 통신에 응답하는
-    뷰입니다.
-    """
-    required_permission = PERM_COMMENT
-   
-    def get_context_data(self, **kwargs):
-        """
-        댓글 작성 폼을 컨텍스트에 추가하는 메서드.
-        """
-        context = super().get_context_data(**kwargs)
-        context['form'] = CommentForm()
-
-        return context
-
-    def post(self, request, *args, **kwargs):
-
-        """
-        댓글 등록 요청에 따라 게시글을 저장하는 메서드.
-        사용자로부터 제출된 댓글 폼을 평가하여 통과될 시 게시글과 첨부파일을
-        저장합니다. 올바르지 않은 댓글이 제출된 경우 오류정보를 포함한 폼을
-        재전달하여 수정을 요구합니다.
-        작성이 정상적으로 완료되면 댓글 HTML 소스를 사용자에게 전달합니다.
-        """
-
-        user = request.user if request.user.is_authenticated() else None
-        
-        comment = Comment(
-            author=user,
-            parent_post=self.post_)
-        form = CommentForm(request.POST, request.FILES, instance=comment)
-
-        if form.is_valid():
-            form.save(request.POST, request.FILES)
-            return HttpResponseRedirect(self.post_.get_absolute_url())
-
-        context = self.get_context_data(**kwargs)
-        context['form'] = form
         return self.render_to_response(self.get_permission_context(context))
 
 class CommentDeleteView(PostView):

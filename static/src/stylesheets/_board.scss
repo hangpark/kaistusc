@@ -204,20 +204,11 @@
 
 #comment-form {
   margin: 28px 0px;
-}
-
-.comment-form-attached {
-  position: relative;
-  overflow: hidden;
-  textarea {
-    padding-bottom: 26px;
-  }
   #comment-form-file {
+    width: 100%;
     z-index: 3;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    border-bottom: 1px solid #ccc;
+    border: 1px solid #ccc;
+    border-top: none;
     background-color: white;
   }
 }

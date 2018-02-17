@@ -12,7 +12,6 @@ $().ready(function() {
         $(".post-form-lang" +' input').prop('required', false);
         $(".post-form-lang" +' textarea').prop('required', false);
         $(".post-form-lang").hide();
-        console.log(1)
         $("#post-form-lang-" + lang +' input').prop('required', true);
         $("#post-form-lang-" + lang +' textarea').prop('required', true);
         $("#post-form-lang-" + lang).show();
@@ -53,18 +52,26 @@ $().ready(function() {
         if ($btn.hasClass("disabled"))
             return;
         $btn.addClass("disabled");
-        $.post("./comment/", $("#comment-form").serialize())
-            .done(function(data) {
-                $("#comment-list").append(data);
-                $(".comment-content:last").each(function () {
-                    $(this).html(convert2html($(this).html()));
-                });
-                $("#comment-form textarea").val("");
-            }).fail(function() {
-                alert("Error");
-            }).always(function() {
-                $btn.removeClass("disabled");
+        $.ajax({
+            url: './comment/',
+            type: 'POST',
+            data: new FormData($("#comment-form")[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+        })
+        .done(function(data) {
+            $("#comment-list").append(data);
+            $(".comment-content:last").each(function () {
+                $(this).html(convert2html($(this).html()));
             });
+            $("#comment-form textarea").val("");
+            $("#comment-form-file").val("");
+        }).fail(function(e) {
+            alert("Error");
+        }).always(function() {
+            $btn.removeClass("disabled");
+        });
     });
 
     $("#comment-list").on('click', ".comment-remove", function() {

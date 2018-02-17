@@ -1,14 +1,9 @@
-{% if board.check_role(BOARD_ROLE['DEBATE']) %}
-	<form  id="comment-form" class="comment-form-attached input-group" action="{{ post.get_absolute_url() }}/commentAttached/"  method="post" enctype="multipart/form-data" >{% csrf_token %}
-		<textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
-		<input id="comment-form-file" type="file" name="files">
-		<span id="btn-comment-form" class="input-group-addon btn btn-primary" type="submit">{{ _('등록') }}</span>
-	</form>
-{% else %}
-	<form id="comment-form" class="input-group">{% csrf_token %}
-			<textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
-			<span id="btn-comment-form" class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
-	</form>
-{% endif %}
+<form id="comment-form" class="input-group">{% csrf_token %}
+	<textarea class="form-control custom-control" name="content" rows="6" style="resize: none;"></textarea>
+	{% if board.check_role(BOARD_ROLE['DEBATE']) %}
+	<input id="comment-form-file" type="file" name="files">
+	{% endif %}
+	<span id="btn-comment-form" class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
+</form>
 
 <input type="hidden" id="comment-no-input" value="{{ _('댓글 내용을 입력해주세요.') }}"/>

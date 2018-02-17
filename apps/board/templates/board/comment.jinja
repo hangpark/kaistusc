@@ -15,18 +15,15 @@
     <div class="comment-content">
       {{ comment.content }}
     </div>
-    {% if comments_files %}
-    {% if comments_files[comment.id] %}
+    {% if comment.attached_files() %}
       <div id="attached-file-comment">
       {{ _('첨부파일') }}
       <p></p>
-      {% for file in comments_files[comment.id] %}
+      {% for file in comment.attached_files() %}
         <p><a href="{{ file.get_absolute_url() }}">{{ file }} ({{ file.get_file_size()|filesizeformat }})</a></p>
       {% endfor %}
       </div>
     {% endif %}
-    {% endif %}
-
   {%- else -%}
   <div class="comment-content">{{ _("삭제되었습니다.") }}</div>
   {%- endif -%}

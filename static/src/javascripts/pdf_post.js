@@ -33,7 +33,6 @@ $(document).ready(function() {
       })
       .catch(function (e) {
         // render error page.
-        console.log(e)
         $("#pdf-success").hide();
         $("#pdf-fail").show();
       });
