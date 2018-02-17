@@ -6,7 +6,7 @@
   <div id="main" class="page-item container-fluid">
     <div id="main-content" class="row">
       <nav id="lnb" class="hidden-xs col-sm-2 list-group">
-      {% for item in category.service_set.all() %}
+      {% for item in category.get_services(request.user) %}
         <a class="list-group-item {% if item == service %}lnb-selected{% endif %}" href="{{ item.get_absolute_url() }}">{{ item.name }}</a>
       {% endfor %}
       </nav>

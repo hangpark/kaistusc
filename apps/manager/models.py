@@ -44,9 +44,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, user):
         """
-        카테고리 내 첫 번째 서비스의 URL을 반환하는 메서드.
+        카테고리 내 접근 가능한 첫 번째 서비스의 URL을 반환하는 메서드.
 
         카테고리는 특정 뷰와 연결되어 있지 않습니다. 따라서 카테고리에 대한
         URL을 카테고리 내 첫 번째 서비스의 URL로 설정하였습니다.
@@ -54,10 +54,17 @@ class Category(models.Model):
         이는 사용자가 카테고리 이름을 페이지 상에서 클릭하였을 때 자동으로 내부
         서비스로 이동하는 기능 등에 활용될 수 있어 UX 향상에 도움이 됩니다.
         """
-        s = self.service_set.first()
+        s = self.service_set.accessible_for(user).first()
         if s:
             return s.get_absolute_url()
         return '/'
+
+    def get_services(self, user):
+        """
+        카테고리 내 접근 가능한 서비스들을 반호나하는 메서드
+        """
+        s = self.service_set.accessible_for(user)
+        return s
 
 class TopBanner(models.Model):
     """

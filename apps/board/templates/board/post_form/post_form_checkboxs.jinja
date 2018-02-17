@@ -6,7 +6,7 @@
       </label>
     {% endcall %}
     {% endif %}
-    {% if form.__class__.__name__ != 'DebateForm' %}
+    {% if form.__class__.__name__ != 'DebatePostForm' %}
     {% call(field) form_group(form.is_secret) %}
       <label class="checkbox-inline">
         <input type="checkbox" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{% if field.value() %} checked{% endif %}> {{ field.label }}

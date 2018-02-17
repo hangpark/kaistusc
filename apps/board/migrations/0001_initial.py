@@ -13,8 +13,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('manager', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('manager', '__first__'),
     ]
 
     operations = [
@@ -25,8 +25,8 @@ class Migration(migrations.Migration):
                 ('file', models.FileField(upload_to=apps.board.models.get_upload_path, verbose_name='첨부파일')),
             ],
             options={
-                'verbose_name': '첨부파일',
                 'verbose_name_plural': '첨부파일(들)',
+                'verbose_name': '첨부파일',
             },
         ),
         migrations.CreateModel(
@@ -36,8 +36,8 @@ class Migration(migrations.Migration):
                 ('sector', models.IntegerField(choices=[(0, '메인페이지')], verbose_name='노출위치')),
             ],
             options={
-                'verbose_name': '배너그룹',
                 'verbose_name_plural': '배너그룹(들)',
+                'verbose_name': '배너그룹',
             },
         ),
         migrations.CreateModel(
@@ -62,11 +62,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('service_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='manager.Service')),
                 ('is_main', models.BooleanField(default=False, verbose_name='메인페이지 노출')),
-                ('role', models.IntegerField(choices=[(0, '기본'), (1, '사업'), (11, '논의')], default=0, verbose_name='보드 역할')),
+                ('role', models.IntegerField(choices=[(0, '기본'), (1, '사업'), (2, '논의')], default=0, verbose_name='보드 역할')),
             ],
             options={
-                'verbose_name': '게시판',
                 'verbose_name_plural': '게시판(들)',
+                'verbose_name': '게시판',
             },
             bases=('manager.service',),
         ),
@@ -74,12 +74,12 @@ class Migration(migrations.Migration):
             name='BoardTab',
             fields=[
                 ('baseservice_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='manager.BaseService')),
-                ('url', models.CharField(help_text='탭을 나타낼 하위 경로만 적어주세요.', max_length=32, verbose_name='하위 주소')),
+                ('url', models.CharField(help_text="탭을 나타낼 하위 경로만 적어주세요('/'를 포함하면 안됩니다)", max_length=32, verbose_name='하위 주소')),
                 ('parent_board', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='board.Board', verbose_name='탭이 속한 게시판')),
             ],
             options={
-                'verbose_name': '탭',
                 'verbose_name_plural': '탭(들)',
+                'verbose_name': '탭',
                 'ordering': ['parent_board', 'level'],
             },
             bases=('manager.baseservice',),
@@ -103,8 +103,8 @@ class Migration(migrations.Migration):
                 ('board_tab', models.ManyToManyField(blank=True, to='board.BoardTab', verbose_name='등록 탭')),
             ],
             options={
-                'verbose_name': '상품',
                 'verbose_name_plural': '상품(들)',
+                'verbose_name': '상품',
                 'ordering': ['name'],
             },
         ),
@@ -119,9 +119,16 @@ class Migration(migrations.Migration):
             name='Schedule',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=128, verbose_name='제목')),
+                ('title', models.CharField(max_length=128, verbose_name='일정')),
+                ('title_ko', models.CharField(max_length=128, null=True, verbose_name='일정')),
+                ('title_en', models.CharField(max_length=128, null=True, verbose_name='일정')),
                 ('date', models.DateTimeField(verbose_name='날짜')),
             ],
+            options={
+                'verbose_name_plural': '일정(들)',
+                'verbose_name': '일정',
+                'ordering': ['date'],
+            },
         ),
         migrations.CreateModel(
             name='Tag',
@@ -137,8 +144,8 @@ class Migration(migrations.Migration):
                 ('board', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='board.Board', verbose_name='게시판')),
             ],
             options={
-                'verbose_name': '태그',
                 'verbose_name_plural': '태그(들)',
+                'verbose_name': '태그',
             },
         ),
         migrations.CreateModel(
@@ -148,8 +155,8 @@ class Migration(migrations.Migration):
                 ('embed_url', models.TextField(blank=True, verbose_name='웹 문서 삽입 URL')),
             ],
             options={
-                'verbose_name': '웹문서 링크',
                 'verbose_name_plural': '웹문서 링크(들)',
+                'verbose_name': '웹문서 링크',
             },
         ),
         migrations.CreateModel(
@@ -163,8 +170,8 @@ class Migration(migrations.Migration):
                 ('image', models.ImageField(upload_to='banner', verbose_name='이미지')),
             ],
             options={
-                'verbose_name': '배너',
                 'verbose_name_plural': '배너(들)',
+                'verbose_name': '배너',
             },
             bases=('board.basepost',),
         ),
@@ -174,8 +181,8 @@ class Migration(migrations.Migration):
                 ('basepost_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='board.BasePost')),
             ],
             options={
-                'verbose_name': '댓글',
                 'verbose_name_plural': '댓글(들)',
+                'verbose_name': '댓글',
                 'ordering': ['date'],
             },
             bases=('board.basepost',),
@@ -191,8 +198,8 @@ class Migration(migrations.Migration):
                 ('board_tab', models.ManyToManyField(blank=True, to='board.BoardTab', verbose_name='등록 탭')),
             ],
             options={
-                'verbose_name': '연락망',
                 'verbose_name_plural': '연락망(들)',
+                'verbose_name': '연락망',
             },
             bases=('board.basepost',),
         ),
@@ -206,8 +213,8 @@ class Migration(migrations.Migration):
                 ('text_en', models.CharField(max_length=128, null=True, verbose_name='텍스트')),
             ],
             options={
-                'verbose_name': '링크',
                 'verbose_name_plural': '링크(들)',
+                'verbose_name': '링크',
             },
             bases=('board.basepost',),
         ),
@@ -221,8 +228,8 @@ class Migration(migrations.Migration):
                 ('is_notice', models.BooleanField(default=False, verbose_name='공지글')),
             ],
             options={
-                'verbose_name': '포스트',
                 'verbose_name_plural': '포스트(들)',
+                'verbose_name': '포스트',
             },
             bases=('board.basepost',),
         ),
@@ -269,8 +276,8 @@ class Migration(migrations.Migration):
                 ('due_date', models.DateTimeField(blank=True, null=True, verbose_name='종결 예정일')),
             ],
             options={
-                'verbose_name': '논의',
                 'verbose_name_plural': '논의(들)',
+                'verbose_name': '논의',
             },
             bases=('board.post',),
         ),
@@ -279,8 +286,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('post_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='board.Post')),
                 ('is_pledge', models.BooleanField(default=False, verbose_name='공약')),
-                ('schedules', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='board.Schedule', verbose_name='프로젝트 일정')),
             ],
+            options={
+                'verbose_name_plural': '사업 포스트(들)',
+                'verbose_name': '사업 포스트',
+            },
             bases=('board.post',),
         ),
         migrations.AddField(
@@ -307,5 +317,10 @@ class Migration(migrations.Migration):
             model_name='bannercarousel',
             name='banners',
             field=models.ManyToManyField(to='board.Banner', verbose_name='배너'),
+        ),
+        migrations.AddField(
+            model_name='schedule',
+            name='post',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='board.ProjectPost', verbose_name='게시글'),
         ),
     ]
