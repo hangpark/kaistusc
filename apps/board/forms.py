@@ -3,9 +3,11 @@
 """
 
 from django.forms import ModelForm
-
-from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment,ProjectPost
-
+import json
+from django.conf import settings
+from dateutil.parser import parse
+from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule
+import pytz
 
 class PostForm(ModelForm):
     """
@@ -72,21 +74,66 @@ class CommentForm(ModelForm):
     
         return comment
 
-class DebateForm(PostForm):
+class DebatePostForm(PostForm):
     class Meta:
         model = DebatePost
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
-            'is_notice', 'is_closed','tag', 'board_tab','due_date', )
+            'is_notice', 'is_closed','tag', 'board_tab', )
+    def save(self, POST, FILES):
+        post = super().save(POST, FILES)
+        post.due_date = parse_date_string(POST['due_date'])
+        post.save()
+        return post
 
 class ProjectPostForm(PostForm):
     """
-    논쟁글을 등록 및 수정하는 폼.
+    진행중인 사업을 등록 및 수정하는 폼.
 
     :class:`POSTForm`으로 구현되었습니다 .
     """
+    
     class Meta:
         model = ProjectPost
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
-            'is_notice', 'is_secret', 'board_tab', 'tag', 'is_pledge', 'schedules',)
+            'is_notice', 'is_secret', 'board_tab', 'tag', 'is_pledge',)
+
+    def save(self, POST, FILES):
+        """
+        사업 게시글과 사업의 스케줄을 저장하는 메서드.
+        schedule의 데이터가 'request.POST'의 'schedules' 에 저장되어있습니다
+        기존 post의 schedule_set과 비교하여
+        - 없으면 -> 삭제
+        - 날짜가 수정되었으면 -> 수정
+        - 신규 schedule이면 -> 생성
+        """
+        post = super().save(POST, FILES)
+
+        schedules = list(map(json.loads, POST.getlist('schedules')))
+        prev_schedules = list(filter(lambda schedule: 'id' in schedule, schedules))
+        original_schedules = post.schedule_set.all()
+        for schedule in original_schedules:
+            target_input_schedule = next((s for s in prev_schedules if s['id'] == schedule.id), None)
+            if not target_input_schedule: # 기존 스케줄 삭제
+                schedule.delete()
+            else: # 기존 스케줄 날짜 수정
+                schedule.date = parse_date_string(target_input_schedule['date'])
+                schedule.save()
+
+        for schedule in filter(lambda s: s not in prev_schedules, schedules): # 새 스캐줄 생성
+            Schedule.objects.create(
+                post=post,
+                title_ko=schedule['title_ko'],
+                title_en=schedule['title_en'],
+                date=parse_date_string(schedule['date']),
+            )
+
+        return post
+
+def parse_date_string(date_string):
+    local_time_zone = pytz.timezone(settings.TIME_ZONE)
+    date = parse(date_string)
+    if(date.tzinfo is None):
+        return date
+    return date.astimezone(local_time_zone).replace(tzinfo=None)

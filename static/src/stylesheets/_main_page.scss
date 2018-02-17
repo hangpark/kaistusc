@@ -57,7 +57,7 @@
     line-height: 54px;
     font-size: 12pt;
     color: #333333;
-    background-color: #dddddd;
+    background-color: $bg-primary-lighter;
   }
   .fnb-content {
     padding: 0;
@@ -68,7 +68,7 @@
   .fnb-box {
     margin: 0;
     padding-left: 14px;
-    background-color: #eeeeee;
+    background-color: $bg-primary-light;
     font-size: 9pt;
     font-weight: bold;
     line-height: 24px;

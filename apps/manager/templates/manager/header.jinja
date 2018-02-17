@@ -19,16 +19,22 @@
   <div id="gnb" class="container-fluid dropdown collapse navbar-collapse">
     <div id="gnb-menu-container" class="row dropdown-toggle" data-toggle="dropdown">
     {% for item in navigator[:4] %}
-      <div class="gnb-menu col-xs-3"><a href="{{ item.category.get_absolute_url() }}">{{ item.category }}</a></div>
+      {% if item.services %}
+      <div class="gnb-menu">
+        <a class="effect-underline" href="{{ item.category.get_absolute_url(request.user) }}">{{ item.category }}</a>
+      </div>
+      {% endif %}
     {% endfor %}
     </div>
     <div id="gnb-svc-wrapper" class="dropdown-menu">
       <div id="gnb-svc-container" class="row">
       {% for item in navigator[:4] %}
-        <ul class="gnb-svc-col col-sm-3 list-group">
-        {% for service in item.services %} 
-          <a href="{{ service.get_absolute_url() }}" class="list-group-item">{{ service.name }}</a>
-        {% endfor %}
+        {% if item.services %}
+          <ul class="gnb-svc-col list-group">
+          {% for item_service in item.services %} 
+            <a href="{{ item_service.get_absolute_url() }}" class="{% if service == item_service %}text-selected{% endif %} effect-underline list-group-item">{{ item_service.name }}</a>
+          {% endfor %}
+        {% endif %}
         </ul>
       {% endfor %}
       </div>

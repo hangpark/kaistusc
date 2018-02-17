@@ -1,8 +1,8 @@
-<div id="banner_carousel_{{bannerCarousel.id}}" class="banner_carousel carousel slide" data-ride="carousel">
+<div id="banner-carousel-{{bannerCarousel.id}}" class="banner-carousel carousel slide" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
     {% for banner in bannerCarousel.banners.all() %}
-    <li data-target="#banner_carousel_{{bannerCarousel.id}}" data-slide-to="{{ loop.index0 }}" {% if loop.index0 == 0 %}class="active"{% endif %}></li>
+    <li data-target="#banner-carousel-{{bannerCarousel.id}}" data-slide-to="{{ loop.index0 }}" {% if loop.index0 == 0 %}class="active"{% endif %}></li>
     {% endfor %}
   </ol>
 

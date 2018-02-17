@@ -25,7 +25,6 @@
     "merge-stream": "^1.0.1"
   },
   "dependencies": {
-    "merge-stream": "^1.0.1",
     "pdfjs-dist": "^2.0.357"
   }
 }

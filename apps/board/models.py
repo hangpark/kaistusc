@@ -3,8 +3,8 @@
 """
 
 import os
-from datetime import date
 from datetime import datetime
+from django.utils import timezone
 
 from django.db import models
 from django.db.models.signals import post_delete
@@ -30,15 +30,16 @@ class Board(Service):
     objects = ServiceManager()
 
     BOARD_ROLE_CHOICES = (
-        (BOARD_ROLE_DEFAULT, _('기본')),
-        (BOARD_ROLE_PROJECT, _('사업')),
-        (BOARD_ROLE_PLANBOOK, _('정책자료집')),
-        (BOARD_ROLE_DEBATE, _('논의')),
+        (BOARD_ROLE['DEFAULT'], _('기본')),
+        (BOARD_ROLE['PROJECT'], _('사업')),
+        (BOARD_ROLE['PLANBOOK'], _('정책자료집')),
+        (BOARD_ROLE['DEBATE'], _('논의')),
     )
 
-    role = models.IntegerField(
+    role = models.CharField(
         _("보드 역할"),
-        choices=BOARD_ROLE_CHOICES, default=BOARD_ROLE_DEFAULT)
+        max_length=32,
+        choices=BOARD_ROLE_CHOICES, default=BOARD_ROLE['DEFAULT'])
 
     class Meta:
         verbose_name = _('게시판')
@@ -67,7 +68,7 @@ class BoardTab(BaseService):
     url = models.CharField(
         _("하위 주소"),
         max_length=32,
-        help_text=_("탭을 나타낼 하위 경로만 적어주세요."))
+        help_text=_("탭을 나타낼 하위 경로만 적어주세요('/'를 포함하면 안됩니다)"))
 
     #: 커스텀 매니저
     objects = ServiceManager()
@@ -422,7 +423,7 @@ class BannerCarousel(models.Model):
         verbose_name=_("배너"))
 
     BANNER_CAROUSEL_SECTOR_CHOICES = (
-       (BANNER_CAROUSEL_SECTOR_MAIN, _('메인페이지')),
+       (BANNER_CAROUSEL_SECTOR['MAIN'], _('메인페이지')),
     )
 
     sector = models.IntegerField(
@@ -537,14 +538,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.board_tab.name + "에서 파는 " + self.title
-
-class Schedule(models.Model):
-    title = models.CharField(
-        _("제목"),
-        max_length=128)
-
-    date = models.DateTimeField(
-        _("날짜"))
     
 class ProjectPost(Post):
     """
@@ -557,13 +550,12 @@ class ProjectPost(Post):
         default=False)
 
     
-    schedules = models.ForeignKey(
-        Schedule,
-        verbose_name=_("프로젝트 일정"))
-    
+    class Meta:
+        verbose_name = _('사업')
+        verbose_name_plural = _('사업(들)')
+
     def get_bureau(self):
         return self.board_tab.name
-
 
 class DebatePost(Post):
 
@@ -579,8 +571,7 @@ class DebatePost(Post):
         null=True, blank=True)
 
     def is_over_due(self):
-        d = date.today()
-        return (datetime.combine(d,datetime.min.time()) > self.due_date)
+        return self.due_date < timezone.now()
 
     def is_commentable(self):
         check_author = (self.author and self.author.is_superuser)
@@ -591,6 +582,22 @@ class DebatePost(Post):
         return self.board.get_absolute_url()+'/'+str(self.id)
     
     
+class Schedule(models.Model):
+    title = models.CharField(
+        _("일정"),
+        max_length=128)
+
+    date = models.DateTimeField(
+        _("날짜"))
+    
+    post = models.ForeignKey(
+        ProjectPost,
+        verbose_name=_("게시글"))
+
+    class Meta:
+        ordering = ['date']
+        verbose_name = _('일정')
+        verbose_name_plural = _('일정(들)')
 
 class WebDoc(models.Model):
     """

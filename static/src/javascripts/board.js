@@ -9,9 +9,12 @@ $().ready(function() {
 
     $("#post-lang-func button.post-lang").click(function() {
         var lang = $(this).attr('post-lang');
-        $(".post-form-lang").prop('required', false);
+        $(".post-form-lang" +' input').prop('required', false);
+        $(".post-form-lang" +' textarea').prop('required', false);
         $(".post-form-lang").hide();
-        $("#post-form-lang-" + lang).prop('required', true);
+        console.log(1)
+        $("#post-form-lang-" + lang +' input').prop('required', true);
+        $("#post-form-lang-" + lang +' textarea').prop('required', true);
         $("#post-form-lang-" + lang).show();
 
         var $btns = $("#post-lang-func button.post-lang");
@@ -28,7 +31,8 @@ $().ready(function() {
     });
 
     $(document).on('click', ".file-more", function() {
-        $("#attach-file-wrap").children(":last").clone().appendTo($("#attach-file-wrap"));
+        var attachFileHtml = '<div class="attach-file col-xs-12 nopadding"><input type="file" name="files"><span class="file-more"><i class="fa fa-plus"></i></span></div>'
+        $(attachFileHtml).appendTo($("#attach-file-wrap"));
         $(this).html($("#file-del-desc").html());
         $(this).removeClass("file-more");
         $(this).addClass("file-del");
@@ -43,7 +47,7 @@ $().ready(function() {
     $("#btn-comment-form").click(function() {
         var $btn = $(this);
         if (!$("#comment-form textarea").val()) {
-            alert($("#comment-no-input").html());
+            alert($("#comment-no-input").val());
             return;
         }
         if ($btn.hasClass("disabled"))
@@ -63,21 +67,13 @@ $().ready(function() {
             });
     });
 
-    $("#btn-commentAttached-form").click(function() {
-        var $btn = $(this);
-        if (!$("#commentAttached-form textarea").val()) {
-            alert($("#comment-no-input").html());
-            return;
-        }
-    });
-
     $("#comment-list").on('click', ".comment-remove", function() {
         var $comment = $(this).parents(".comment");
         var $form = $(this).parent();
-        if (confirm($("#delete-comment-warning").text())) {
+        if (confirm($("#delete-comment-warning").val())) {
             $.post($form.attr('action'), $form.serialize())
                 .done(function(data) {
-                    $comment.find(".comment-content").html($("#deleted-comment-content").html());
+                    $comment.find(".comment-content").html($("#deleted-comment-content").val());
                 }).fail(function() {
                     alert("Error");
                 });
@@ -98,15 +94,6 @@ $().ready(function() {
             });
     });
 
-    $("#id_due_date").datepicker({
-        altFormat: "mm/dd/yyyy",
-        minDate: new Date(),
-        maxDate: "+15d",
-    });
-    if($("#id_due_date").val() == ''){
-        $("#id_due_date").datepicker({ dateFormat: 'mm/dd/yyyy'}).datepicker("setDate", new Date());
-    }
-
     $('.tag-item').click(function(e) {
         e.stopPropagation();
     })
@@ -120,7 +107,7 @@ $().ready(function() {
             }
         }
         if (!is_selected) {
-            val = $('#current_tab')[0].value || e.currentTarget.options[0].value;
+            val = $('#current-tab')[0].value || e.currentTarget.options[0].value;
             $('#id_board_tab option[value=' + val + ']').prop("selected", true);
         }
         $('#id_board_tab').selectpicker('refresh')

@@ -12,14 +12,16 @@
 <nav id="side-nav" class="container-fluid navbar navbar-default">
   <ul class="nav navbar-nav">
   {% for item in navigator %}
-    <li class="dropdown {% if service is defined and item.category == service.category %}current-menu{% endif %}">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="{{ item.category.get_absolute_url() }}">{{ item.category.name }}</a>
-      <ul class="dropdown-menu">
-      {% for service in item.services %}
-        <li><a href="{{ service.get_absolute_url() }}">{{ service.name }}</a></li>
-      {% endfor %}
-      </ul>
-    </li>
+    {% if item.services %}
+      <li class="dropdown {% if service is defined and item.category == service.category %}current-menu{% endif %}">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="{{ item.category.get_absolute_url(request.user) }}">{{ item.category.name }}</a>
+        <ul class="dropdown-menu">
+        {% for service in item.services %}
+          <li><a href="{{ service.get_absolute_url() }}">{{ service.name }}</a></li>
+        {% endfor %}
+        </ul>
+      </li>
+    {% endif %}
   {% endfor %}
   </ul>
 </nav>

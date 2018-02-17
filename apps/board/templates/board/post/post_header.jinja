@@ -1,20 +1,11 @@
-{% from 'board/macros.jinja' import debate_state %}
+{% from 'board/macros.jinja' import post_title_postfix %}
 
 <div id="post-header" class="clearfix">
   <div id="post-title">
-  {%- if post.content_en and post.content_ko -%}
-    <i class="fa fa-globe"></i>
-  {%- endif %}
-  {% if post.is_secret -%}
-    <i class="fa fa-lock"></i>
-  {%- endif %}
-    {{ post.title }}
-    {% if board.role == BOARD_ROLE_DEBATE %}
-    {% from 'board/macros.jinja' import debate_state %}
-      <div class='pull-right'>
-        {{ debate_state(post)}}
-      </div>
-    {% endif %}
+  {{ post.title }}
+  <div class='pull-right'>
+    {{ post_title_postfix(post)}}
+  </div>
   </div>
   <div id="post-info">
     <div class="pull-left">
@@ -23,10 +14,10 @@
       {% endif %}
       {{ name(post.author) }}
       <span class="margin-both">|</span>
-      {% if board.role == BOARD_ROLE_DEBATE %}
-      {{ post.date.strftime('%y-%m-%d') }} ~ {{ post.due_date.strftime('%y-%m-%d')}}
+      {% if board.check_role(BOARD_ROLE['DEBATE']) %}
+      {{ post.date.strftime('%Y/%-m/%-d') }} ~ {{ post.due_date.strftime('%Y/%-m/%-d')}}
       {% else %}
-      {{ post.date.strftime('%Y-%m-%d %H:%M:%S') }}
+      {{ post.date.strftime('%Y/%-m/%-d %H:%M') }}
       {% endif %}
     </div>
     <div class="pull-right">{{ _('조회수') }}<span class="margin-both">|</span>{{ post.get_hits() }}</div>
