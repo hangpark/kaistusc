@@ -7,8 +7,9 @@ from datetime import datetime
 import os
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
 
 from apps.manager import Custom404
 from apps.manager.constants import *
@@ -187,10 +188,17 @@ class PostView(BoardView):
         게시글과 관련 정보를 컨텍스트에 저장하는 메서드.
         """
         context = super().get_context_data(**kwargs)
+
         # 게시글 저장
         context['post'] = self.post_
+
         # 게시글에 달린 댓글 목록 저장
-        context['comments'] = self.post_.comment_set.all()
+        # 페이지네이션 생성
+        comment_list = self.post_.comment_set.all()
+        comment_paginator = Paginator(comment_list, 15)
+        comments = comment_paginator.page(1)
+
+        context['comments'] = comments
 
         # 게시글에 첨부된 파일 목록 저장
         context['files'] = self.post_.attachedfile_set.all()
@@ -373,9 +381,9 @@ class PostDeleteView(PostView):
         return HttpResponseRedirect(post.board.get_absolute_url())
 
 
-class CommentWriteView(PostView):
+class CommentView(PostView):
     """
-    댓글 등록 뷰.
+    댓글 뷰.
 
     기본 필요권한이 댓글권한으로 설정되어 있습니다. AJAX 통신에 응답하는
     뷰입니다.
@@ -383,6 +391,26 @@ class CommentWriteView(PostView):
 
     template_name = 'board/comment.jinja'
     required_permission = PERM_COMMENT
+
+    def get(self, request, *args, **kwargs):
+        # 페이지네이션 생성
+        comment_list = self.post_.comment_set.all()
+        comment_paginator = Paginator(comment_list, 15)
+        page_num = self.request.GET.get('p')
+        comments_page = comment_paginator.page(page_num)
+        if comments_page.has_next():
+            next_page_num = comments_page.next_page_number()
+        else :
+            next_page_num = None
+        
+        comments = [render_to_string('board/comment.jinja', {
+            'comment': comment,
+            }, request) for comment in comments_page]
+        
+        return JsonResponse({
+            'comments':comments,
+            'next_page_num': next_page_num,
+        })
 
     def post(self, request, *args, **kwargs):
         """

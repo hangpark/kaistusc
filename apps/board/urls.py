@@ -4,7 +4,7 @@
 
 from django.conf.urls import url
 
-from apps.board.views import (BoardView, CommentDeleteView,CommentWriteView,PostDeleteView, PostEditView, PostView,PostWriteView,PostVoteView)
+from apps.board.views import (BoardView, CommentDeleteView,CommentView,PostDeleteView, PostEditView, PostView,PostWriteView,PostVoteView)
 
 url_tab = r'^(?:(?P<tab>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
 
@@ -25,7 +25,7 @@ urlpatterns = [
         PostDeleteView.as_view()),
 
     url(url_tab + r'(?P<post>[0-9]+)/comment/$',
-        CommentWriteView.as_view()),
+        CommentView.as_view()),
 
     url(url_tab + r'(?P<post>[0-9]+)/comment/(?P<comment>[0-9]+)/delete/$',
         CommentDeleteView.as_view()),

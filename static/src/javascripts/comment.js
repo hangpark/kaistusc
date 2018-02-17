@@ -48,6 +48,22 @@ $().ready(function() {
         }
         
     });
+
+    $('#comment-prev-btn span').on('click', function(e) {
+        var nextPageNum = $('#comment-next-page-num').val();
+        $.getJSON('./comment/?p=' + nextPageNum, function(data){
+            var comments = data.comments;
+            nextPageNum = data.next_page_num;
+            comments.forEach(function(comment_html){
+                $(comment_html).insertBefore("#comment-prev-btn");
+            });
+            if(nextPageNum) {
+                $('#comment-next-page-num').val(nextPageNum);
+            } else {
+                $('#comment-prev-btn').remove();
+            }
+        })  
+    })
 });
 
 $(document).on('click', ".comment-remove", function() {
