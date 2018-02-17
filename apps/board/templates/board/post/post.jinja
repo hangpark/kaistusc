@@ -8,11 +8,10 @@
   {% include 'board/post/post_header.jinja' %}
   <div id="post-content">{{ post.content }}</div>
   
-  {% if post.board.check_role(BOARD_ROLE['PROJECT']) %}
-    {% if post.schedule_set.all() %}
-      {% include 'board/post/post_project_timeline.jinja' %}
-    {% endif %}
+  {% if post.board.check_role(BOARD_ROLE['PROJECT']) and post.schedule_set.all() %}
+    {% include 'board/post/post_project_timeline.jinja' %}
   {% endif %}
+  
   {% include 'board/post/post_func.jinja' %}
 
   {% if files %}
@@ -20,20 +19,10 @@
   {% endif %}
 
   {% if post.is_permitted(request.user, PERM_COMMENT) %}
-  {% include 'board/comment_form.jinja' %}
+    {% include 'board/comment_form.jinja' %}
   {% endif %}
 
-  <div id="comment-list">
-    {% for comment in comments %}
-      {% include 'board/comment.jinja' %}
-    {% endfor %}
-    {% if comments.has_next() %}
-      <div id="comment-prev-btn" class="comment">
-        <span>{{_('이전 댓글 보기')}}</span>
-      </div>
-      <input id="comment-next-page-num" type="hidden" value="{{comments.next_page_number()}}"/>
-    {% endif %}
-  </div>
+  {% include 'board/comment_list.jinja' %}
 </div>
 
 {% if board.check_role(BOARD_ROLE['DEBATE']) %}
