@@ -6,7 +6,7 @@ from django.forms import ModelForm
 import json
 from django.conf import settings
 from dateutil.parser import parse
-from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule
+from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule, WebDoc
 import pytz
 
 class PostForm(ModelForm):
@@ -83,6 +83,40 @@ class DebatePostForm(PostForm):
     def save(self, POST, FILES):
         post = super().save(POST, FILES)
         post.due_date = parse_date_string(POST['due_date'])
+        post.save()
+        return post
+
+class WorkhourPostForm(PostForm):
+    class Meta:
+        model = Post
+        fields = (
+            'title_ko', 'title_en', 'content_ko', 'content_en',
+            'is_notice', 'tag', 'board_tab', 'is_secret')
+    def save(self, POST, FILES):
+        post = super().save(POST, FILES)
+        webdocs = post.webdoc_set.all()
+
+        if webdocs:
+            webdocs[0].embed_url = POST['embed_url']
+        else:
+            WebDoc.objects.create(post=post, embed_url=POST['embed_url'])
+
+        post.title_ko = post.board.role
+        post.content_ko = post.board.role
+        post.save()
+        return post
+
+class PlanbookPostForm(PostForm):
+    class Meta:
+        model = Post
+        fields = (
+            'title_ko', 'title_en', 'content_ko', 'content_en',
+            'is_notice', 'tag', 'board_tab', 'is_secret')
+    def save(self, POST, FILES):
+        post = super().save(POST, FILES)
+
+        post.title_ko = post.board.role
+        post.content_ko = post.board.role
         post.save()
         return post
 
