@@ -124,7 +124,8 @@ class BoardView(ServiceView):
             # 상품 카테고리 목록 저장
             context['product_categories'] = ProductCategory.objects.all();        
             product_category = self.request.GET.get('product_category')
-            post_list = post_list.filter(category=product_category)
+            if(product_category):
+                post_list = post_list.filter(category=product_category)
 
         # 포스트 리스트 페이지네이션 생성
         context['POST_PER_PAGE'] = POST_PER_PAGE
