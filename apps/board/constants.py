@@ -19,3 +19,8 @@ BOARD_ROLE = {
 BANNER_CAROUSEL_SECTOR = {
     'MAIN': 0,
 }
+
+# 페이지당 아이탬 수 (per_page)
+
+POST_PER_PAGE = 15
+COMMENT_PER_PAGE = 15

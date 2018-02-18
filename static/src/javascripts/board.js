@@ -1,9 +1,9 @@
 $().ready(function() {
-    function convert2html(str) {
+    function convert2html(str, withP) {
         return "<p>" + str.replace(/^\n+/g, "").replace(/\n+$/g, "").replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>") + "</p>";
     }
 
-    $("#post-content, .comment-content").each(function() {
+    $("#post-content").each(function() {
         $(this).html(convert2html($(this).html()));
     });
 
@@ -12,7 +12,6 @@ $().ready(function() {
         $(".post-form-lang" +' input').prop('required', false);
         $(".post-form-lang" +' textarea').prop('required', false);
         $(".post-form-lang").hide();
-        console.log(1)
         $("#post-form-lang-" + lang +' input').prop('required', true);
         $("#post-form-lang-" + lang +' textarea').prop('required', true);
         $("#post-form-lang-" + lang).show();
@@ -42,43 +41,6 @@ $().ready(function() {
         if (e.is(":first-child") && !e.next().length)
             e.clone().appendTo("#attach-file-wrap");
         e.remove();
-    });
-
-    $("#btn-comment-form").click(function() {
-        var $btn = $(this);
-        if (!$("#comment-form textarea").val()) {
-            alert($("#comment-no-input").val());
-            return;
-        }
-        if ($btn.hasClass("disabled"))
-            return;
-        $btn.addClass("disabled");
-        $.post("./comment/", $("#comment-form").serialize())
-            .done(function(data) {
-                $("#comment-list").append(data);
-                $(".comment-content:last").each(function () {
-                    $(this).html(convert2html($(this).html()));
-                });
-                $("#comment-form textarea").val("");
-            }).fail(function() {
-                alert("Error");
-            }).always(function() {
-                $btn.removeClass("disabled");
-            });
-    });
-
-    $("#comment-list").on('click', ".comment-remove", function() {
-        var $comment = $(this).parents(".comment");
-        var $form = $(this).parent();
-        if (confirm($("#delete-comment-warning").val())) {
-            $.post($form.attr('action'), $form.serialize())
-                .done(function(data) {
-                    $comment.find(".comment-content").html($("#deleted-comment-content").val());
-                }).fail(function() {
-                    alert("Error");
-                });
-        }
-
     });
 
     $("#post-vote form").click(function() {
