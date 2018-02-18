@@ -36,6 +36,7 @@ class Board(Service):
         (BOARD_ROLE['DEBATE'], _('논의')),
         (BOARD_ROLE['ARCHIVING'], _('아카이빙')),
         (BOARD_ROLE['WORKHOUR'], _('상근관리')),
+        (BOARD_ROLE['STORE'], _('상점')),
     )
 
     role = models.CharField(
@@ -501,6 +502,10 @@ class ProductCategory(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = _('상품 카테고리')
+        verbose_name_plural = _('상품 카테고리(들)')
+
 
 class Product(models.Model):
     """
@@ -513,7 +518,6 @@ class Product(models.Model):
 
     board_tab = models.ManyToManyField(
         BoardTab,
-        blank=True,
         verbose_name=_("등록 탭"))
 
     category = models.ForeignKey(
@@ -528,15 +532,17 @@ class Product(models.Model):
         _("가격"))
     
     description = models.TextField(
-        _("상품 설명"))
+        _("상품 설명"),
+        blank=True,
+        null=True,)
 
     class Meta:
-        ordering = ['name']
+        ordering = ['-id']
         verbose_name = _('상품')
         verbose_name_plural = _('상품(들)')
 
     def __str__(self):
-        return self.board_tab.name + "에서 파는 " + self.title
+        return self.name
     
 class ProjectPost(Post):
     """
