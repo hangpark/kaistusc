@@ -296,11 +296,10 @@ class PostWriteView(BoardView):
         return context
 
     def get_redirect_url(self, post):
-        # (false_value, true_value)[condition]
-        return (
-            post.get_absolute_url(),
-            self.service.get_absolute_url(),
-        )[self.service.board.role in ['PLANBOOK', 'WORKHOUR']]
+        if self.service.board.role in ['PLANBOOK', 'WORKHOUR']:
+            return self.service.get_absolute_url()
+        else:
+            return post.get_absolute_url()
 
     def post(self, request, *args, **kwargs):
         """
