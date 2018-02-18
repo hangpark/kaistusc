@@ -8,8 +8,10 @@
     {% endfor %}
     <div id="attach-file-wrap">
         <div class="attach-file col-xs-12 nopadding">
-            <input type="file" name="files">
+            <input type="file" name="files" {% if board.check_role(BOARD_ROLE['ARCHIVING']) %} required {% endif %}>
+            {% if not board.check_role(BOARD_ROLE['ARCHIVING']) %}
             <span class="file-more"><i class="fa fa-plus"></i></span>
+            {% endif %}
         </div>
     </div>
 </div>

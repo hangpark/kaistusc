@@ -12,6 +12,7 @@ BOARD_ROLE = {
     'PROJECT': 'PROJECT',
     'DEBATE': 'DEBATE',
     'PLANBOOK': 'PLANBOOK',
+    'ARCHIVING':'ARCHIVING',
 }
 
 # 배너 캐러셀 노출위치

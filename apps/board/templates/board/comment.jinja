@@ -3,7 +3,7 @@
 <div id="comment-id-{{ comment.id }}" class="comment">
   <div class="comment-header clearfix">
     <div class="pull-left">
-      {{ name(comment.author) }}<span class="margin-both">|</span>{{ comment.date.strftime('%Y/%-m/%-d %H:%M') }}
+      {{ name(comment.author) }}<span class="margin-both">|</span>{{ comment.date.strftime('%Y/%m/%d %H:%M') }}
     </div>
     {% if comment.is_permitted(request.user, PERM_DELETE) %}
     <form action="{{ comment.get_absolute_url() }}/delete/" class="pull-right">{% csrf_token %}

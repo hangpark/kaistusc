@@ -31,9 +31,9 @@
 </div>
 
 {% if board.check_role(BOARD_ROLE['DEBATE']) %}
-  {% include 'board/debate/post_list_debate.jinja' %}
+  {% include 'board/post_list/post_list_debate.jinja' %}
 {% else %}
-  {% include 'board/post_list.jinja' %}
+  {% include 'board/post_list/post_list.jinja' %}
 {% endif %}
 
 {% if post.is_permitted(request.user, PERM_DELETE) %}

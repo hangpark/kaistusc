@@ -12,7 +12,6 @@ $().ready(function() {
         $(".post-form-lang" +' input').prop('required', false);
         $(".post-form-lang" +' textarea').prop('required', false);
         $(".post-form-lang").hide();
-        console.log(1)
         $("#post-form-lang-" + lang +' input').prop('required', true);
         $("#post-form-lang-" + lang +' textarea').prop('required', true);
         $("#post-form-lang-" + lang).show();

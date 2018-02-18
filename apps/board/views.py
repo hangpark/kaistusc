@@ -433,12 +433,10 @@ class CommentWriteWithFileView(PostView):
         """
 
         user = request.user if request.user.is_authenticated() else None
-        
         comment = Comment(
             author=user,
             parent_post=self.post_)
         form = CommentForm(request.POST, request.FILES, instance=comment)
-
         if form.is_valid():
             form.save(request.POST, request.FILES)
             return HttpResponseRedirect(self.post_.get_absolute_url())
