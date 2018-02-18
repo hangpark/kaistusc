@@ -8,26 +8,21 @@
   {% include 'board/post/post_header.jinja' %}
   <div id="post-content">{{ post.content }}</div>
   
-  {% if post.board.check_role(BOARD_ROLE['PROJECT']) %}
-    {% if post.schedule_set.all() %}
-      {% include 'board/post/post_project_timeline.jinja' %}
-    {% endif %}
+  {% if post.board.check_role(BOARD_ROLE['PROJECT']) and post.schedule_set.all() %}
+    {% include 'board/post/post_project_timeline.jinja' %}
   {% endif %}
+  
   {% include 'board/post/post_func.jinja' %}
 
   {% if files %}
     {% include 'board/post/post_files.jinja' %}
   {% endif %}
 
-  <div id="comment-list">
-    {% for comment in comments %}
-      {% include 'board/comment.jinja' %}
-    {% endfor %}
-  </div>
-
   {% if post.is_permitted(request.user, PERM_COMMENT) %}
-  {% include 'board/comment_form.jinja' %}
+    {% include 'board/comment_form.jinja' %}
   {% endif %}
+
+  {% include 'board/comment_list.jinja' %}
 </div>
 
 {% if board.check_role(BOARD_ROLE['DEBATE']) %}
@@ -40,6 +35,5 @@
 {% include 'board/post/post_delete_confirm.jinja' %}
 {% endif %}
 
-<input type="hidden" id="deleted-comment-content" value="{{ _('삭제되었습니다.') }}"/>
 <input type="hidden" id="delete-comment-warning" value="{{ _('댓글을 정말 삭제할까요?') }}"/>
 {% endblock %}

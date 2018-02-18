@@ -6,7 +6,7 @@ from django.forms import ModelForm
 import json
 from django.conf import settings
 from dateutil.parser import parse
-from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule
+from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule, WebDoc
 import pytz
 
 class PostForm(ModelForm):
@@ -46,34 +46,6 @@ class PostForm(ModelForm):
 
         return post
 
-
-class CommentForm(ModelForm):
-    """
-    댓글을 등록 및 수정하는 폼.
-
-    :class:`ModelForm`으로 구현되었으며, `save` 메서드에서 첨부파일까지
-    저장합니다.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    class Meta:
-        model = Comment
-        fields = ('content',)
-
-    def save(self, POST, FILES):
-        """
-        게시글과 그에 첨부된 파일들을 저장하는 메서드.
-        """
-        comment = super().save()
-       
-        files = FILES.getlist('files')
-        for f in files:
-            AttachedFile.objects.create(post=comment, file=f)
-    
-        return comment
-
 class DebatePostForm(PostForm):
     class Meta:
         model = DebatePost
@@ -83,6 +55,40 @@ class DebatePostForm(PostForm):
     def save(self, POST, FILES):
         post = super().save(POST, FILES)
         post.due_date = parse_date_string(POST['due_date'])
+        post.save()
+        return post
+
+class WorkhourPostForm(PostForm):
+    class Meta:
+        model = Post
+        fields = (
+            'title_ko', 'title_en', 'content_ko', 'content_en',
+            'is_notice', 'tag', 'board_tab', 'is_secret')
+    def save(self, POST, FILES):
+        post = super().save(POST, FILES)
+        webdocs = post.webdoc_set.all()
+
+        if webdocs:
+            webdocs[0].embed_url = POST['embed_url']
+        else:
+            WebDoc.objects.create(post=post, embed_url=POST['embed_url'])
+
+        post.title_ko = post.board.role
+        post.content_ko = post.board.role
+        post.save()
+        return post
+
+class PlanbookPostForm(PostForm):
+    class Meta:
+        model = Post
+        fields = (
+            'title_ko', 'title_en', 'content_ko', 'content_en',
+            'is_notice', 'tag', 'board_tab', 'is_secret')
+    def save(self, POST, FILES):
+        post = super().save(POST, FILES)
+
+        post.title_ko = post.board.role
+        post.content_ko = post.board.role
         post.save()
         return post
 

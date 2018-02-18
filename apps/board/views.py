@@ -7,8 +7,9 @@ from datetime import datetime
 import os
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
 
 from apps.manager import Custom404
 from apps.manager.constants import *
@@ -17,8 +18,7 @@ from apps.manager.views import ServiceView
 from apps.board.constants import *
 
 from apps.board.constants_mapping import *
-from .forms import PostForm, ProjectPostForm,CommentForm, DebatePostForm
-from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost
+from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost, AttachedFile
 
 class BoardView(ServiceView):
     """
@@ -109,7 +109,7 @@ class BoardView(ServiceView):
         context['filter_state'] = filter_state
 
         # 페이지네이션 생성
-        paginator = Paginator(post_list, 15)
+        paginator = Paginator(post_list, POST_PER_PAGE)
         page_num = self.request.GET.get('p')
         try:
             posts = paginator.page(page_num)
@@ -188,15 +188,17 @@ class PostView(BoardView):
         게시글과 관련 정보를 컨텍스트에 저장하는 메서드.
         """
         context = super().get_context_data(**kwargs)
+
         # 게시글 저장
         context['post'] = self.post_
+
         # 게시글에 달린 댓글 목록 저장
-        context['comments'] = self.post_.comment_set.all()
-        comments_files = {}
-        for comment in context['comments']:
-            if(comment.attached_files()):
-                comments_files[comment.id] = comment.attached_files()
-        context['comments_files'] =comments_files
+        # 페이지네이션 생성
+        comment_list = self.post_.comment_set.all()
+        comment_paginator = Paginator(comment_list, COMMENT_PER_PAGE)
+        comments = comment_paginator.page(1)
+
+        context['comments'] = comments
 
         # 게시글에 첨부된 파일 목록 저장
         context['files'] = self.post_.attachedfile_set.all()
@@ -228,7 +230,6 @@ class PdfPostView(BoardView):
         required_permission = self.required_permission
         self.required_permission = PERM_ACCESS
         kwargs['url'] = kwargs['url'] + '/latest/'
-        print(kwargs)
         if not super().has_permission(request, *args, **kwargs):
             return False
         self.required_permission = required_permission
@@ -273,9 +274,17 @@ class PostWriteView(BoardView):
 
     기본 필요권한이 쓰기권한으로 설정되어 있습니다.
     """
-
-    template_name = 'board/post_form/post_form.jinja'
+        
     required_permission = PERM_WRITE
+
+    # Use this method instead of directly assigning template_name
+    def get_template_names(self):
+        template_names = ['board/post_form/post_form.jinja']
+        if (self.service.board.check_role(BOARD_ROLE['WORKHOUR'])):
+            template_names = ['board/post_form/workhour_post_form.jinja']
+        elif (self.service.board.check_role(BOARD_ROLE['PLANBOOK'])):
+            template_names = ['board/post_form/planbook_post_form.jinja']
+        return template_names
 
     def get_context_data(self, **kwargs):
         """
@@ -283,9 +292,15 @@ class PostWriteView(BoardView):
         """
         context = super().get_context_data(**kwargs)
         post_form = MAP_FORM_POST[self.service.board.role]
-        context['form'] =post_form(self.service.board)
+        context['form'] = post_form(self.service.board)
 
         return context
+
+    def get_redirect_url(self, post):
+        if self.service.board.role in ['PLANBOOK', 'WORKHOUR']:
+            return self.service.get_absolute_url()
+        else:
+            return post.get_absolute_url()
 
     def post(self, request, *args, **kwargs):
         """
@@ -307,9 +322,7 @@ class PostWriteView(BoardView):
 
         if form.is_valid():
             form.save(request.POST, request.FILES)
-            if self.service.board.check_role(BOARD_ROLE['PLANBOOK']):
-                return HttpResponseRedirect(self.service.get_absolute_url())
-            return HttpResponseRedirect(post.get_absolute_url())
+            return HttpResponseRedirect(self.get_redirect_url(post))
         context = self.get_context_data(**kwargs)
         context['form'] = form
         return self.render_to_response(context)
@@ -322,8 +335,16 @@ class PostEditView(PostView):
     기본 필요권한이 수정권한으로 설정되어 있습니다.
     """
 
-    template_name = 'board/post_form/post_form.jinja'
     required_permission = PERM_EDIT
+
+    # Use this method instead of directly assigning template_name
+    def get_template_names(self):
+        template_names = ['board/post_form/post_form.jinja']
+        if (self.service.board.check_role(BOARD_ROLE['WORKHOUR'])):
+            template_names = ['board/workhour_form.jinja']
+        elif (self.service.board.check_role(BOARD_ROLE['PLANBOOK'])):
+            template_names = ['board/planbook_form.jinja']
+        return template_names
 
     def get_context_data(self, **kwargs):
         """
@@ -380,9 +401,9 @@ class PostDeleteView(PostView):
         return HttpResponseRedirect(post.board.get_absolute_url())
 
 
-class CommentWriteView(PostView):
+class CommentView(PostView):
     """
-    댓글 등록 뷰.
+    댓글 뷰.
 
     기본 필요권한이 댓글권한으로 설정되어 있습니다. AJAX 통신에 응답하는
     뷰입니다.
@@ -390,6 +411,26 @@ class CommentWriteView(PostView):
 
     template_name = 'board/comment.jinja'
     required_permission = PERM_COMMENT
+
+    def get(self, request, *args, **kwargs):
+        # 페이지네이션 생성
+        comment_list = self.post_.comment_set.all()
+        comment_paginator = Paginator(comment_list, COMMENT_PER_PAGE)
+        page_num = self.request.GET.get('p')
+        comments_page = comment_paginator.page(page_num)
+        if comments_page.has_next():
+            next_page_num = comments_page.next_page_number()
+        else :
+            next_page_num = None
+        
+        comments = [render_to_string('board/comment.jinja', {
+            'comment': comment,
+            }, request) for comment in comments_page]
+        
+        return JsonResponse({
+            'comments':comments,
+            'next_page_num': next_page_num,
+        })
 
     def post(self, request, *args, **kwargs):
         """
@@ -402,47 +443,10 @@ class CommentWriteView(PostView):
             author=user,
             content=request.POST.get('content'),
             parent_post=self.post_)
+        for f in request.FILES.getlist('files'):
+            AttachedFile.objects.create(post=comment, file=f)
         context = {'comment': comment}
-        return self.render_to_response(self.get_permission_context(context))
 
-class CommentWriteWithFileView(PostView):
-    """
-    첨부 가능한 댓글 등록 뷰.
-    기본 필요권한이 댓글권한으로 설정되어 있습니다. AJAX 통신에 응답하는
-    뷰입니다.
-    """
-    required_permission = PERM_COMMENT
-   
-    def get_context_data(self, **kwargs):
-        """
-        댓글 작성 폼을 컨텍스트에 추가하는 메서드.
-        """
-        context = super().get_context_data(**kwargs)
-        context['form'] = CommentForm()
-
-        return context
-
-    def post(self, request, *args, **kwargs):
-
-        """
-        댓글 등록 요청에 따라 게시글을 저장하는 메서드.
-        사용자로부터 제출된 댓글 폼을 평가하여 통과될 시 게시글과 첨부파일을
-        저장합니다. 올바르지 않은 댓글이 제출된 경우 오류정보를 포함한 폼을
-        재전달하여 수정을 요구합니다.
-        작성이 정상적으로 완료되면 댓글 HTML 소스를 사용자에게 전달합니다.
-        """
-
-        user = request.user if request.user.is_authenticated() else None
-        comment = Comment(
-            author=user,
-            parent_post=self.post_)
-        form = CommentForm(request.POST, request.FILES, instance=comment)
-        if form.is_valid():
-            form.save(request.POST, request.FILES)
-            return HttpResponseRedirect(self.post_.get_absolute_url())
-
-        context = self.get_context_data(**kwargs)
-        context['form'] = form
         return self.render_to_response(self.get_permission_context(context))
 
 class CommentDeleteView(PostView):
@@ -453,7 +457,7 @@ class CommentDeleteView(PostView):
     뷰입니다.
     """
 
-    template_name = None
+    template_name = 'board/comment.jinja'
     required_permission = PERM_DELETE
 
     def has_permission(self, request, *args, **kwargs):
@@ -484,7 +488,8 @@ class CommentDeleteView(PostView):
         """
         self.comment.is_deleted = True
         self.comment.save()
-        return HttpResponse()
+        context = {'comment': self.comment}
+        return self.render_to_response(self.get_permission_context(context))
 
 
 class PostVoteView(PostView):

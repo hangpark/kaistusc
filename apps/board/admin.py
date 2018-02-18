@@ -5,7 +5,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import AttachedFile, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule
+from .models import AttachedFile, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule, WebDoc
 
 
 class BoardAdmin(TranslationAdmin):
@@ -120,3 +120,4 @@ admin.site.register(Banner, BannerAdmin)
 admin.site.register(BannerCarousel, BannerCarouselAdmin)
 admin.site.register(Link, LinkAdmin)
 admin.site.register(AttachedFile)
+admin.site.register(WebDoc)

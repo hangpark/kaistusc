@@ -35,6 +35,7 @@ class Board(Service):
         (BOARD_ROLE['PLANBOOK'], _('정책자료집')),
         (BOARD_ROLE['DEBATE'], _('논의')),
         (BOARD_ROLE['ARCHIVING'], _('아카이빙')),
+        (BOARD_ROLE['WORKHOUR'], _('상근관리')),
     )
 
     role = models.CharField(
@@ -365,7 +366,7 @@ class Comment(BasePost):
         verbose_name=_("상위 포스트"))
 
     class Meta:
-        ordering = ['date']
+        ordering = ['-date']
         verbose_name = _('댓글')
         verbose_name_plural = _('댓글(들)')
 
