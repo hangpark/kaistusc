@@ -1,0 +1,11 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'board/macros.jinja' import form_group %}
+
+{% block content %}
+<form id="post-form" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% include 'board/post_form/post_form_files.jinja' %}
+  <button type="submit" class="col-xs-12 btn btn-primary">{{ _('등록') }}</button>
+</form>
+{% endblock %}

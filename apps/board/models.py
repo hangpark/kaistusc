@@ -34,6 +34,7 @@ class Board(Service):
         (BOARD_ROLE['PROJECT'], _('사업')),
         (BOARD_ROLE['PLANBOOK'], _('정책자료집')),
         (BOARD_ROLE['DEBATE'], _('논의')),
+        (BOARD_ROLE['WORKHOUR'], _('상근관리')),
     )
 
     role = models.CharField(

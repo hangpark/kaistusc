@@ -109,15 +109,53 @@ gulp.task('revision:rename', ['js', 'css', 'fonts'], () =>
   .pipe(gulp.dest(dist))
 );
 
-gulp.task('revision:updateReferences', ['revision:rename'], () =>
-  gulp.src([dist + '/rev-manifest.json', dist + '/**/*.{json,css,js}'],  { base: './' })
+gulp.task('revision:update-references', ['revision:rename'], () =>
+  gulp.src([dist + '/manifest.json', dist + '/**/*.{json,css,js}'],  { base: './' })
   .pipe(collect())
   .pipe(gulp.dest('./'))
 );
 
+gulp.task('rename-css', ['clean-css', 'css'], function() {
+  return (
+    gulp.src([dist + '/**/*.css'], { base: './' })
+        .pipe(rev())
+        .pipe(gulp.dest('./'))
+        .pipe(rev.manifest({ path: 'manifest.json' }))
+        .pipe(gulp.dest(dist))
+  );
+
+});
+
+gulp.task('update-references-css', ['clean-css', 'css', 'rename-css'], function() {
+  return (
+    gulp.src([dist + '/manifest.json', dist + '/**/*.{css}'],  { base: './' })
+        .pipe(collect())
+        .pipe(gulp.dest('./'))
+  );
+});
+
+gulp.task('rename-js', ['clean-js', 'js'], function() {
+  return (
+    gulp.src([dist + '/**/*.js'], { base: './' })
+        .pipe(rev())
+        .pipe(gulp.dest('./'))
+        .pipe(rev.manifest({ path: 'manifest.json' }))
+        .pipe(gulp.dest(dist))
+  );
+
+});
+
+gulp.task('update-references-js', ['clean-js', 'js', 'rename-js'], function() {
+  return (
+    gulp.src([dist + '/manifest.json', dist + '/**/*.{js}'],  { base: './' })
+        .pipe(collect())
+        .pipe(gulp.dest('./'))
+  );
+});
+
 gulp.task('pdfjs', ['clean-js'], function() {
   return gulp.src(pdfjs.in)
-        .pipe(gulp.dest(pdfjs.out));	
+    .pipe(gulp.dest(pdfjs.out));	
 });
 
 gulp.task('clean-js', function() {
@@ -130,8 +168,7 @@ gulp.task('clean-css', function() {
         .pipe(clean());
 })
 
-gulp.task('clean-fonts', function() {
-  return gulp.src(fonts.out, { read: false })
+gulp.task('clean-fonts', function() { return gulp.src(fonts.out, { read: false })
         .pipe(clean());
 })
 
@@ -144,12 +181,12 @@ gulp.task('default', [
   'fonts', 
   'css', 
   'revision:rename', 
-  'revision:updateReferences',
+  'revision:update-references',
 ]);
 
 gulp.task('watch', ['default'], function() {
 	livereload.listen();
-	gulp.watch(css.in.scss, ['clean-css', 'css']);
-	gulp.watch(js.in, ['clean-js', 'js']);
+	gulp.watch(css.in.scss, ['clean-css', 'css', 'rename-css', 'update-references-css']);
+	gulp.watch(js.in, ['clean-js', 'js', 'rename-js', 'update-references-js']);
 	gulp.watch([dist + '/**', template.in]).on('change', livereload.changed);
 });
