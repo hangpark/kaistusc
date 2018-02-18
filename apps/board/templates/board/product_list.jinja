@@ -5,16 +5,20 @@
       <th class="text-center">#</th>
       <th class="text-center">
         <div class="dropdown">
-          <button class="dropdown-toggle" type="button" id="post-list-header-tag" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <button class="dropdown-toggle" type="button" id="product-list-header-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ _('카테고리') }}
             {% if product_categories %}
               <span class="caret"></span>
             {% endif %}
           </button>
           {% if product_categories %}
-            <ul class="dropdown-menu" id="post-list-header-tag-dropdown" aria-labelledby="post-list-header-tag">
+            <ul class="dropdown-menu" aria-labelledby="product-list-header-category">
               {% for product_category in product_categories %}
-                <li>{{product_category.name}}</li>
+                <li>
+                  <a href="{% if tab %}{{ tab.get_absolute_url() }}{% else %}{{ board.get_absolute_url() }}{% endif %}?product_category={{ product_category.id }}">
+                    {{product_category.name}}
+                  </a>
+                </li>
               {% endfor %}
             </ul>
           {% endif %}

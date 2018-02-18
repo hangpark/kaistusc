@@ -90,6 +90,21 @@
 }
 
 #product-list {
+
+
+  #product-list-header-category {
+    background: none;
+    border: none;
+  }
+  .dropdown-menu {
+    left: 50%;
+    right: auto;
+    text-align: center;
+    transform: translate(-50%, 0);
+    li {
+      cursor: pointer;
+    }
+  }
   thead {
     border-bottom: solid 2px #9f9fa0;
     font-size: 12pt;
