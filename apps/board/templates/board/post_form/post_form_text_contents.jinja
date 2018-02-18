@@ -2,18 +2,23 @@
     {% call(field) form_group(form.title_ko) %}
     <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
     {% endcall %}
+    {% if not board.check_role(BOARD_ROLE['ARCHIVING']) %}
     {% call(field) form_group(form.content_ko) %}
         <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=18 class="form-control" style="resize: none;" required>{{ field.value() or '' }}</textarea>
     {% endcall %}
+    {% endif %}
 </div>
 <div id="post-form-lang-en" class="post-form-lang" style="display: none;">
     {% call(field) form_group(form.title_en) %}
     <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" />
     {% endcall %}
+    {% if not board.check_role(BOARD_ROLE['ARCHIVING']) %}
     {% call(field) form_group(form.content_en) %}
         <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=18 class="form-control" style="resize: none;">{{ field.value() or '' }}</textarea>
     {% endcall %}
-</div>
+    {% endif %}
+    </div>
+
 <div id="post-lang-func" class="row">
     <div class="col-sm-3">
         <div class="btn-group btn-group-justified">

@@ -9,7 +9,7 @@
             {% for schedule in post.schedule_set.all() %}
             <div class="project-timeline-point">
                 <div class="project-timeline-title">{{schedule.title}}</div>
-                <div class="project-timeline-date">{{schedule.date.strftime('%-m/%-d')}}</div>
+                <div class="project-timeline-date">{{schedule.date.strftime('%m/%d')}}</div>
                 <input type="hidden" class="project-timeline-date-data" value="{{schedule.date}}"/>
             </div>
             {% endfor %}

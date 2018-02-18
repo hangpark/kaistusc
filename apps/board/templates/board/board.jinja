@@ -15,13 +15,15 @@
   {% endif %}
 </div>
 {% if board.check_role(BOARD_ROLE['DEBATE']) %}
-	{% include 'board/debate/post_list_debate.jinja' %}
+	{% include 'board/post_list/post_list_debate.jinja' %}
 {% elif board.check_role(BOARD_ROLE['PLANBOOK']) %}
 	{% include 'board/post/pdf_post.jinja' %}
+{% elif board.check_role(BOARD_ROLE['ARCHIVING']) %}
+  {% include 'board/post_list/post_list_archiving.jinja' %}
 {% elif board.check_role(BOARD_ROLE['WORKHOUR']) %}
 	{% include 'board/post/webdoc_post.jinja' %}
 {% else %}
-	{% include 'board/post_list.jinja' %}
+	{% include 'board/post_list/post_list.jinja' %}
 {% endif %}
   
 {% endblock %}

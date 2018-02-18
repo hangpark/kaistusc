@@ -445,7 +445,6 @@ class CommentView(PostView):
             parent_post=self.post_)
         for f in request.FILES.getlist('files'):
             AttachedFile.objects.create(post=comment, file=f)
-
         context = {'comment': comment}
 
         return self.render_to_response(self.get_permission_context(context))

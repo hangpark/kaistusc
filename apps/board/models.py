@@ -3,7 +3,7 @@
 """
 
 import os
-from datetime import datetime
+from datetime import date,datetime
 from django.utils import timezone
 
 from django.db import models
@@ -34,6 +34,7 @@ class Board(Service):
         (BOARD_ROLE['PROJECT'], _('사업')),
         (BOARD_ROLE['PLANBOOK'], _('정책자료집')),
         (BOARD_ROLE['DEBATE'], _('논의')),
+        (BOARD_ROLE['ARCHIVING'], _('아카이빙')),
         (BOARD_ROLE['WORKHOUR'], _('상근관리')),
     )
 
@@ -49,9 +50,6 @@ class Board(Service):
     def __str__(self):
         return self.name
     
-    def check_role(self, role):
-        return self.role == role
-
     def check_role(self, role):
         return self.role == role
 
@@ -572,7 +570,8 @@ class DebatePost(Post):
         null=True, blank=True)
 
     def is_over_due(self):
-        return self.due_date < timezone.now()
+        d = timezone.now().date()
+        return (datetime.combine(d,datetime.min.time()) > self.due_date)
 
     def is_commentable(self):
         check_author = (self.author and self.author.is_superuser)
