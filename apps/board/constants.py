@@ -13,6 +13,7 @@ BOARD_ROLE = {
     'DEBATE': 'DEBATE',
     'PLANBOOK': 'PLANBOOK',
     'WORKHOUR': 'WORKHOUR',
+    'SPONSOR': 'SPONSOR',
 }
 
 # 배너 캐러셀 노출위치

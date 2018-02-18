@@ -1,0 +1,15 @@
+#sponsor-list > a {
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+}
+.sponsor-content {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  
+  & > .text-center {
+    margin-bottom: 10px;
+  }
+}

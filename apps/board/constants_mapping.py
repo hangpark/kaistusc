@@ -9,6 +9,7 @@ MAP_MODEL_POST = {
 	BOARD_ROLE['DEBATE']:DebatePost,
     BOARD_ROLE['PLANBOOK']:Post,
     BOARD_ROLE['WORKHOUR']:Post,
+    BOARD_ROLE['SPONSOR']:Post,
 }
 
 MAP_FORM_POST = {
@@ -17,4 +18,5 @@ MAP_FORM_POST = {
 	BOARD_ROLE['DEBATE']:DebatePostForm,
     BOARD_ROLE['PLANBOOK']:PlanbookPostForm,
     BOARD_ROLE['WORKHOUR']:WorkhourPostForm,
+    BOARD_ROLE['SPONSOR']:PostForm,
 }

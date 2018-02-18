@@ -1,4 +1,3 @@
-
 $().ready(function(){
     $('#schedule-add-input-ko').attr('placeholder', $('#schedule-add-input-placeholder-ko').val());
     $('#schedule-add-input-en').attr('placeholder', $('#schedule-add-input-placeholder-en').val());
