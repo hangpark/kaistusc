@@ -118,6 +118,14 @@ class BoardView(ServiceView):
          
         context['filter_state'] = filter_state
 
+
+        # 상품 목록일 경우
+        if self.service.board.check_role(BOARD_ROLE['STORE']):
+            # 상품 카테고리 목록 저장
+            context['product_categories'] = ProductCategory.objects.all();        
+            product_category = self.request.GET.get('product_category')
+            post_list = post_list.filter(category=product_category)
+
         # 포스트 리스트 페이지네이션 생성
         context['POST_PER_PAGE'] = POST_PER_PAGE
         paginator = Paginator(post_list, POST_PER_PAGE)
@@ -133,11 +141,7 @@ class BoardView(ServiceView):
             page_num, paginator.num_pages)
 
         # 게시글 목록 저장
-        context['posts'] = posts
-
-        # 상품 카테고리 목록 저장
-        if self.service.board.check_role(BOARD_ROLE['STORE']):
-            context['product_categories'] = ProductCategory.objects.all();        
+        context['posts'] = posts    
         
         return context
 
