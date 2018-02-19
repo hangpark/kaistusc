@@ -23,7 +23,7 @@
 {% elif board.check_role(BOARD_ROLE['WORKHOUR']) %}
 	{% include 'board/post/webdoc_post.jinja' %}
 {% elif board.check_role(BOARD_ROLE['STORE']) %}
-  {% include 'board/product_list.jinja' %}
+  {% include 'board/post_list/product_list.jinja' %}
 {% else %}
 	{% include 'board/post_list/post_list.jinja' %}
 {% endif %}

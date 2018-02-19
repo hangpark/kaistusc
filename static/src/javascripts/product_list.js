@@ -29,7 +29,7 @@ function validateProductAddInput() {
     var isValid = true;
     $('#product-form-row input').each(function(e) {
         if(!$(this).val()) {
-            alert($(this).attr('placeholder')+' is empty');
+            alert("'" + $(this).attr('placeholder') + "' is empty");
             isValid = false;
             return isValid;
         }

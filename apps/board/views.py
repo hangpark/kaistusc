@@ -84,11 +84,9 @@ class BoardView(ServiceView):
             post_list = post_model.objects.filter(board=board, board_tab=tab)
         else:
             post_list = post_model.objects.filter(board=board)
-
-        try:
+        
+        if Post in [post_model] + list(post_model.__bases__):
             context['notices'] = post_list.filter(is_notice=True)
-        except:
-            pass
 
         # 태그 필터링
         tag = self.request.GET.get('tag')
@@ -420,29 +418,45 @@ class PostDeleteView(PostView):
         return HttpResponseRedirect(post.board.get_absolute_url())
 
 class ProductView(BoardView):
+    
+    template_name = None
+    required_permission = PERM_WRITE
+
     def post(self, request, *args, **kwargs):
         """
         사용자로부터 제출된 상품을 작성하는 메서드.
         작성이 정상적으로 완료되면 작성된 json data를 사용자에게 전달합니다.
         """
+        def validate(category_id, price):
+            # validate category
+            try:
+                ProductCategory.objects.get(id=category_id)
+            except ProductCategory.DoesNotExist:
+                return JsonResponse({
+                    'message': _('올바르지 않은 상품카테고리입니다'),
+                }, status=400)
+            
+            # validate price
+            if(not price.isdigit()):
+                return JsonResponse({
+                    'message': _('잘못된 가격 형식입니다'),
+                }, status=400)
+            return True
+
         board = self.service.board;
         board_tab = self.get_tab(**kwargs);
         category_id = request.POST.get('category');
-        try:
-            category = ProductCategory.objects.get(id=category_id)
-        except ProductCategory.DoesNotExist:
-            return JsonResponse({
-                'message': _('올바르지 않은 상품카테고리입니다'),
-            }, status=500)
         name = request.POST.get('name');
         price = request.POST.get('price');
-        try:
-            price = int(price);
-        except ValueError:
-            return JsonResponse({
-                'message': _('잘못된 가격 형식입니다'),
-            }, status=500)
         description = request.POST.get('description');
+        validation = validate(category_id, price)
+
+        #validation
+        if(not validation == True):
+            return validation
+
+        category = ProductCategory.objects.get(id=category_id)
+        price = int(price);
         product = Product.objects.create(
             board=board,
             category=category,
@@ -480,7 +494,8 @@ class ProductDeleteView(BoardView):
         except Product.DoesNotExist:
             return JsonResponse({
                 'message': _('존재하지 않는 상품입니다'),
-            }, status=500)
+            }, status=400)
+        
         product.delete()
         return JsonResponse({
             'message': _('상품이 삭제되었습니다'),
