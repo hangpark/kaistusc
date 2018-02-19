@@ -494,7 +494,7 @@ class ProductDeleteView(BoardView):
         except Product.DoesNotExist:
             return JsonResponse({
                 'message': _('존재하지 않는 상품입니다'),
-            }, status=400)
+            }, status=404)
         
         product.delete()
         return JsonResponse({
