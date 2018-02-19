@@ -50,25 +50,44 @@ $().ready(function() {
                   });
     };
 
+    var getParameterByName = function(name) {
+      url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
     var isLoading = false;
-    var numSponsorPosts = document.getElementById('sponsor-list').childNodes.length;
-    var numSponsorPosts = $("a[href*='#collapse-example-']").length;
+    var numLoadedSponsorPosts = $("a[href*='#collapse-example-']").length;
+    var numTotalSponsorPosts = -1;
+    var search = getParameterByName('s');
 
     document.addEventListener('scroll', function (event) {
       var scrollHeight = $(document).height();
       var scrollPosition = $(window).height() + $(window).scrollTop();
-      if ((scrollHeight - scrollPosition) / scrollHeight === 0 && !isLoading) {
+
+      if ((scrollHeight - scrollPosition) / scrollHeight === 0
+          && !isLoading
+          && (numLoadedSponsorPosts < numTotalSponsorPosts || numTotalSponsorPosts === -1)) {
         // when scroll to bottom of the page
         // load more posts
         isLoading = true;
+        var requestUrl = '/api/posts?role=SPONSOR&offset=' + String(numLoadedSponsorPosts)
+        if (search !== null && search !== '') {
+          requestUrl += '&search=' + search;
+        }
         $.ajax({
-            url: '/api/posts?role=SPONSOR&offset=' + String(numSponsorPosts),
+            url: requestUrl,
             type: 'GET',
         })
         .done(function(data) {
           console.log(data);
-          numSponsorPosts += data.results.length;
+          numTotalSponsorPosts = data.count;
           drawLoadedSponsorPosts(data.results);
+          numLoadedSponsorPosts = $("a[href*='#collapse-example-']").length;
           // draw on html
         }).fail(function(e) {
             alert('데이터 로드에 실패했습니다.');

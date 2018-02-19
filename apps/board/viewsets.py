@@ -1,6 +1,8 @@
 from rest_framework import mixins, viewsets, permissions
 from rest_framework.pagination import LimitOffsetPagination
 
+from django.db.models import Q
+
 from apps.board.models import Post
 from apps.board.serializers import PostSerializer, CreatePostSerializer, RetrivePostSerializer
 
@@ -24,11 +26,14 @@ class PostViewSet(
     def get_queryset(self):
         role = self.request.query_params.get('role', None)
         search = self.request.query_params.get('search', None)
-        posts = Post.objects.all()
+        posts = Post.objects.filter(is_deleted=False)
         if role is not None:
             posts = posts.filter(board__role__exact=role)
         if search is not None:
-            posts = posts
+            posts = posts.filter(
+                Q(title__icontains=search) | 
+                Q(content__icontains=search)
+            )
         return posts
 
     def get_serializer_class(self):
