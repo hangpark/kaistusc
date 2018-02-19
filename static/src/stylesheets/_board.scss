@@ -89,6 +89,97 @@
   }
 }
 
+#product-list {
+
+
+  #product-list-header-category {
+    background: none;
+    border: none;
+  }
+  .dropdown-menu {
+    left: 50%;
+    right: auto;
+    text-align: center;
+    transform: translate(-50%, 0);
+    li {
+      cursor: pointer;
+    }
+  }
+  thead {
+    border-bottom: solid 2px #9f9fa0;
+    font-size: 12pt;
+  }
+
+  tbody tr {
+    border-top: solid 1px #ddd;
+    border-bottom: solid 1px #ddd;
+    &:hover {
+      background: #fff;
+    }
+    &:nth-child(even) {
+      background: $bg-primary-light;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
+  .product-delete-btn {
+    cursor: pointer;
+    &:hover {
+      color: $gray-2;
+    }
+  }
+
+  #product-form-row {
+    #product-add-btn {
+      line-height: 35px;
+      cursor: pointer;
+      &:hover {
+        i {
+          color: $brand-primary-hover;
+        }
+      }
+    }
+
+    td:not(#product-add-btn) {
+      display: none;
+    }
+    td {
+      padding-top:0;
+      padding-bottom: 0;
+      position: relative;
+    }
+    input {
+      height: 35px;
+      border: none;
+      background: transparent;
+      text-align: center;
+      padding: 0 30px;
+    }
+    #product-submit-btn {
+      font-size: 18px;
+      cursor: pointer;
+      &:hover {
+        color: #509c51;
+      }
+    }
+    button {
+      span {
+        text-align: center;
+      }
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      outline: none !important;
+    }
+    ul {
+      text-align: center;
+    }
+  }
+}
+
 .debate-state{
   margin-right: 5px;
   padding: 4px 6px;
@@ -148,9 +239,12 @@
 }
 
 #post-func {
-  padding: 30px 0 40px 0;
+  padding: 30px 0 50px 0;
   form {
     display: inline-block;
+  }
+  .pull-right {
+    margin-top: 10px;
   }
 }
 

@@ -6,19 +6,22 @@ from datetime import datetime
 
 import os
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.serializers import serialize
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
+import json
 
 from apps.manager import Custom404
 from apps.manager.constants import *
 from apps.board.constants import *
 from apps.manager.views import ServiceView
 from apps.board.constants import *
+from django.utils.translation import ugettext_lazy as _
 
 from apps.board.constants_mapping import *
-from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost, AttachedFile
+from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost, AttachedFile, Product, ProductCategory
 
 class BoardView(ServiceView):
     """
@@ -81,8 +84,9 @@ class BoardView(ServiceView):
             post_list = post_model.objects.filter(board=board, board_tab=tab)
         else:
             post_list = post_model.objects.filter(board=board)
-
-        context['notices'] = post_list.filter(is_notice=True)
+        
+        if Post in [post_model] + list(post_model.__bases__):
+            context['notices'] = post_list.filter(is_notice=True)
 
         # 태그 필터링
         tag = self.request.GET.get('tag')
@@ -91,8 +95,12 @@ class BoardView(ServiceView):
                 raise Custom404
             post_list = post_list.filter(tag__slug=tag)
         if search:
-            post_list = post_list.filter(is_deleted=False).filter(
-                Q(title__icontains=search) | Q(content__icontains=search))
+            if board.check_role(BOARD_ROLE['STORE']):
+                post_list = post_list.filter(
+                    Q(name__icontains=search) | Q(description__icontains=search))
+            else :
+                post_list = post_list.filter(is_deleted=False).filter(
+                    Q(title__icontains=search) | Q(content__icontains=search))
         
         if filter_state:
             superUser = User.objects.all().filter(is_superuser = True)
@@ -108,7 +116,17 @@ class BoardView(ServiceView):
          
         context['filter_state'] = filter_state
 
-        # 페이지네이션 생성
+
+        # 상품 목록일 경우
+        if self.service.board.check_role(BOARD_ROLE['STORE']):
+            # 상품 카테고리 목록 저장
+            context['product_categories'] = ProductCategory.objects.all();        
+            product_category = self.request.GET.get('product_category')
+            if(product_category):
+                post_list = post_list.filter(category=product_category)
+
+        # 포스트 리스트 페이지네이션 생성
+        context['POST_PER_PAGE'] = POST_PER_PAGE
         paginator = Paginator(post_list, POST_PER_PAGE)
         page_num = self.request.GET.get('p')
         try:
@@ -122,8 +140,7 @@ class BoardView(ServiceView):
             page_num, paginator.num_pages)
 
         # 게시글 목록 저장
-        context['posts'] = posts
-        
+        context['posts'] = posts    
         
         return context
 
@@ -407,6 +424,91 @@ class PostDeleteView(PostView):
         post.save()
         return HttpResponseRedirect(post.board.get_absolute_url())
 
+class ProductView(BoardView):
+    
+    template_name = None
+    required_permission = PERM_WRITE
+
+    def post(self, request, *args, **kwargs):
+        """
+        사용자로부터 제출된 상품을 작성하는 메서드.
+        작성이 정상적으로 완료되면 작성된 json data를 사용자에게 전달합니다.
+        """
+        def validate(category_id, price):
+            # validate category
+            try:
+                ProductCategory.objects.get(id=category_id)
+            except ProductCategory.DoesNotExist:
+                return JsonResponse({
+                    'message': _('올바르지 않은 상품카테고리입니다'),
+                }, status=400)
+            
+            # validate price
+            if(not price.isdigit()):
+                return JsonResponse({
+                    'message': _('잘못된 가격 형식입니다'),
+                }, status=400)
+            return True
+
+        board = self.service.board;
+        board_tab = self.get_tab(**kwargs);
+        category_id = request.POST.get('category');
+        name = request.POST.get('name');
+        price = request.POST.get('price');
+        description = request.POST.get('description');
+        validation = validate(category_id, price)
+
+        #validation
+        if(not validation == True):
+            return validation
+
+        category = ProductCategory.objects.get(id=category_id)
+        price = int(price);
+        product = Product.objects.create(
+            board=board,
+            category=category,
+            name=name,
+            price=price,
+            description=description,
+        )
+        product.board_tab.add(board_tab)
+        return JsonResponse({'product': {
+            'category': {
+                'id': category.id,
+                'name': category.name,
+            },
+            'name': name,
+            'price': price,
+            'description': description,
+        }})
+
+
+class ProductDeleteView(BoardView):
+    """
+    상품 삭제 뷰.
+
+    기본 필요권한이 삭제권한으로 설정되어 있습니다. AJAX 통신에 응답하는
+    뷰입니다.
+    """
+    required_permission = PERM_DELETE
+
+    def post(self, request, *args, **kwargs):
+        """
+        댓글을 삭제하는 메서드.
+        """
+        try:
+            product = Product.objects.get(id=kwargs['product_id'])
+        except Product.DoesNotExist:
+            return JsonResponse({
+                'message': _('존재하지 않는 상품입니다'),
+            }, status=404)
+        
+        product.delete()
+        return JsonResponse({
+            'message': _('상품이 삭제되었습니다'),
+        })
+
+
 class CommentView(PostView):
     """
     댓글 뷰.
@@ -451,7 +553,6 @@ class CommentView(PostView):
             parent_post=self.post_)
         for f in request.FILES.getlist('files'):
             AttachedFile.objects.create(post=comment, file=f)
-
         context = {'comment': comment}
 
         return self.render_to_response(self.get_permission_context(context))
