@@ -6,7 +6,7 @@
 
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import BasePost, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule
+from .models import BasePost, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule, ProductCategory
 
 
 @register(Board)
@@ -105,3 +105,11 @@ class LinkTranslationOptions(TranslationOptions):
     """
 
     fields = ('text',)
+
+@register(ProductCategory)
+class ProductCategoryTranslationOptions(TranslationOptions):
+    """
+    :class:`ProductCategory` 모델에 대한 국제화 지원.
+    """
+
+    fields = ('name',)
