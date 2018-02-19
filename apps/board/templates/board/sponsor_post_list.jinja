@@ -38,17 +38,6 @@
 </div>
 
 <div id="board-func" class="row">
-  <div class="pull-left col-sm-6">
-    <ul id="pagination" class="pagination pull-left">
-      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p=1">&lt;&lt;</a></li>
-      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={% if posts.has_previous() %}{{ posts.previous_page_number() }}{% else %}{{ posts.number }}{% endif %}">&lt;</a></li>
-      {% for page in pages %}
-      <li class="{% if posts.number == page %}active{% endif %}"><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={{ page }}">{{ page }}</a></li>
-      {% endfor %}
-      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={% if posts.has_next() %}{{ posts.next_page_number() }}{% else %}{{ posts.number }}{% endif %}">&gt;</a></li>
-      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={{ posts.paginator.num_pages }}">&gt;&gt;</a></li>
-    </ul>
-  </div>
   <div class="pull-right col-sm-5">
     <form action="." method="get" id="search-form">
       <div class="input-group">
