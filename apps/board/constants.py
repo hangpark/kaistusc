@@ -14,6 +14,7 @@ BOARD_ROLE = {
     'PLANBOOK': 'PLANBOOK',
     'ARCHIVING':'ARCHIVING',
     'WORKHOUR': 'WORKHOUR',
+    'SWIPER':'SWIPER,'
 }
 
 # 배너 캐러셀 노출위치
