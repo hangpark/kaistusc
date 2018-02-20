@@ -1,0 +1,32 @@
+{% macro swiper_content(post) -%}
+<dev class="swiper-slide" {% if  board.is_permitted(request.user, PERM_WRITE) %} onclick="location.href='{{ post.get_absolute_url() }}';" {% endif %}>
+{% if post.attached_files %}
+	<img src = '{{ post.attached_files()[0].get_absolute_url() }}'>
+{% else %}
+	{{ _('파일이 첨부 되지 않았습니다') }}
+{% endif %}
+</dev>
+{%- endmacro -%}
+
+<div class="swiper-container">
+	<div class="swiper-wrapper">
+		{% for post in posts %}
+		{% if not post.is_deleted %}
+			{{swiper_content(post)}}
+		{% endif %}
+		{% endfor %}
+	</div>
+	<!-- Add Arrows -->
+	<div class="swiper-pagination"></div>
+	<div class="swiper-button-next"></div>
+	<div class="swiper-button-prev"></div>
+</div>
+
+<div class = "new-swiper">
+      <div class="input-group pull-right">
+        {% if board.is_permitted(request.user, PERM_WRITE) %}
+          <a href="{{current_path}}/new/" class="btn btn-primary">{{ _('글쓰기') }}</a>
+        {% endif %}
+        </span>
+      </div>
+</div>
