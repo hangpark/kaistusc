@@ -15,6 +15,7 @@ BOARD_ROLE = {
     'ARCHIVING':'ARCHIVING',
     'WORKHOUR': 'WORKHOUR',
     'SWIPER':'SWIPER,'
+    'STORE': 'STORE',
 }
 
 # 배너 캐러셀 노출위치
