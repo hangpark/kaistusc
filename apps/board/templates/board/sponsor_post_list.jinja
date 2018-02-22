@@ -1,6 +1,3 @@
-{% from 'ksso/macros.jinja' import name %}
-{% from 'board/macros.jinja' import make_tag, post_title_postfix %}
-
 {% macro post_info(post) -%}
   <a class="list-group-item" data-toggle="collapse" href="#collapse-example-{{ post.id }}" role="button" aria-expanded="false" aria-controls="collapse-example-{{post.id}}">
   {% if post.is_deleted %}

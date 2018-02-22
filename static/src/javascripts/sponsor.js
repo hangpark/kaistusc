@@ -2,21 +2,9 @@ $().ready(function() {
   // this part should work only when board is sponsor
   if (document.getElementById('sponsor-context')) {
 
-    var getListElementTitle = function (post) {
-      if (post.is_secret) {
-        if (post.is_permitted_to_read) {
-          return post.title;
-        } else {
-          return "_('비밀글입니다.')";
-        }
-      } else {
-        return post.title;
-      }
-    }
-
     var getHtmlStrOfImgs = function (fileSet) {
       return fileSet.map(function (elem) {
-        return '<img src="' + elem.file +'" alt="사진">'
+        return '<img src="' + elem.file +'" alt="Failed to load photo">'
       }).join();
     }
 
@@ -28,7 +16,7 @@ $().ready(function() {
           href="#collapse-example-'+post.id+'" \
           role="button" aria-expanded="false" \
           aria-controls="collapse-example-'+post.id+'"> \
-          '+getListElementTitle(post)+'\
+          '+post.title+'\
         </a> \
         <div class="collapse" id="collapse-example-'+post.id+'"> \
           <div class="sponsor-content"> \
@@ -84,7 +72,6 @@ $().ready(function() {
             type: 'GET',
         })
         .done(function(data) {
-          console.log(data);
           numTotalSponsorPosts = data.count;
           drawLoadedSponsorPosts(data.results);
           numLoadedSponsorPosts = $("a[href*='#collapse-example-']").length;
