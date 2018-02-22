@@ -24,6 +24,8 @@
 	{% include 'board/post/webdoc_post.jinja' %}
 {% elif board.check_role(BOARD_ROLE['SPONSOR']) %}
 	{% include 'board/sponsor_post_list.jinja' %}
+{% elif board.check_role(BOARD_ROLE['SWIPER']) %}
+  {% include 'board/post/post_swiper.jinja' %}
 {% elif board.check_role(BOARD_ROLE['STORE']) %}
   {% include 'board/post_list/product_list.jinja' %}
 {% else %}
