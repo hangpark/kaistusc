@@ -9,6 +9,7 @@ var livereload = require('gulp-livereload');
 var rev = require('gulp-rev');
 var collect = require('gulp-rev-collector');
 var clean = require('gulp-clean');
+var eslint = require('gulp-eslint');
 var autoprefixer = require('autoprefixer');
 var merge = require('merge-stream');
 
@@ -79,6 +80,11 @@ var css = {
 // process JS files and return the stream.
 gulp.task('js', ['clean-js'], function () {
     return gulp.src(js.in)
+    .pipe(eslint({
+      useEslintrc: false,
+    }))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
 		.pipe(concat('main.js'))
     .pipe(uglify())
 		.pipe(gulp.dest(js.out))

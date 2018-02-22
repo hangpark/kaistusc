@@ -10,5 +10,6 @@ router = routers.SimpleRouter()
 
 router.register(
     prefix=r'posts',
+    base_name='post',
     viewset=PostViewSet,
 )

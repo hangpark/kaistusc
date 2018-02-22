@@ -158,6 +158,7 @@ class BoardView(ServiceView):
             return BoardTab.objects.filter(url=url).first()
         return BoardTab.objects.filter(parent_board=self.service.board).first()
 
+
 class PostView(BoardView):
     """
     특정 게시글 조회 뷰.
@@ -314,7 +315,7 @@ class PostWriteView(BoardView):
         return context
 
     def get_redirect_url(self, post):
-        if self.service.board.role in ['PLANBOOK', 'WORKHOUR']:
+        if self.service.board.role in ['PLANBOOK', 'WORKHOUR', 'SPONSOR']:
             return self.service.get_absolute_url()
         else:
             return post.get_absolute_url()
@@ -374,6 +375,12 @@ class PostEditView(PostView):
 
         return context
 
+    def get_redirect_url(self, post):
+        if self.service.board.role in [BOARD_ROLE['PLANBOOK'], BOARD_ROLD['WORKHOUR'], BOARD_ROLE['SPONSOR']]:
+            return self.service.get_absolute_url()
+        else:
+            return post.get_absolute_url()
+
     def post(self, request, *args, **kwargs):
         """
         게시글 수정 요청에 따라 게시글을 업데이트 하는 메서드.
@@ -390,7 +397,7 @@ class PostEditView(PostView):
 
         if form.is_valid():
             form.save(request.POST, request.FILES)
-            return HttpResponseRedirect(post.get_absolute_url())
+            return HttpResponseRedirect(self.get_redirect_url(post))
         context = self.get_context_data(**kwargs)
         context['form'] = form
         return self.render_to_response(context)
