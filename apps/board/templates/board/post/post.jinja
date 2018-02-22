@@ -19,7 +19,9 @@
   {% endif %}
 
   {% if post.is_permitted(request.user, PERM_COMMENT) %}
+  {% if (not post.board.check_role(BOARD_ROLE['DEBATE'])) or (post.is_commentable())%}
     {% include 'board/comment_form.jinja' %}
+  {% endif %}
   {% endif %}
 
   {% include 'board/comment_list.jinja' %}
