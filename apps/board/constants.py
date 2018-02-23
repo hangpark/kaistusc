@@ -15,7 +15,7 @@ BOARD_ROLE = {
     'ARCHIVING':'ARCHIVING',
     'WORKHOUR': 'WORKHOUR',
     'SPONSOR': 'SPONSOR',
-    'SWIPER':'SWIPER,'
+    'SWIPER':'SWIPER',
     'STORE': 'STORE',
 }
 
