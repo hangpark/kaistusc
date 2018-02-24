@@ -64,9 +64,15 @@ class WorkhourPostForm(PostForm):
         fields = (
             'title_ko', 'title_en', 'content_ko', 'content_en',
             'is_notice', 'tag', 'board_tab', 'is_secret')
+    
+    def sanitize(self, POST):
+        POST['embed_url'] = POST['embed_url'].replace('/edit', '/preview')
+        
     def save(self, POST, FILES):
         post = super().save(POST, FILES)
         webdocs = post.webdoc_set.all()
+
+        self.sanitize(POST)
 
         if webdocs:
             webdocs[0].embed_url = POST['embed_url']
