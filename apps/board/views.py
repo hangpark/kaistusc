@@ -21,7 +21,7 @@ from apps.board.constants import *
 from django.utils.translation import ugettext_lazy as _
 
 from apps.board.constants_mapping import *
-from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost, AttachedFile, Product, ProductCategory
+from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost, AttachedFile, Product, ProductCategory, BoardBanner
 
 class BoardView(ServiceView):
     """
@@ -141,6 +141,12 @@ class BoardView(ServiceView):
 
         # 게시글 목록 저장
         context['posts'] = posts    
+
+        # 보드 배너 저장
+        if tab:
+            context['board_banner'] = BoardBanner.objects.filter(board_tab=tab).first()
+        else:
+            context['board_banner'] = BoardBanner.objects.filter(board=board).first()
         
         return context
 

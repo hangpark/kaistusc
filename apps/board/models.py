@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from apps.manager.constants import *
 from apps.board.constants import *
-from apps.manager.models import BaseService, Service, ServiceManager
+from apps.manager.models import BaseService, Service, ServiceManager, TopBanner
 from kaistusc.settings import MEDIA_URL
 
 class Board(Service):
@@ -458,9 +458,28 @@ class Link(BasePost):
     def __str__(self):
         return self.text
 
+
+class BoardBanner(TopBanner):
+
+    board = models.ForeignKey(
+        Board,
+        verbose_name=_("등록 게시판"))
+
+    board_tab = models.ManyToManyField(
+        BoardTab,
+        blank=True,
+        verbose_name=_("등록 탭"))
+
+    class Meta:
+        verbose_name = _('보드배너')
+        verbose_name_plural = _('보드배너(들)')
+
+    
 class Contact(BasePost):
     """
     기구 등의 연락망 (소통창구, 오픈톡방, 전화번호)을 구현한 모델.
+    총학생회 산하기구 소개 및 연락망에서 사용합니다.
+    의결기구 아카이빙의 오픈톡방 링크는 BoardBanner model을 사용합니다.
     """
 
     board = models.ForeignKey(

@@ -13,6 +13,10 @@
     {% endfor %}
   </ul>
   {% endif %}
+  <!-- 만약 보드 배너가 있으면 표시 -->
+  {% if board_banner %}
+    {% include 'board/board_banner.jinja' %}
+  {% endif %}
 </div>
 {% if board.check_role(BOARD_ROLE['DEBATE']) %}
 	{% include 'board/post_list/post_list_debate.jinja' %}
