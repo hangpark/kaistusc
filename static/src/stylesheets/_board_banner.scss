@@ -1,0 +1,24 @@
+#board-banner-text-input, #board-banner-url-input {
+  width: 100%;
+}
+
+#board-banner .btn {
+  padding: 0;
+}
+
+#board-banner-form {
+
+  .form-inline {
+    margin: 15px 0;
+  }
+  .form-group {
+    @media (min-width: $screen-sm-min) {
+      margin-right: 12px;
+    }
+  }
+  .input-group {
+    .form-control {
+      height: 34px;
+    }
+  }
+}

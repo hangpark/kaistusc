@@ -1,0 +1,31 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% block content %}
+<form id="board-banner-form" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form-inline">
+    <input 
+      id="board-banner-text-input" 
+      type="text" 
+      name="text" 
+      class="form-control" 
+      placeholder="{{_('배너 텍스트를 입력해주세요')}}" 
+      {% if board_banner %}
+      value="{{ board_banner.text }}" 
+      {% endif %} />
+  </div>
+  <div class="form-inline">
+    <textarea 
+      id="board-banner-url-input" 
+      type="text" 
+      name="url" 
+      class="form-control" 
+      placeholder="{{_('배너 링크를 입력해주세요')}}"
+    >{% if board_banner %}{{ board_banner.url }}{% endif %}</textarea>
+  </div>
+  {% if tab %}
+    <input type="hidden" value="{{tab.id}}" name="board_tab"/>
+  {% endif %}
+  <button type="submit" class="col-xs-12 btn btn-primary">{{ _('등록') }}</button>
+</form>
+{% endblock %}

@@ -471,8 +471,8 @@ class BoardBanner(TopBanner):
         verbose_name=_("등록 탭"))
 
     class Meta:
-        verbose_name = _('보드배너')
-        verbose_name_plural = _('보드배너(들)')
+        verbose_name = _('게시판 배너')
+        verbose_name_plural = _('게시판 배너(들)')
 
     
 class Contact(BasePost):

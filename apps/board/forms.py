@@ -6,8 +6,31 @@ from django.forms import ModelForm
 import json
 from django.conf import settings
 from dateutil.parser import parse
-from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule, WebDoc
+from .models import (
+    BoardBanner, BoardTab,
+    Post, DebatePost, ProjectPost, 
+    AttachedFile, Tag, Schedule, WebDoc, 
+    Comment, 
+)
 import pytz
+
+class BoardBannerForm(ModelForm):
+    """
+    게시판 배너를 등록 및 수정하는 폼.
+
+    :class:`ModelForm`으로 구현되었습니다.
+    """
+
+    def __init__(self, board, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['board_tab'].queryset = BoardTab.objects.filter(parent_board=board)
+
+    class Meta:
+        model = BoardBanner
+        fields = (
+            'text', 'url', 'board_tab'
+        )
+    
 
 class PostForm(ModelForm):
     """
