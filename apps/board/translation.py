@@ -6,7 +6,7 @@
 
 from modeltranslation.translator import TranslationOptions, register
 
-from .models import BasePost, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule, ProductCategory
+from .models import BasePost, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule, ProductCategory, BoardBanner
 
 
 @register(Board)
@@ -89,6 +89,14 @@ class BannerTranslationOptions(TranslationOptions):
     """
 
     fields = ('title',)
+
+@register(BoardBanner)
+class BoardBannerTranslationOptions(TranslationOptions):
+    """
+    :class:`BoardBanner` 모델에 대한 국제화 지원.
+    """
+
+    fields = ()
 
 @register(BannerCarousel)
 class BannerCarouselTranslationOptions(TranslationOptions):
