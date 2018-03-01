@@ -211,8 +211,8 @@ class Service(BaseService):
 
     url = models.CharField(
         _("최상위 주소"),
-        max_length=32, default='/',
-        help_text=_("도메인 하위 경로만 적어주세요. /aaa/bbb 형식을 지켜주세요."))
+        max_length=100, default='/',
+        help_text=_("도메인 하위 경로만 적어주세요. /aaa/bbb 형식을 지켜주세요. 특정 페이지에 리다이렉팅 할 서비스의 경우 https://www.google.com/ 형식을 해주시면 됩니다."))
 
     category = models.ForeignKey(
         Category,
