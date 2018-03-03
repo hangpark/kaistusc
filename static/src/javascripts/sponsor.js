@@ -78,7 +78,6 @@ $().ready(function() {
           // draw on html
         }).fail(function(e) {
             alert('데이터 로드에 실패했습니다.');
-            console.log(e);
         }).always(function() {
           isLoading = false;
         });

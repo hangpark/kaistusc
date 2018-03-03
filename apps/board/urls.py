@@ -4,13 +4,28 @@
 
 from django.conf.urls import url
 
-from apps.board.views import (BoardView,ProductView,ProductDeleteView,CommentDeleteView,CommentView,PostDeleteView, PostEditView, PostView,PostWriteView,PostVoteView)
+from apps.board.views import (
+    BoardView,
+    ProductView,ProductDeleteView,
+    CommentDeleteView,CommentView,
+    PostDeleteView, PostEditView, PostView, PostWriteView, PostVoteView,
+    BoardBannerWriteView, BoardBannerEditView, BoardBannerDeleteView
+)
 
 url_tab = r'^(?:(?P<tab>[a-z0-9]*[a-z]+[a-z0-9]*)/)?'
 
 urlpatterns = [
     url(url_tab + r'product/$',
         ProductView.as_view()),
+
+    url(url_tab + r'banner/new/$',
+        BoardBannerWriteView.as_view()),
+
+    url(url_tab + r'banner/edit/$',
+        BoardBannerEditView.as_view()),
+
+    url(url_tab + r'banner/(?P<board_banner_id>[0-9]+)/delete/$',
+        BoardBannerDeleteView.as_view()),
 
     url(url_tab + r'new/$',
         PostWriteView.as_view()),
