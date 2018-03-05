@@ -3,8 +3,9 @@
 {% from 'board/macros.jinja' import form_group %}
 
 {% block content %}
-<form id="post-form" method="post" enctype="multipart/form-data">
+<form id="post-form" class="post-form-workhour" method="post" enctype="multipart/form-data">
   {% csrf_token %}
+  {% include 'board/post_form/post_form_content_only.jinja' %}
   {% include 'board/post_form/post_form_webdoc.jinja' %}
   <button type="submit" class="col-xs-12 btn btn-primary">{{ _('등록') }}</button>
 </form>
