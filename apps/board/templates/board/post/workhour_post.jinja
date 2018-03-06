@@ -3,6 +3,9 @@
 
 <div id="webdoc-content">
   {% if posts.object_list and posts.object_list[0].webdoc_set.all() %}
+    <div id="webdoc-description">
+      {{ posts.object_list[0].content|linebreaks }}
+    </div>
     
     <div id="webdoc-container" class="well">
       <iframe id="webdoc-embed" src="{{posts.object_list[0].webdoc_set.all()[0].embed_url}}"></iframe>

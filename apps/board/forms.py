@@ -103,7 +103,6 @@ class WorkhourPostForm(PostForm):
             WebDoc.objects.create(post=post, embed_url=POST['embed_url'])
 
         post.title_ko = post.board.role
-        post.content_ko = post.board.role
         post.save()
         return post
 
