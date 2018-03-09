@@ -21,7 +21,7 @@ from apps.board.constants import *
 from django.utils.translation import ugettext_lazy as _
 
 from apps.board.constants_mapping import *
-from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost, AttachedFile, Product, ProductCategory
+from .models import ACTIVITY_VOTE, Comment, Post, Tag, BoardTab, DebatePost, ProjectPost, AttachedFile, Product, ProductCategory, Contact
 
 class BoardView(ServiceView):
     """
@@ -211,14 +211,15 @@ class PostView(BoardView):
 
         # 게시글에 달린 댓글 목록 저장
         # 페이지네이션 생성
-        comment_list = self.post_.comment_set.all()
-        comment_paginator = Paginator(comment_list, COMMENT_PER_PAGE)
-        comments = comment_paginator.page(1)
+        if not self.service.board.check_role(BOARD_ROLE['CONTACT']):
+            # CONTACT의 게시물은 POST 를 기반으로 하지 않습니다.
+            comment_list = self.post_.comment_set.all()
+            comment_paginator = Paginator(comment_list, COMMENT_PER_PAGE)
+            comments = comment_paginator.page(1)
+            context['comments'] = comments
 
-        context['comments'] = comments
-
-        # 게시글에 첨부된 파일 목록 저장
-        context['files'] = self.post_.attachedfile_set.all()
+            # 게시글에 첨부된 파일 목록 저장
+            context['files'] = self.post_.attachedfile_set.all()
 
         # 게시글에 저장된 스케쥴 저장
         if self.service.board.check_role(BOARD_ROLE['PROJECT']):
@@ -301,6 +302,8 @@ class PostWriteView(BoardView):
             template_names = ['board/post_form/workhour_post_form.jinja']
         elif (self.service.board.check_role(BOARD_ROLE['PLANBOOK'])):
             template_names = ['board/post_form/planbook_post_form.jinja']
+        elif (self.service.board.check_role(BOARD_ROLE['CONTACT'])):
+            template_names  = ['board/post_form/contact_post_form.jinja']
         return template_names
 
     def get_context_data(self, **kwargs):
@@ -314,7 +317,7 @@ class PostWriteView(BoardView):
         return context
 
     def get_redirect_url(self, post):
-        if self.service.board.role in ['PLANBOOK', 'WORKHOUR']:
+        if self.service.board.role in ['PLANBOOK', 'WORKHOUR',"CONTACT"]:
             return self.service.get_absolute_url()
         else:
             return post.get_absolute_url()
@@ -361,6 +364,8 @@ class PostEditView(PostView):
             template_names = ['board/workhour_form.jinja']
         elif (self.service.board.check_role(BOARD_ROLE['PLANBOOK'])):
             template_names = ['board/planbook_form.jinja']
+        elif (self.service.board.check_role(BOARD_ROLE['CONTACT'])):
+            template_names  = ['board/post_form/contact_post_form.jinja']
         return template_names
 
     def get_context_data(self, **kwargs):

@@ -6,7 +6,7 @@ from django.forms import ModelForm
 import json
 from django.conf import settings
 from dateutil.parser import parse
-from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule, WebDoc
+from .models import AttachedFile, Post, Tag, BoardTab, DebatePost, Comment, ProjectPost, Schedule, WebDoc, Contact
 import pytz
 
 class PostForm(ModelForm):
@@ -136,6 +136,32 @@ class ProjectPostForm(PostForm):
             )
 
         return post
+
+
+class ContactForm(ModelForm):
+    """
+    각 산하기구의 연락처 모델을 저장하는 폼입니다.
+    :class:`ModelForm`으로 구현되었으며, :meth:`save` 메서드에서 첨부파일까지
+    저장합니다. 
+    """
+    def __init__(self, board, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['board_tab'].queryset = BoardTab.objects.filter(parent_board=board)
+
+    class Meta:
+        model = Contact;
+        fields = (
+            'name_ko','name_en','content_ko', 'content_en', 'board_tab','phone','url', )
+
+    def save(self, POST, FILES):
+        """
+        게시글과 그에 첨부된 파일들을 저장하는 메서드.
+        """
+        contact = super().save()
+        print("Try to Save");
+        return contact
+
+
 
 def parse_date_string(date_string):
     local_time_zone = pytz.timezone(settings.TIME_ZONE)
