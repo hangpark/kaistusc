@@ -5,7 +5,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import AttachedFile, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule, WebDoc, ProductCategory,Contact
+from .models import AttachedFile, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule, WebDoc, ProductCategory, BoardBanner,Contact
 
 
 class BoardAdmin(TranslationAdmin):
@@ -90,6 +90,18 @@ class BannerAdmin(TranslationAdmin):
     """
     fields = ('title', 'url', 'image', 'author')
 
+
+class BoardBannerAdmin(TranslationAdmin):
+    """
+    :class:`BoardBanner` 모델에 대한 커스텀 어드민.
+
+    `django-modeltranslation` 에서 제공하는 :class:TranslationAdmin` 을 상속받아
+    다국어 처리를 사용자 친화적으로 변경하였습니다.
+    """
+    
+    pass
+
+
 class BannerCarouselAdmin(TranslationAdmin):
     """
     :class:`BannerCarousel` 모델에 대한 커스텀 어드민.
@@ -135,6 +147,7 @@ admin.site.register(ProjectPost, ProjectPostAdmin)
 admin.site.register(DebatePost,DebatePostAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Banner, BannerAdmin)
+admin.site.register(BoardBanner, BoardBannerAdmin)
 admin.site.register(BannerCarousel, BannerCarouselAdmin)
 admin.site.register(Link, LinkAdmin)
 admin.site.register(AttachedFile)

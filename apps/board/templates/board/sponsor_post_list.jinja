@@ -1,0 +1,52 @@
+{% macro post_info(post) -%}
+  <a class="list-group-item" data-toggle="collapse" href="#collapse-example-{{ post.id }}" role="button" aria-expanded="false" aria-controls="collapse-example-{{post.id}}">
+  {% if post.is_deleted %}
+    {{ _('삭제되었습니다.') }}
+  {% elif post.is_secret %}
+    {% if post.is_permitted(request.user, PERM_READ) %}
+      {{ post.title }}
+    {% else %}
+      {{ _('비밀글입니다.') }}
+    {% endif %}
+  {% else %}
+    {{ post.title }}
+  {% endif %}
+  </a>
+  <div class="collapse" id="collapse-example-{{post.id}}">
+    <div class="sponsor-content">
+      <div class="text-center">
+        {% for file in post.attachedfile_set.all() %}
+          <img src="{{ file.get_absolute_url() }}" alt="사진!">
+        {% endfor %}
+      </div>
+      <div>
+        <p>{{ post.content }}</p>
+      </div>
+    </div>
+  </div>
+{%- endmacro %}
+
+<div id="sponsor-list" class="list-group">
+  {% for post in posts %}
+    {% if not post.is_deleted %}
+      {{ post_info(post) }}
+    {% endif %}
+  {% endfor %}
+</div>
+
+<div id="board-func" class="row">
+  <div class="pull-right col-sm-5">
+    <form action="." method="get" id="search-form">
+      <div class="input-group">
+        <input type="text" class="form-control" name="s" style="height:auto">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">{{ _('검색') }}</button>
+        {% if board.is_permitted(request.user, PERM_WRITE) %}
+          <a href="{{current_path}}/new/" class="btn btn-primary">{{ _('글쓰기') }}</a>
+        {% endif %}
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="sponsor-context"></div>
