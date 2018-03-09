@@ -6,7 +6,7 @@
 {% block content %}
 <div id="post-wrap">
   {% include 'board/post/post_header.jinja' %}
-  <div id="post-content">{{ post.content }}</div>
+  <div id="post-content">{{ post.content|linebreaks }}</div>
   
   {% if post.board.check_role(BOARD_ROLE['PROJECT']) and post.schedule_set.all() %}
     {% include 'board/post/post_project_timeline.jinja' %}

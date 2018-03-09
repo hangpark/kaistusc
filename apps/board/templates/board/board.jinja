@@ -13,10 +13,7 @@
     {% endfor %}
   </ul>
   {% endif %}
-  <!-- 만약 보드 배너가 있으면 표시 -->
-  {% if board_banner %}
-    {% include 'board/board_banner.jinja' %}
-  {% endif %}
+  {% include 'board/board_banner.jinja' %}
 </div>
 {% if board.check_role(BOARD_ROLE['DEBATE']) %}
 	{% include 'board/post_list/post_list_debate.jinja' %}
@@ -25,7 +22,7 @@
 {% elif board.check_role(BOARD_ROLE['ARCHIVING']) %}
   {% include 'board/post_list/post_list_archiving.jinja' %}
 {% elif board.check_role(BOARD_ROLE['WORKHOUR']) %}
-	{% include 'board/post/webdoc_post.jinja' %}
+	{% include 'board/post/workhour_post.jinja' %}
 {% elif board.check_role(BOARD_ROLE['SPONSOR']) %}
 	{% include 'board/sponsor_post_list.jinja' %}
 {% elif board.check_role(BOARD_ROLE['SWIPER']) %}

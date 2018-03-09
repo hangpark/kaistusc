@@ -16,6 +16,7 @@ import json
 from apps.manager import Custom404
 from apps.manager.constants import *
 from apps.board.constants import *
+from apps.board.forms import BoardBannerForm
 from apps.manager.views import ServiceView
 from apps.board.constants import *
 from django.utils.translation import ugettext_lazy as _
@@ -145,10 +146,7 @@ class BoardView(ServiceView):
         context['posts'] = posts    
 
         # 보드 배너 저장
-        if tab:
-            context['board_banner'] = BoardBanner.objects.filter(board_tab=tab).first()
-        else:
-            context['board_banner'] = BoardBanner.objects.filter(board=board).first()
+        context['board_banner'] = self.get_board_banner(**kwargs)
         
         return context
 
@@ -165,6 +163,14 @@ class BoardView(ServiceView):
             url = kwargs['tab']
             return BoardTab.objects.filter(url=url).first()
         return BoardTab.objects.filter(parent_board=self.service.board).first()
+    
+    def get_board_banner(self, **kwargs):
+        board = self.service.board
+        tab = self.get_tab(**kwargs)
+        if tab:
+            return BoardBanner.objects.filter(board_tab=tab).first()
+        else:
+            return BoardBanner.objects.filter(board=board).first()
 
 
 class PostView(BoardView):
@@ -294,6 +300,117 @@ class PdfPostView(BoardView):
         
         return context
 
+
+class BoardBannerWriteView(BoardView):
+    """
+    게시판 배너 등록 뷰.
+
+    기본 필요권한이 쓰기권한으로 설정되어 있습니다.
+    """
+
+    required_permission = PERM_WRITE
+    template_name = 'board/board_banner_form.jinja'
+
+    def get_context_data(self, **kwargs):
+        """
+        게시판 배너 작성 폼을 컨텍스트에 추가하는 메서드.
+        """
+        context = super().get_context_data(**kwargs)
+        context['form'] = BoardBannerForm
+
+        return context
+    
+    def get_redirect_url(self, board_tab):
+        return board_tab.get_absolute_url() if board_tab else self.service.get_absolute_url()
+
+    def post(self, request, *args, **kwargs):
+        """
+        게시판 배너 등록 요청에 따라 게시글을 저장하는 메서드.
+
+        사용자로부터 제출된 게시판 배너 폼을 평가하여 통과될 시 게시판 배너를 
+        저장합니다. 올바르지 않은 게시판 배너가 제출된 경우 오류정보를 포함한 폼을
+        재전달하여 수정을 요구합니다.
+        """
+        
+        board_banner = BoardBanner(board=self.service.board)
+        form = BoardBannerForm(self.service.board, request.POST, instance=board_banner)
+        
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.get_redirect_url(form.cleaned_data['board_tab'].first()))
+        
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
+
+
+class BoardBannerEditView(BoardView):
+
+    required_permission = PERM_EDIT
+    template_name = 'board/board_banner_form.jinja'
+    
+    def get_context_data(self, **kwargs):
+        """
+        게시글 작성 폼을 컨텍스트에 추가하는 메서드.
+        """
+        context = super().get_context_data(**kwargs)
+        board_banner = self.get_board_banner(**kwargs)
+        context['board_banner'] = board_banner
+        context['form'] = BoardBannerForm
+
+        return context
+    
+    def get_redirect_url(self, board_tab):
+        return board_tab.get_absolute_url() if board_tab else self.service.get_absolute_url()
+    
+    def post(self, request, *args, **kwargs):
+        """
+        게시판 배너 수정 요청에 따라 게시글을 업데이트 하는 메서드.
+
+        사용자로부터 제출된 게시판 배너 폼을 평가하여 통과될 시 게시판 배너를
+        저장합니다. 올바르지 않은 게시판 배너가 제출된 경우 오류정보를 포함한 폼을
+        재전달하여 수정을 요구합니다.
+        """
+        board_banner = self.get_board_banner(**kwargs)
+        form = BoardBannerForm(self.service.board, request.POST, instance=board_banner)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(self.get_redirect_url(form.cleaned_data['board_tab'].first()))
+
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
+
+
+class BoardBannerDeleteView(BoardView):
+    """
+    게시판 배너 삭제 뷰.
+
+    기본 필요권한이 삭제권한으로 설정되어 있습니다.
+    """
+
+    template_name = None
+    required_permission = PERM_DELETE
+
+    def post(self, request, *args, **kwargs):
+        """
+        게시글을 삭제하는 메서드.
+
+        삭제가 완료되면 게시판 메인 페이지로 이동합니다.
+        """
+
+        try:
+            board_banner = BoardBanner.objects.get(id=kwargs['board_banner_id'])
+        except BoardBanner.DoesNotExist:
+            return JsonResponse({
+                'message': _('존재하지 않는 게시판 배너입니다'),
+            }, status=404)
+        
+        board_banner.delete()
+        return JsonResponse({
+            'message': _('게시판 배너가 삭제되었습니다'),
+        })
 
 class PostWriteView(BoardView):
     """
@@ -508,7 +625,7 @@ class ProductDeleteView(BoardView):
 
     def post(self, request, *args, **kwargs):
         """
-        댓글을 삭제하는 메서드.
+        상품을 삭제하는 메서드.
         """
         try:
             product = Product.objects.get(id=kwargs['product_id'])
