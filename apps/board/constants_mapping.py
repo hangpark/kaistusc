@@ -12,8 +12,8 @@ MAP_MODEL_POST = {
     BOARD_ROLE['SPONSOR']:Post,
     BOARD_ROLE['ARCHIVING']:Post,
     BOARD_ROLE['SWIPER']:Post,
-  	BOARD_ROLE['STORE']:Product,
-  	BOARD_ROLE['CONTACT']:Contact,
+    BOARD_ROLE['STORE']:Product,
+    BOARD_ROLE['CONTACT']:Contact,
 }
 
 MAP_FORM_POST = {
