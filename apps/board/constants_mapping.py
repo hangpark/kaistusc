@@ -1,6 +1,6 @@
 
-from .forms import PostForm, ProjectPostForm, DebatePostForm, WorkhourPostForm, PlanbookPostForm
-from .models import Post, DebatePost, ProjectPost, Product
+from .forms import PostForm, ProjectPostForm, DebatePostForm, WorkhourPostForm, PlanbookPostForm, ContactForm
+from .models import Post, DebatePost, ProjectPost, Product, Contact
 from .constants import *
 
 MAP_MODEL_POST = {
@@ -12,7 +12,8 @@ MAP_MODEL_POST = {
     BOARD_ROLE['SPONSOR']:Post,
     BOARD_ROLE['ARCHIVING']:Post,
     BOARD_ROLE['SWIPER']:Post,
-  	BOARD_ROLE['STORE']:Product,
+    BOARD_ROLE['STORE']:Product,
+    BOARD_ROLE['CONTACT']:Contact,
 }
 
 MAP_FORM_POST = {
@@ -25,4 +26,5 @@ MAP_FORM_POST = {
     BOARD_ROLE['ARCHIVING']:PostForm,
     BOARD_ROLE['SWIPER']:PostForm,
     BOARD_ROLE['STORE']:PostForm,
+    BOARD_ROLE['CONTACT']:ContactForm,
 }
