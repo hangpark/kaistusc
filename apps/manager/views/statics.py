@@ -31,7 +31,7 @@ class MainPageView(PageView):
             pass
         try:
             context['MainPoster'] = MainPoster.objects.first()
-        except BannerCarousel.DoesNotExist:
+        except MainPoster.DoesNotExist:
             pass
         try:
             context['topBanner'] = TopBanner.objects.get(terminate_at__gte=datetime.now())
