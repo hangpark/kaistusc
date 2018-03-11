@@ -48,14 +48,14 @@
       <div id="main-page-content" class="container-fluid">
       <div class="row">
         <div id="main-board-list" class="col-sm-6">
-          {% for board in boards %}
-          {% include 'board/post_list/post_list_min.jinja' %}
-          {% endfor %}
+          {% if MainPoster %}
+            <img id="main-poster" src="{{MainPoster.image.url}}" alt="{{MainPoster.image.url}}"'>
+          {% endif%}
         </div>
         <div class="col-sm-6">
           <div id="fb-root""></div>
           <script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v2.6&appId=551602898355546";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>
-          <div class="fb-page" data-href="https://www.facebook.com/kaistusc/" data-tabs="timeline" data-width="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/kaistusc/"><a href="https://www.facebook.com/kaistusc/">KAIST 학부 총학생회</a></blockquote></div></div>
+          <div class="fb-page" data-href="https://www.facebook.com/kaistusc/" data-tabs="timeline" data-width="500" data-height='660' data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/kaistusc/"><a href="https://www.facebook.com/kaistusc/">KAIST 학부 총학생회</a></blockquote></div></div>
         </div>
         </div>
       </div>
