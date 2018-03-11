@@ -440,6 +440,22 @@ class BannerCarousel(models.Model):
     def __str__(self):
         return self.get_sector_display()
 
+class MainPoster(BasePost):
+    title = models.CharField(
+        _("제목"),
+        max_length=128)
+
+    image = models.ImageField(
+        _("이미지"),
+        upload_to='banner')
+
+    class Meta:
+        verbose_name = _('메인포스터')
+        verbose_name_plural = _('메인포스터(들)')
+
+    def __str__(self):
+        return self.title
+
 class Link(BasePost):
     """
     링크를 구현한 모델

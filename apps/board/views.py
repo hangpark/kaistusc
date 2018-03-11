@@ -507,7 +507,7 @@ class PostEditView(PostView):
         return context
 
     def get_redirect_url(self, post):
-        if self.service.board.role in [BOARD_ROLE['PLANBOOK'], BOARD_ROLE['WORKHOUR'], BOARD_ROLE['SPONSOR']]:
+        if self.service.board.role in [BOARD_ROLE['PLANBOOK'], BOARD_ROLE['WORKHOUR'], BOARD_ROLE['SPONSOR'],BOARD_ROLE['CONTACT']]:
             return self.service.get_absolute_url()
         else:
             return post.get_absolute_url()

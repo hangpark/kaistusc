@@ -3,7 +3,7 @@
 """
 from django.db import models
 from apps.manager.models import TopBanner
-from apps.board.models import Board, BannerCarousel
+from apps.board.models import Board, BannerCarousel, MainPoster
 from apps.board.constants import *
 from .base import PageView
 from datetime import datetime
@@ -27,6 +27,10 @@ class MainPageView(PageView):
             self.request.user).filter(is_main=True)
         try:
             context['bannerCarousel'] = BannerCarousel.objects.get(sector=BANNER_CAROUSEL_SECTOR['MAIN'])
+        except BannerCarousel.DoesNotExist:
+            pass
+        try:
+            context['MainPoster'] = MainPoster.objects.first()
         except BannerCarousel.DoesNotExist:
             pass
         try:
