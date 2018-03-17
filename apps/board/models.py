@@ -39,6 +39,7 @@ class Board(Service):
         (BOARD_ROLE['SPONSOR'], _('제휴리스트')),
         (BOARD_ROLE['SWIPER'], _('격주보고')),
         (BOARD_ROLE['STORE'], _('상점')),
+        (BOARD_ROLE['CONTACT'], _('산하기구')),
     )
 
     role = models.CharField(
@@ -439,6 +440,22 @@ class BannerCarousel(models.Model):
     def __str__(self):
         return self.get_sector_display()
 
+class MainPoster(BasePost):
+    title = models.CharField(
+        _("제목"),
+        max_length=128)
+
+    image = models.ImageField(
+        _("이미지"),
+        upload_to='banner')
+
+    class Meta:
+        verbose_name = _('메인포스터')
+        verbose_name_plural = _('메인포스터(들)')
+
+    def __str__(self):
+        return self.title
+
 class Link(BasePost):
     """
     링크를 구현한 모델
@@ -481,7 +498,6 @@ class Contact(BasePost):
     총학생회 산하기구 소개 및 연락망에서 사용합니다.
     의결기구 아카이빙의 오픈톡방 링크는 BoardBanner model을 사용합니다.
     """
-
     board = models.ForeignKey(
         Board,
         verbose_name=_("등록 게시판"))
@@ -509,6 +525,10 @@ class Contact(BasePost):
     class Meta:
         verbose_name = _('연락망')
         verbose_name_plural = _('연락망(들)')
+
+    def get_absolute_url(self):
+        # return os.path.join(self.board.get_absolute_url(), str(self.id))
+        return self.board.get_absolute_url()+'/'+str(self.id)
 
     def __str__(self):
         return self.name

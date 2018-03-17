@@ -5,7 +5,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from .models import AttachedFile, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule, WebDoc, ProductCategory, BoardBanner
+from .models import AttachedFile, Board, BoardTab, Comment, Post, Tag, Banner, BannerCarousel, Link, DebatePost, ProjectPost, Schedule, WebDoc, ProductCategory, BoardBanner,Contact, MainPoster
 
 
 class BoardAdmin(TranslationAdmin):
@@ -129,7 +129,24 @@ class ProductCategoryAdmin(TranslationAdmin):
     다국어 처리를 사용자 친화적으로 변경하였습니다.
     """
     pass
-    
+
+class ContactAdmin(TranslationAdmin):
+    """
+    :class:`Contact` 모델에 대한 커스텀 어드민.
+
+    `django-modeltranslation` 에서 제공하는 :class:TranslationAdmin` 을 상속받아
+    다국어 처리를 사용자 친화적으로 변경하였습니다.
+    """
+    pass    
+
+class MainPosterAdmin(TranslationAdmin):
+    """
+    :class:`MainPoster` 모델에 대한 커스텀 어드민.
+
+    `django-modeltranslation` 에서 제공하는 :class:TranslationAdmin` 을 상속받아
+    다국어 처리를 사용자 친화적으로 변경하였습니다.
+    """
+    pass    
 
 admin.site.register(Board, BoardAdmin)
 admin.site.register(BoardTab, BoardTabAdmin)
@@ -145,4 +162,6 @@ admin.site.register(Link, LinkAdmin)
 admin.site.register(AttachedFile)
 admin.site.register(WebDoc)
 admin.site.register(ProductCategory, ProductCategoryAdmin)
+admin.site.register(Contact, ContactAdmin)
+admin.site.register(MainPoster, MainPosterAdmin)
 

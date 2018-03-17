@@ -1,0 +1,31 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'board/macros.jinja' import form_group %}
+
+{% block content %}
+<form id="post-form" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+  	{% include 'board/post_form/post_form_text_contents.jinja' %}
+
+  	<div class="form-inline">
+	    {% if form.board_tab.field.queryset %}
+	    {% call(field) form_group(form.phone) %}
+		    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
+	    {% endcall %}
+	    {% call(field) form_group(form.url) %}
+		    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
+	    {% endcall %}
+	    {% call(field) form_group(form.board_tab) %}
+	        <input type="hidden" id="current-tab" value="{{tab.id}}"/>
+	        <select id="{{ field.id_for_label }}" class="selectpicker" name="board_tab" multiple data-width="auto">
+	        {% for choice in field.field.queryset %}
+	        <option value="{{ choice.id }}"{% if tab == choice %} selected="selected"{% endif %}>{{ choice.name }}</option>
+	        {% endfor %}
+	        </select>
+	    {% endcall %}
+	    {% endif %}
+    </div>
+    
+  <button type="submit" class="col-xs-12 btn btn-primary">{{ _('등록') }}</button>
+</form>
+{% endblock %}
