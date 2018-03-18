@@ -39,6 +39,7 @@ var js = {
 		bootstrapDatetimepicker + '/js/bootstrap-datetimepicker.min.js',
     src + '/javascripts/**/*',
     swiper + '/js/swiper.min.js',
+    npm + '/string-format/lib/string-format.js',
 	],
 	'out': dist + '/js'
 };

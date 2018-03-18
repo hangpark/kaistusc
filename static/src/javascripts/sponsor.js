@@ -8,6 +8,22 @@ $().ready(function() {
       }).join();
     }
 
+    var escapeHTML = function(htmlStr) {
+      'use strict';
+
+      return htmlStr.replace(/[&<>"\n]/g, function (tag) {
+        var charsToReplace = {
+          '&': '&amp;',
+          '<': '&lt',
+          '>': '&gt',
+          '\n': '<br>',
+          '"': '"'
+        };
+
+        return charsToReplace[tag] || tag;
+      });
+    }
+
     var postInfo = function (post) {
       return $.parseHTML(
         '<a \
@@ -24,18 +40,49 @@ $().ready(function() {
               '+getHtmlStrOfImgs(post.attachedfile_set)+' \
             </div> \
             <div> \
-              <p>'+post.content+'</p> \
-            </div> \
+              <p>'+escapeHTML(post.content)+'</p> \
+            </div>'+postFunc(post)+' \
           </div> \
         </div>'
       )
     };
 
+    var postFunc = function (post) {
+      post.csrf = $('input[name*="csrfmiddlewaretoken"]').val();
+      return window.format(' \
+        <div id="post-func-{id}" class="text-center"> \
+          <div> \
+            <div class="pull-right"> \
+              <a href="{absolute_url}/edit/" class="btn btn-sm btn-default">수정</a> \
+              <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#delete-modal-{id}">삭제</a> \
+            </div> \
+          </div> \
+          <div id="delete-modal-{id}" class="modal fade" tabindex="-1"> \
+            <div class="modal-dialog"> \
+              <div class="modal-content"> \
+                <div class="modal-header"> \
+                  <button type="button" class="close" data-dismiss="modal">&times;</button> \
+                  <h4 class="modal-title" id="myModalLabel-{id}">삭제</h4> \
+                </div> \
+                <div class="modal-body"> \
+                  <p>게시글을 정말 삭제할까요?</p> \
+                </div> \
+                <form class="modal-footer" method="post" action="{absolute_url}/delete/"> \
+                  <input type="hidden" name="csrfmiddlewaretoken" value="{csrf}"> \
+                  <button type="button" class="btn btn-default" data-dismiss="modal">취소</button> \
+                  <button type="submit" class="btn btn-danger">삭제</button> \
+                </form> \
+              </div> \
+            </div> \
+          </div> \
+        </div> \
+      ', post);
+    };
+
     var drawLoadedSponsorPosts = function (sponsorPosts) {
-      sponsorPosts.filter(function(post) { return !post.is_deleted })
-                  .forEach(function (post) {
-                    $('#sponsor-list').append(postInfo(post));
-                  });
+      sponsorPosts.forEach(function (post) {
+          $('#sponsor-list').append(postInfo(post));
+      });
     };
 
     var getParameterByName = function(name) {

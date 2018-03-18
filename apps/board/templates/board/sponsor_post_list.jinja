@@ -1,4 +1,4 @@
-{% macro post_info(post) -%}
+{% macro sponsor_post_info(post) -%}
   <a class="list-group-item" data-toggle="collapse" href="#collapse-example-{{ post.id }}" role="button" aria-expanded="false" aria-controls="collapse-example-{{post.id}}">
   {% if post.is_deleted %}
     {{ _('삭제되었습니다.') }}
@@ -22,6 +22,7 @@
       <div>
         <p>{{ post.content|linebreaks }}</p>
       </div>
+      {% include 'board/post/sponsor_post_func.jinja' %}
     </div>
   </div>
 {%- endmacro %}
@@ -29,7 +30,7 @@
 <div id="sponsor-list" class="list-group">
   {% for post in posts %}
     {% if not post.is_deleted %}
-      {{ post_info(post) }}
+      {{ sponsor_post_info(post) }}
     {% endif %}
   {% endfor %}
 </div>
@@ -50,3 +51,4 @@
   </div>
 </div>
 <div id="sponsor-context"></div>
+
