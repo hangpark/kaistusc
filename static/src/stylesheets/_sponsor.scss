@@ -12,4 +12,16 @@
   & > .text-center {
     margin-bottom: 10px;
   }
+  
+  [id^=post-func] {
+    padding: 30px 0 50px 0;
+    form {
+      display: inline-block;
+    }
+    .pull-right {
+      margin-top: 10px;
+    }
+  }
 }
+
+ 
