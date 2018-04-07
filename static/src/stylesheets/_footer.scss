@@ -4,36 +4,34 @@
 
 
 #footer {
-  position: relative;
-  z-index: $main-high-zindex;
-  border-top: 1px solid $main-default-border;
-  background-color: $body-bg;
-}
-
-#footer-wrapper {
-  padding-top: $footer-margin-top;
-}
-
-#footer-container {
-  position: relative;
-  margin-bottom: $footer-margin-bot;
-  img {
-    position: absolute;
-    top: $footer-img-top-pos;
-    left: $footer-img-left-pos;
-    width: $footer-img-width;
+    position: relative;
+    z-index: $main-high-zindex;
+    background-color: $bg-primary-lighter;
   }
-  p {
-    margin: 0;
-    padding-left: $footer-img-width + $footer-img-gap;
-    font-size: $footer-font-size;
-    color: $footer-text-color;
-    line-height: $footer-line-height;
+  
+  #footer-wrapper {
+    padding: $footer-margin-top 0 $footer-margin-bot 0;
   }
-  a {
-    @include disable-effect();
+  
+  #footer-container {
+    position: relative;
+    display: flex;
+    align-items: start;
+    img {
+      width: $footer-img-width;
+      margin-right: $footer-img-gap;
+    }
+    p {
+      margin: 0;
+      font-size: $footer-font-size;
+      color: $footer-text-color;
+      line-height: $footer-line-height;
+    }
+    a {
+      @include disable-effect();
+    }
+    .div-line {
+      margin: 0 4px;
+    }
   }
-  .div-line {
-    margin: 0 4px;
-  }
-}
+  

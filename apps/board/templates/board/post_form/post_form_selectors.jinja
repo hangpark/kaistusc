@@ -1,0 +1,36 @@
+<div class="form-inline">
+    {% if form.board_tab.field.queryset %}
+    {% call(field) form_group(form.board_tab) %}
+        <input type="hidden" id="current-tab" value="{{tab.id}}"/>
+        <select id="{{ field.id_for_label }}" class="selectpicker" name="board_tab" multiple data-width="auto">
+        {% for choice in field.field.queryset %}
+        <option value="{{ choice.id }}"{% if tab == choice %} selected="selected"{% endif %}>{{ choice.name }}</option>
+        {% endfor %}
+        </select>
+    {% endcall %}
+    {% endif %}
+    {% call(field) form_group(form.tag) %}
+        <select id="{{ field.id_for_label }}" class="selectpicker" name="tag" data-width="auto">
+        {% if form.__class__.__name__ != 'ProjectPostForm' %}
+            <option value{% if not form.initial.tag %} selected="selected"{% endif %} >
+            ---- {{ _('태그') }} ----
+            </option>
+        {% endif %}
+        {% for choice in field.field.queryset %}
+        <option value="{{ choice.id }}"{% if choice.id == form.initial.tag %} selected="selected"{% endif %}>{{ choice }}</option>
+        {% endfor %}
+        </select>
+    {% endcall %}
+    {% if form.__class__.__name__ == 'DebatePostForm' %}
+    {{_('종결 예정일')}} :&nbsp;
+    <div class="form-group">
+        <div class='input-group date' id='debate_due_date_datetimepicker'>
+            <input type='text' class="form-control" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <input type='hidden' id="id_due_date" name="due_date"/>
+    </div>
+    {% endif %}
+</div>

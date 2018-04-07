@@ -1,0 +1,8 @@
+{% if files %}
+  <div id="attached-file">
+    <p><b>{{ _('첨부파일') }}</b></p>
+    {% for file in files %}
+      <p><a href="{{ file.get_absolute_url() }}">{{ file }} ({{ file.get_file_size()|filesizeformat }})</a></p>
+    {% endfor %}
+  </div>
+{% endif %}

@@ -1,0 +1,104 @@
+{% from 'ksso/macros.jinja' import name %}
+{% from 'board/macros.jinja' import make_tag, post_title_postfix %}
+
+{% macro post_info(post, class='') -%}
+  <tr class="{{ class }}" onclick="location.href='{{ post.get_absolute_url() }}';">
+    <td class="hidden-xs text-center">{{ make_tag(board, post.tag) }}</td>
+    <td>
+    {%- if post.tag -%}
+      <span class="visible-xs-inline margin-right">{{ make_tag(board, post.tag) }}</span>
+    {%- endif -%}
+      <span class="post-list-title">
+      {%- if post.is_deleted -%}
+        {{ _('삭제되었습니다.') }}
+      {%- elif post.is_secret -%}
+        {% if post.is_permitted(request.user, PERM_READ) -%}
+          {{ post.title }}
+        {%- else -%}
+          {{ _('비밀글입니다.') }}
+        {%- endif -%}
+      {%- else -%}
+        {{ post.title }}
+      {%- endif -%}
+      {{ post_title_postfix(post)}}
+      
+      </span>
+      <div class="post-list-mobile visible-xs-block">
+        {{ name(post.author) }}<span class="margin-both">|</span>{{ post.date.strftime('%Y/%m/%d') }}
+        <span class="pull-right">+{{ post.vote_up }} / -{{ post.vote_down }}<span class="margin-both">|</span>{{ _('조회') }} {{ post.get_hits() }}</span>
+      </div>
+    </td>
+    <td class="hidden-xs text-center">{{ name(post.author) }}</td>
+    <td class="hidden-xs text-center">{{ post.date.strftime('%m/%d') }} ~ {{post.due_date.strftime('%m/%d')}}</td>
+    <td class="hidden-xs text-center">{{ post.get_hits() }}</td>
+    <td class= "hidden-xs text-center">{{ post.vote_up }}</td>
+  </tr>
+{%- endmacro -%}
+
+<table id="post-list" class="table table-hover">
+  <thead class="hidden-xs">
+    <tr>
+      <th class="text-center">{{ _('태그') }}</th>
+      <th class="post-list-dom-width text-center">{{ _('제목') }}</th>
+      <th class="text-center">{{ _('작성자') }}</th>
+      <th class="text-center">{{ _('기간') }}</th>
+      <th class="text-center">{{ _('조회') }}</th>
+      <th class="text-center">{{ _('참여') }}</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for post in notices[:2] %}
+    {{ post_info(post, 'active notice') }}
+  {% endfor %}
+  {% for post in posts %}
+    {{ post_info(post) }}
+  {% endfor %}
+  </tbody>
+</table>
+
+<div id="board-func" class="row">
+  
+  <form action="." method="get" id="search-form">
+  
+  <div class="pull-left col-sm-6">
+    <ul id="pagination" class="pagination pull-left">
+      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p=1">&lt;&lt;</a></li>
+      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={% if posts.has_previous() %}{{ posts.previous_page_number() }}{% else %}{{ posts.number }}{% endif %}">&lt;</a></li>
+      {% for page in pages %}
+      <li class="{% if posts.number == page %}active{% endif %}"><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={{ page }}">{{ page }}</a></li>
+      {% endfor %}
+      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={% if posts.has_next() %}{{ posts.next_page_number() }}{% else %}{{ posts.number }}{% endif %}">&gt;</a></li>
+      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={{ posts.paginator.num_pages }}">&gt;&gt;</a></li>
+    </ul>
+  </div>
+  <div class = "filter-checkbox">
+    <label><span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value = 'all' {% if filter_state == 'all' %} checked{% endif %} > {{ _('전체보기')}}
+    </span></label>
+    <label><span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value='ongoing' {% if filter_state == 'ongoing' %} checked{% endif %}> {{ _('논의중')}}
+    </span></label>
+    <label><span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value='wait' {% if filter_state == 'wait' %} checked{% endif %}> {{ _('청원중')}}
+    </span></label>
+    <label><span class="checkbox-inline pull-right" >
+        <input type="radio" name='filter_state' value="finish" {% if filter_state == 'finish' %} checked{% endif %}> {{ _('종료')}}
+    </span></label>
+    
+    
+    
+  </div>
+  <div class="pull-right col-sm-5">
+      <div class="input-group">
+        <input type="text" class="form-control" name="s">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">{{ _('검색') }}</button>
+        {% if board.is_permitted(request.user, PERM_WRITE) %}
+          <a href="{{ board.get_absolute_url() }}/new/" class="btn btn-primary">{{ _('글쓰기') }}</a>
+        {% endif %}
+        </span>
+      </div> 
+  </div>
+  
+  </form>
+</div>

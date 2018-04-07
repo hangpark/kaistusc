@@ -1,0 +1,26 @@
+{% from 'board/macros.jinja' import post_title_postfix %}
+
+<div id="post-header" class="clearfix">
+  <div id="post-title">
+  {{ post.title }}
+  <div class='pull-right'>
+    {{ post_title_postfix(post)}}
+  </div>
+  </div>
+  <div id="post-info">
+    <div class="pull-left">
+      {% if post.tag %}
+      <span class="margin-right">{{ make_tag(board, post.tag, post.get_first_tab()) }}</span>
+      {% endif %}
+      {{ name(post.author) }}
+      <span class="margin-both">|</span>
+      {% if board.check_role(BOARD_ROLE['DEBATE']) %}
+      {{ post.date.strftime('%Y/%m/%d') }} ~ {{ post.due_date.strftime('%Y/%m/%d')}}
+      {% else %}
+      {{ post.date.strftime('%Y/%m/%d %H:%M') }}
+
+      {% endif %}
+    </div>
+    <div class="pull-right">{{ _('조회수') }}<span class="margin-both">|</span>{{ post.get_hits() }}</div>
+  </div>
+</div>

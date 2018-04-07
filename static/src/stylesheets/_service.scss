@@ -10,7 +10,6 @@
 #main {
   position: relative;
   background-color: $body-bg;
-  box-shadow: $service-base-shadow;
 }
 
 
@@ -20,34 +19,11 @@
 
 #main-header {
   position: relative;
+  border-bottom: 1px solid $service-base-border;
   img {
     width: 100%;
   }
 }
-
-.main-header-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-bottom: 1px solid $service-base-border;
-}
-
-.main-header-item {
-  display: table;
-  height: 100%;
-  background-color: $service-category-bg;
-  text-align: center;
-  span {
-    display: table-cell;
-    vertical-align: middle;
-    font-family: $font-family-script;
-    font-size: $service-title-font-size;
-    color: $gray-dark;
-  }
-}
-
 
 //== Main content
 //
@@ -78,8 +54,7 @@
 //
 //##
 
-.main-header-item,
-#lnb {
+.main-header-item {
   border-right: 1px solid $service-base-border;
 }
 
@@ -90,21 +65,36 @@
     position: relative;
     margin-top: $service-lnb-item-gap;
     border: 0;
-    border-radius: $service-lnb-radius 0 0 $service-lnb-radius;
     font-weight: bold;
+    border-radius: 0px;
+    transition: color 0.2s ease-in-out;  
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: inline-block;
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+      border-left: 0px solid;
+      transition: all 0.2s ease-in-out;
+    }
+    &:hover {
+      color: $brand-primary;
+      background-color: $body-bg;
+      &:after {
+        opacity: 1;
+        border-left: 4px solid $brand-primary-lighter;
+      }
+    }
   }
   .list-group-item.lnb-selected {
-    background-color: #a0a0a0;
-    color: $body-bg;
-    & > .lnb-arrow {
-      position: absolute;
-      top: $service-lnb-arrow-top;
-      right: $service-lnb-arrow-right;
-      width: 0px;
-      height: 0px;
-      border-width: $service-lnb-arrow-size;
-      border-style: solid;
-      border-color: transparent $body-bg transparent transparent;
+    color: $brand-primary;
+
+    &:after {
+      opacity: 1;
+      border-left: 4px solid $brand-primary-lighter;
     }
   }
 }

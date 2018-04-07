@@ -1,0 +1,41 @@
+{% extends 'manager/app_base.jinja' %}
+
+{% from 'ksso/macros.jinja' import name %}
+{% from 'board/macros.jinja' import make_tag %}
+
+{% block content %}
+<div id="post-wrap">
+  {% include 'board/post/post_header.jinja' %}
+  <div id="post-content">{{ post.content|linebreaks }}</div>
+  
+  {% if post.board.check_role(BOARD_ROLE['PROJECT']) and post.schedule_set.all() %}
+    {% include 'board/post/post_project_timeline.jinja' %}
+  {% endif %}
+  
+  {% include 'board/post/post_func.jinja' %}
+
+  {% if files %}
+    {% include 'board/post/post_files.jinja' %}
+  {% endif %}
+
+  {% if post.is_permitted(request.user, PERM_COMMENT) %}
+  {% if (not post.board.check_role(BOARD_ROLE['DEBATE'])) or (post.is_commentable())%}
+    {% include 'board/comment_form.jinja' %}
+  {% endif %}
+  {% endif %}
+
+  {% include 'board/comment_list.jinja' %}
+</div>
+
+{% if board.check_role(BOARD_ROLE['DEBATE']) %}
+  {% include 'board/post_list/post_list_debate.jinja' %}
+{% else %}
+  {% include 'board/post_list/post_list.jinja' %}
+{% endif %}
+
+{% if post.is_permitted(request.user, PERM_DELETE) %}
+{% include 'board/post/post_delete_confirm.jinja' %}
+{% endif %}
+
+<input type="hidden" id="delete-comment-warning" value="{{ _('댓글을 정말 삭제할까요?') }}"/>
+{% endblock %}

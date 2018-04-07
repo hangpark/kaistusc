@@ -1,6 +1,6 @@
-{% macro make_tag(board, tag) -%}
+{% macro make_tag(board, tag, tab) -%}
 {% if tag -%}
-<div class="tag-item bg-{{ tag.id % 10 }}" onclick="location.href='{{ board.get_absolute_url() }}/{{ tag.slug }}/';">{{ tag.abbr }}</div>
+<div class="tag-item bg-{{ tag.id % 10 }}" onclick="location.href='{% if tab %}{{ tab.get_absolute_url() }}{% else %}{{ board.get_absolute_url() }}{% endif %}?tag={{ tag.slug }}';">{{ tag.abbr }}</div>
 {%- endif %}
 {%- endmacro %}
 
@@ -15,3 +15,26 @@
   {{ caller(field) }}
 </div>
 {%- endmacro %}
+
+{% macro post_title_postfix(post) %}
+{% if post.is_secret -%}
+  <i class="fa fa-lock"></i>
+{% endif %}
+{% if post.content_en and post.content_ko %}
+  <i class="fa fa-globe"></i>
+{% endif %}
+{% if post.__class__.__name__ == 'ProjectPost' %}
+  {% if post.is_pledge %}
+    <i class="fa fa-handshake-o" title="{{_('공약')}}"></i>
+  {% endif %}
+{% endif %}
+{% if post.__class__.__name__ == 'DebatePost' %}
+  {% if post.is_commentable() %}
+  <span class="debate-state debate-ongoing">{{ _('논의중') }}</span>
+  {% elif (post.is_closed or post.is_over_due()) %}
+  <span class='debate-state debate-finished'>{{ _('종료') }}</span>
+  {% else %}
+  <span class='debate-state debate-waiting'>{{ _('청원중') }}</span>
+  {%- endif -%}
+{% endif %}
+{% endmacro %}

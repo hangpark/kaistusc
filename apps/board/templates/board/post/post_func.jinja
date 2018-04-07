@@ -1,0 +1,46 @@
+<div id="post-func" class="text-center">
+  <div id="post-vote">
+    <form action="{{ post.get_absolute_url() }}/vote/up/" id="post-up">{% csrf_token %}
+      <button type="button" class="btn btn-default"><i class="fa fa-thumbs-o-up"></i> <span class="vote-status">{{ post.vote_up }}</span>명</button>
+    </form>
+    {% if not board.check_role(BOARD_ROLE['DEBATE']) %}
+    <form action="{{ post.get_absolute_url() }}/vote/down/" id="post-down">{% csrf_token %}
+      <button type="button" class="btn btn-default"><i class="fa fa-thumbs-o-down"></i> <span class="vote-status">{{ post.vote_down }}</span>명</button>
+    </form>
+    {% endif %}
+  </div>
+
+  {% if post.is_permitted(request.user, PERM_EDIT) %} 
+  {% if (not board.check_role(BOARD_ROLE['DEBATE'])) or (not post.is_closed) -%}
+  <div>
+    <div class="pull-right">
+      <a href="{{ post.get_absolute_url() }}/edit/" class="btn btn-sm btn-default">{{ _('수정') }}</a>
+      {% if post.is_permitted(request.user, PERM_DELETE) -%}
+      <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#delete-modal">{{ _('삭제') }}</a>
+      {%- endif %}
+    </div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {% if post.is_permitted(request.user, PERM_DELETE) %}
+  <div id="delete-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">{{ _('삭제') }}</h4>
+        </div>
+        <div class="modal-body">
+          <p>{{ _('게시글을 정말 삭제할까요?') }}</p>
+        </div>
+        <form class="modal-footer" method="post" action="{{ post.get_absolute_url() }}/delete/">
+          {% csrf_token %}
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('취소') }}</button>
+          <button type="submit" class="btn btn-danger">{{ _('삭제') }}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>

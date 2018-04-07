@@ -1,0 +1,18 @@
+<div id="project-timeline">
+    <i id="project-timeline-nav-button-left" class="project-timeline-nav-button fa fa-chevron-left"></i>
+    <i id="project-timeline-nav-button-right" class="project-timeline-nav-button fa fa-chevron-right"></i>
+    <div id="project-timeline-current">
+        <i class="fa fa-arrow-down"></i>
+    </div>
+    <div id="project-timeline-slider">
+        <div id="project-timeline-points">
+            {% for schedule in post.schedule_set.all() %}
+            <div class="project-timeline-point">
+                <div class="project-timeline-title">{{schedule.title}}</div>
+                <div class="project-timeline-date">{{schedule.date.strftime('%m/%d')}}</div>
+                <input type="hidden" class="project-timeline-date-data" value="{{schedule.date}}"/>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

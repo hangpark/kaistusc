@@ -1,0 +1,11 @@
+<div id="comment-list">
+    {% for comment in comments %}
+        {% include 'board/comment.jinja' %}
+    {% endfor %}
+    {% if comments.has_next() %}
+        <div id="comment-prev-btn" class="comment">
+        <span>{{_('이전 댓글 보기')}}</span>
+        </div>
+        <input id="comment-next-page-num" type="hidden" value="{{comments.next_page_number()}}"/>
+    {% endif %}
+</div>

@@ -1,0 +1,41 @@
+<div id="post-form-lang-ko" class="post-form-lang">
+    {% if board.check_role(BOARD_ROLE['CONTACT']) %}
+    {% call(field) form_group(form.name_ko) %}
+    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
+    {% endcall %}
+    {% else %}
+    {% call(field) form_group(form.title_ko) %}
+    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" required />
+    {% endcall %}
+    {% endif %}
+
+    {% if not (board.check_role(BOARD_ROLE['ARCHIVING']) or board.check_role(BOARD_ROLE['SWIPER'])) %}
+    {% call(field) form_group(form.content_ko) %}
+        <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=18 class="form-control" style="resize: none;" required>{{ field.value() or '' }}</textarea>
+    {% endcall %}
+    {% endif %}
+</div>
+<div id="post-form-lang-en" class="post-form-lang" style="display: none;">
+    {% if board.check_role(BOARD_ROLE['CONTACT']) %}
+    {% call(field) form_group(form.name_en) %}
+    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" />
+    {% endcall %}
+    {% else %}
+    {% call(field) form_group(form.title_en) %}
+    <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" value="{{ field.value() or '' }}" />
+    {% endcall %}
+    {% endif %}
+    
+    {% if not (board.check_role(BOARD_ROLE['ARCHIVING']) or board.check_role(BOARD_ROLE['SWIPER'])) %}
+    {% call(field) form_group(form.content_en) %}
+        <textarea id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" rows=18 class="form-control" style="resize: none;">{{ field.value() or '' }}</textarea>
+    {% endcall %}
+    {% endif %}
+    </div>
+
+{% include 'board/post_form/post_lang_func.jinja' %}
+
+<p class="help-block">
+    {{ _('다국어 지원 기능입니다. 번역을 하지 않은 언어 입력란은 빈칸으로 놔두시길 바랍니다.') }}<br />
+    {{ _('최소한 제목은 번역해주시길 바랍니다. 글 작성 이후 수정을 통해 추가 번역이 가능합니다.') }}
+</p>

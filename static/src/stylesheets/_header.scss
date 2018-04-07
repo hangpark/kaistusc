@@ -40,9 +40,20 @@
   .navbar-default {
     background-color: $body-bg;
   }
-  #gnb.dropdown:hover .dropdown-menu{
+  
+  #gnb.dropdown .dropdown-menu {
+    max-height: 0px;
+    overflow: hidden;
     display: block;
+    box-shadow: none;
+    transition: max-height 0.2s ease-in-out;
   }
+
+  #gnb.dropdown:hover .dropdown-menu{
+    max-height: 200px;
+    transition: max-height 0.2s ease-in-out;
+  }
+
   .navbar-header,
   .navbar-brand {
     float: none;
@@ -93,6 +104,8 @@
 #gnb-svc-container {
   margin: 0 auto;
   max-width: $header-gnb-width;
+  display: flex;
+  justify-content: center;
 }
 
 #gnb-menu-container {
@@ -101,27 +114,51 @@
 
 #gnb-svc-wrapper {
   @include full-jumbotron($main-service-bg);
+  max-height: 0px;
+  overflow: hidden;
+  display: block;
+  border: none;
+  box-shadow: 0 6px 12px rgba(0,0,0,.175) !important;
+  transition: max-height 0.2s ease-in-out;
+}
+
+#gnb.dropdown:hover #gnb-svc-wrapper {
+  max-height: 200px;
+  transition: max-height 0.2s ease-in-out;
 }
 
 .gnb-menu {
   text-align: center;
   font-weight: bold;
+  width: 140px;
   a {
-    @include disable-effect();
+    @include disable-effect(#555);
+    padding: 20px;
+    position: relative;
+    &:hover {
+      color: $brand-primary;
+    }
   }
 }
 
 .gnb-svc-col {
-  margin: $header-col-margin 0;
-  padding: 0 $header-col-padding;
-  font-size: $font-size-small;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: $header-col-margin 0 $header-col-margin*2;
   list-style-type: none;
   .list-group-item {
-    @include disable-effect($body-bg);
-    display: list-item;
-    margin: $header-col-margin 0;
-    padding: 0;
+    font-weight: bold;
     border: 0;
-    border-radius: 0;
+    @include disable-effect(#555);
+    display: list-item;
+    padding: $header-col-margin 20px;
+    font-size: 14px;
+    &:hover {
+      color: $brand-primary;
+    }
   }
 }

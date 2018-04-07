@@ -4,17 +4,35 @@
 
 {% block content %}
 <div id="board-header">
-  <h1 id="board-title" class="pull-left">{{ board.name }}</h1>
-  <div id="board-tag-btn" class="pull-right" data-toggle="collapse" href="#board-tag-list">{{ _('태그별 검색') }}<span class="caret"></span></div>
-</div>
-<div id="board-tag-list" class="collapse">
-  <ul class="pull-right">
-  {% for tag in tags %}
-    <li class="pull-left">{{ make_tag(board, tag) }}</li>
-  {% endfor %}
+  <h1 id="board-title" class="text-center">{{ board.name }}</h1>
+
+  {% if board.tabs %}
+  <ul class="nav nav-tabs">
+    {% for _tab in board.tabs %}
+      <li role="presentation" {% if tab == _tab %}class="active"{% endif %}><a href="{{_tab.get_absolute_url()}}">{{_tab.name}}</a></li>
+    {% endfor %}
   </ul>
+  {% endif %}
+  {% include 'board/board_banner.jinja' %}
 </div>
-
-{% include 'board/post_list.jinja' %}
-
+{% if board.check_role(BOARD_ROLE['DEBATE']) %}
+	{% include 'board/post_list/post_list_debate.jinja' %}
+{% elif board.check_role(BOARD_ROLE['PLANBOOK']) %}
+	{% include 'board/post/pdf_post.jinja' %}
+{% elif board.check_role(BOARD_ROLE['ARCHIVING']) %}
+  {% include 'board/post_list/post_list_archiving.jinja' %}
+{% elif board.check_role(BOARD_ROLE['WORKHOUR']) %}
+	{% include 'board/post/workhour_post.jinja' %}
+{% elif board.check_role(BOARD_ROLE['SPONSOR']) %}
+	{% include 'board/sponsor_post_list.jinja' %}
+{% elif board.check_role(BOARD_ROLE['SWIPER']) %}
+  {% include 'board/post/post_swiper.jinja' %}
+{% elif board.check_role(BOARD_ROLE['STORE']) %}
+  {% include 'board/post_list/product_list.jinja' %}
+{% elif board.check_role(BOARD_ROLE['CONTACT']) %}
+  {% include 'board/post_list/contact_list.jinja' %}
+{% else %}
+	{% include 'board/post_list/post_list.jinja' %}
+{% endif %}
+  
 {% endblock %}

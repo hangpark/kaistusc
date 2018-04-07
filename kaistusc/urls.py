@@ -16,7 +16,8 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
-
+from django.conf import settings
+from django.conf.urls.static import static
 from apps.board.views import BoardView
 from apps.manager.views import ServiceView, MainPageView, ErrorView
 
@@ -42,8 +43,8 @@ urlpatterns = [
     url(r'^(?P<url>board/[a-z0-9]*[a-z]+[a-z0-9]*)/', include('apps.board.urls')),
     url(r'^revision/', include('apps.rule.urls.revision')),
 
-    # Custom static pages
-
+    # Custom static page
     # For freshmen ot
     url(r'^ot/', include('apps.ot.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# debuging mode in Window

@@ -10,6 +10,9 @@
   "dependencies": {
     "jquery": "^3.1.1",
     "bootstrap-sass": "^3.3.7",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "bootstrap-select": "^1.12.4",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "swiper": "^4.1.6"
   }
 }

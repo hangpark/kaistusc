@@ -6,12 +6,17 @@
 //== 기본 레이아웃
 //
 //##
+#clear{
+  clear:both;
+  height: 0;
+  overflow: hidden;
+}
 
 .tag-item {
   padding: 1px;
   width: 52px;
   display: inline-block;
-  border: 1px solid #dcdcdd;
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: $font-size-xm;
   font-weight: bold;
@@ -37,9 +42,7 @@
 }
 
 #board-tag-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 0;
+  cursor: pointer;
   font-size: $font-size-sm;
   font-weight: bold;
   color: #717071;
@@ -56,16 +59,14 @@
 //##
 
 #post-list {
-  border-top: solid 3px #717071;
-
   thead {
     border-bottom: solid 2px #9f9fa0;
     font-size: 12pt;
   }
 
   tbody tr {
-    border-top: solid 1px #dcdcdd;
-    border-bottom: solid 1px #dcdcdd;
+    border-top: solid 1px #ddd;
+    border-bottom: solid 1px #ddd;
     font-size: $font-size-sm;
     cursor: pointer;
 
@@ -88,6 +89,114 @@
   }
 }
 
+#product-list {
+
+
+  #product-list-header-category {
+    background: none;
+    border: none;
+  }
+  .dropdown-menu {
+    left: 50%;
+    right: auto;
+    text-align: center;
+    transform: translate(-50%, 0);
+    li {
+      cursor: pointer;
+    }
+  }
+  thead {
+    border-bottom: solid 2px #9f9fa0;
+    font-size: 12pt;
+  }
+
+  tbody tr {
+    border-top: solid 1px #ddd;
+    border-bottom: solid 1px #ddd;
+    &:hover {
+      background: #fff;
+    }
+    &:nth-child(even) {
+      background: $bg-primary-light;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
+  .product-delete-btn {
+    cursor: pointer;
+    &:hover {
+      color: $gray-2;
+    }
+  }
+
+  #product-form-row {
+    #product-add-btn {
+      line-height: 35px;
+      cursor: pointer;
+      &:hover {
+        i {
+          color: $brand-primary-hover;
+        }
+      }
+    }
+
+    td:not(#product-add-btn) {
+      display: none;
+    }
+    td {
+      padding-top:0;
+      padding-bottom: 0;
+      position: relative;
+    }
+    input {
+      height: 35px;
+      border: none;
+      background: transparent;
+      text-align: center;
+      padding: 0 30px;
+    }
+    #product-submit-btn {
+      font-size: 18px;
+      cursor: pointer;
+      &:hover {
+        color: #509c51;
+      }
+    }
+    button {
+      span {
+        text-align: center;
+      }
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      outline: none !important;
+    }
+    ul {
+      text-align: center;
+    }
+  }
+}
+
+.debate-state{
+  margin-right: 5px;
+  padding: 4px 6px;
+  color:white;
+  font-weight: bold;
+  border-radius: 10%;
+}
+
+.debate-ongoing{
+  background: orange;
+}
+.debate-finished{
+  background: gray;
+}
+.debate-waiting{
+  background: navy;
+}
 
 //== 게시판 기능
 //
@@ -112,9 +221,9 @@
 #post-header {
   margin-bottom: 20px;
   padding: 10px 12px 7px 13px;
-  border-top: 3px solid #717071;
-  border-bottom: 2px solid #9f9fa0;
-  background-color: #f7f7f7;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: $bg-primary-light;
 }
 
 #post-title {
@@ -129,11 +238,13 @@
   padding: 0 10px;
 }
 
-#post-vote {
-  padding: 50px 0;
-  border-bottom: 1px solid #dcdcdd;
+#post-func {
+  padding: 30px 0 50px 0;
   form {
     display: inline-block;
+  }
+  .pull-right {
+    margin-top: 10px;
   }
 }
 
@@ -147,59 +258,149 @@
 
 #attached-file {
   padding: 10px 10px 25px;
-  border-bottom: 1px solid #dcdcdd;
+  border-bottom: 1px solid #ddd;
   font-size: 10pt;
   p {
     margin-bottom: 5px;
   }
 }
 
-#comment-list .comment {
-  padding-top: 6px;
-  border-left: 14px solid #dcdcdd;
-  &:nth-child(even) {
-    border-left-color: #eeefef;
+#comment-attached-file {
+  padding: 10px 10px 0 25px;
+  font-size: 10pt;
+  p {
+    margin-bottom: 5px;
   }
-  border-bottom: 1px solid #dcdcdd;
-  .comment-header {
-    margin: 0 12px 12px;
-  }
-  .comment-content {
-    padding: 0 10px 20px 25px;
-    p {
-      margin-bottom: 12px;
+}
+
+#comment-list{
+  position: relative;
+  .comment {
+    padding: 6px 0 15px 0;
+    border-left: 14px solid $bg-primary;
+    border-bottom: 1px solid #ddd;
+    &:nth-child(even) {
+      border-left-color: $bg-primary-lighter;
+    }
+    &:first-child {
+      border-top: 1px solid #ddd;
+    }
+    .comment-header {
+      margin: 0 12px 12px;
+    }
+    .comment-content {
+      padding: 0 10px 0 25px;
+      p {
+        margin-bottom: 12px;
+      }
+    }
+    .comment-remove {
+      cursor: pointer;
+      color: #717071;
     }
   }
-  .comment-remove {
-    cursor: pointer;
-    color: #717071;
+  .comment-content-deleted {
+    padding: 12px 0 0 12px;
+    color: $gray-4;
+  }
+
+  #comment-prev-btn {
+    width: 100%;
+    text-align: center;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    padding-left: 12px;
+    height: 40px;
+    z-index: 1;
+    span {
+      z-index: 5;
+      position: relative;
+      color: $gray-2;
+      cursor: pointer;
+      &:hover {
+        color: $gray-3;
+      }
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      background-image: -webkit-gradient(
+        linear, left top, left bottom, from(rgba(255,255,255,0)),
+        to(rgba(255,255,255,1)), color-stop(1,#fff)
+      );
+    }
   }
 }
 
 #comment-form {
-  margin-top: 28px;
+  margin-bottom: 28px;
+  #comment-form-content-wrap {
+    textarea {
+      height: auto;
+      resize: none;
+      overflow-y: auto;
+      max-height: 300px;
+    }
+  }
+  #comment-form-file {
+    width: 100%;
+    z-index: 3;
+    border: 1px solid #ccc;
+    border-top: none;
+    background-color: white;
+  }
 }
-
-#post-func {
-  margin-top: 58px;
-}
-
 
 //== 포스트 폼
 //
 //##
+#post-form {
+
+  .form-inline {
+    margin: 15px 0;
+  }
+  .form-group {
+    @media (min-width: $screen-sm-min) {
+      margin-right: 12px;
+    }
+  }
+  .input-group {
+    .form-control {
+      height: 34px;
+    }
+  }
+}
+
+#btn-comment-form {
+  color: #fff;
+  background-color: $brand-primary;
+  &:hover {
+    border: 1px solid #ccc;
+    border-left: none;
+    background-color: $brand-primary-hover;
+  }
+}
 
 #file-func {
-  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
   .prev-file,
   .attach-file {
-    margin: 8px 0;
+    margin: 3px 0;
+    display: flex;
+    align-items: center;
   }
   .prev-file-name,
   .attach-file input {
+    flex: 1;
     display: inline-block;
-    width: 340px;
-    border: 1px solid #bbb;
   }
   .prev-file-name {
     padding: 2px 4px;
@@ -211,10 +412,55 @@
     text-decoration: underline;
     cursor: pointer;
   }
+  i {
+    padding: 0 10px;
+  }
 }
 
-#post-form .form-inline .form-group {
-  @media (min-width: $screen-sm-min) {
-    margin-right: 12px;
+.comment-wrapper{
+  border: 1px solid #ccc; 
+  width: 100%;
+  position: relative;
+}
+
+#attach-file-wrap{
+  width: 100%;
+}
+.comment-button{
+  width: 10%;
+  position: absolute;
+  right: 0;
+  height: 100%;
+}
+
+#comment-area{
+  border-radius: 0px;
+  border: none;
+  -webkit-tap-highlight-color:none;
+  border-bottom: 1px solid #ccc; 
+}
+
+.comment-input{
+  width: 90%;
+}
+
+.filter-checkbox{
+  float:right;
+  padding-right: 15px;
+  padding-bottom: 5px;
+  @media (max-width: $screen-sm-min) {
+    margin: $line-height-computed 0;
+  }
+}
+
+#post-list-header-tag {
+  background: none;
+  border: none;
+}
+
+#post-list-header-tag-dropdown {
+  min-width: 0;
+  li {
+    padding: 2px 3px;
   }
 }

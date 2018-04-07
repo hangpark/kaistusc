@@ -60,7 +60,7 @@ a {
 }
 
 .spot {
-  @include full-jumbotron($body-black-bg);
+  @include full-jumbotron($bg-primary-light);
 }
 
 .margin-left {
@@ -153,4 +153,12 @@ a {
   height: 100%;
   background-color: $side-nav-overlay;
   z-index: $side-nav-zindex - 1;
+}
+
+.nopadding {
+  padding: 0 !important;
+}
+
+.nomargin {
+  margin: 0 !important;
 }

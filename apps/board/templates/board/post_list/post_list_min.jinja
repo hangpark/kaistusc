@@ -1,4 +1,4 @@
-{% from 'board/macros.jinja' import make_tag %}
+{% from 'board/macros.jinja' import make_tag, post_title_postfix %}
 
 {% macro post_info_min(post) -%}
   <tr onclick="location.href='{{ post.get_absolute_url() }}';">
@@ -6,14 +6,10 @@
     {%- if post.tag -%}
       <span class="margin-right">{{ make_tag(board, post.tag) }}</span>
     {%- endif -%}
-    {%- if post.content_en and post.content_ko -%}
-      <i class="fa fa-globe"></i>
-    {%- endif %}
       <span class="post-list-title">
       {%- if post.is_deleted -%}
         {{ _('삭제되었습니다.') }}
       {%- elif post.is_secret -%}
-      <i class="fa fa-lock"></i>
       {% if post.is_permitted(request.user, PERM_READ) -%}
         {{ post.title }}
       {%- else -%}
@@ -22,9 +18,10 @@
       {%- else -%}
         {{ post.title }}
       {%- endif -%}
+      {{ post_title_postfix(post)}}
       </span>
     </td>
-    <td class="text-right">{{ post.date.strftime('%Y-%m-%d') }}</td>
+    <td class="text-right">{{ post.date.strftime('%Y/%m/%d') }}</td>
   </tr>
 {%- endmacro -%}
 

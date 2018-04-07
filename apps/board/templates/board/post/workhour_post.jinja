@@ -1,0 +1,25 @@
+{% from 'ksso/macros.jinja' import name %}
+{% from 'board/macros.jinja' import make_tag %}
+
+<div id="webdoc-content">
+  {% if posts.object_list and posts.object_list[0].webdoc_set.all() %}
+    <div id="webdoc-description">
+      {{ posts.object_list[0].content|linebreaks }}
+    </div>
+    
+    <div id="webdoc-container" class="well">
+      <iframe id="webdoc-embed" src="{{posts.object_list[0].webdoc_set.all()[0].embed_url}}"></iframe>
+    </div>
+
+  {% else %}
+    {{ _('상근 관리 문서가 업로드 되지 않았습니다.') }}
+  {% endif %}
+</div>
+
+<div id="board-func" class="row">
+  <div class="pull-right col-sm-1">
+    {% if board.is_permitted(request.user, PERM_WRITE) %}
+      <a href="{{current_path}}/new/" class="btn btn-primary">{{ _('업로드') }}</a>
+    {% endif %}
+  </div>
+</div>

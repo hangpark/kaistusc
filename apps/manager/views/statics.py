@@ -1,10 +1,12 @@
 """
 고정 페이지 뷰.
 """
-
-from apps.board.models import Board
-
+from django.db import models
+from apps.manager.models import TopBanner
+from apps.board.models import Board, BannerCarousel, MainPoster
+from apps.board.constants import *
 from .base import PageView
+from datetime import datetime
 
 
 class MainPageView(PageView):
@@ -23,6 +25,18 @@ class MainPageView(PageView):
         context = super().get_context_data(**kwargs)
         context['boards'] = Board.objects.accessible_for(
             self.request.user).filter(is_main=True)
+        try:
+            context['bannerCarousel'] = BannerCarousel.objects.get(sector=BANNER_CAROUSEL_SECTOR['MAIN'])
+        except BannerCarousel.DoesNotExist:
+            pass
+        try:
+            context['MainPoster'] = MainPoster.objects.first()
+        except MainPoster.DoesNotExist:
+            pass
+        try:
+            context['topBanner'] = TopBanner.objects.get(terminate_at__gte=datetime.now())
+        except TopBanner.DoesNotExist:
+            pass
         return context
 
 

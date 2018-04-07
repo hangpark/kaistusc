@@ -1,0 +1,99 @@
+<form id="product-form">{% csrf_token %}</form>
+<table id="product-list" class="table table-hover">
+  <thead>
+    <tr id="product-header">
+      <th class="text-center">#</th>
+      <th class="text-center">
+        <div class="dropdown">
+          <button class="dropdown-toggle" type="button" id="product-list-header-category" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            {{ _('카테고리') }}
+            {% if product_categories %}
+              <span class="caret"></span>
+            {% endif %}
+          </button>
+          {% if product_categories %}
+            <ul class="dropdown-menu" aria-labelledby="product-list-header-category">
+              {% for product_category in product_categories %}
+                <li>
+                  <a href="{% if tab %}{{ tab.get_absolute_url() }}{% else %}{{ board.get_absolute_url() }}{% endif %}?product_category={{ product_category.id }}">
+                    {{product_category.name}}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </th>
+      <th class="text-center">{{ _('상품명') }}</th>
+      <th class="text-center">{{ _('가격(원)') }}</th>
+      {% if board.is_permitted(request.user, PERM_WRITE) %}
+      <th></th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for product in posts %}
+    <tr>
+      <td class="text-center">{{loop.index + (posts.number-1) * POST_PER_PAGE}}</td>
+      <td class="text-center">{{product.category.name}}</td>
+      <td class="text-center">{{product.name}}</td>
+      <td class="text-center">{{product.price}}</td>
+      {% if board.is_permitted(request.user, PERM_DELETE) %}
+        <td class="text-center">
+          <input type="hidden" value="{{product.id}}"/>
+          <i class="fa fa-trash product-delete-btn"></i>
+        </td>
+        <input type="hidden" id="delete-product-warning" value="{{ _('상품을 정말 삭제할까요?') }}"/>
+      {% endif %}
+    </tr>
+  {% endfor %}
+  {% if board.is_permitted(request.user, PERM_WRITE) %}
+    <tr id="product-form-row">
+      <td class="text-center"></td>
+      <td class="text-center">
+        <select form="product-form" name="category" data-width="fit" class="selectpicker">
+          {% for product_category in product_categories %}
+            <option value="{{product_category.id}}">{{product_category.name}}</option>
+          {% endfor %}
+        </select>
+      </td>
+      <td class="text-center"><input id="product-name-input" form="product-form" name="name" placeholder="{{_('상품명')}}" type="text"/></td>
+      <td class="text-center">
+        <input id="product-price-input" form="product-form" name="price" placeholder="{{_('가격')}}" type="text"/>
+      </td>
+      <td class="text-center">
+        <i id="product-submit-btn" class="fa fa-check text-success"></i>
+      </td>
+      <td id="product-add-btn" class="text-center" colspan="{% if board.is_permitted(request.user, PERM_WRITE) %}5{% else %}4{%endif%}">
+        <i class="fa fa-plus"></i>
+      </td>
+    </tr>
+  {% endif %}
+  </tbody>
+</table>
+
+{% if posts %}
+<div id="board-func" class="row">
+  <div class="pull-left col-sm-6">
+    <ul id="pagination" class="pagination pull-left">
+      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p=1">&lt;&lt;</a></li>
+      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={% if posts.has_previous() %}{{ posts.previous_page_number() }}{% else %}{{ posts.number }}{% endif %}">&lt;</a></li>
+      {% for page in pages %}
+      <li class="{% if posts.number == page %}active{% endif %}"><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={{ page }}">{{ page }}</a></li>
+      {% endfor %}
+      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={% if posts.has_next() %}{{ posts.next_page_number() }}{% else %}{{ posts.number }}{% endif %}">&gt;</a></li>
+      <li><a href="?{% if search %}s={{ search }}&amp;{% endif %}p={{ posts.paginator.num_pages }}">&gt;&gt;</a></li>
+    </ul>
+  </div>
+  <div class="pull-right col-sm-4">
+    <form action="." method="get" id="search-form">
+      <div class="input-group">
+        <input type="text" class="form-control" name="s" style="height:auto">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">{{ _('검색') }}</button>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}

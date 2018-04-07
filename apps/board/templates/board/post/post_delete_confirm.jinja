@@ -1,0 +1,18 @@
+<div id="delete-modal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">{{ _('삭제') }}</h4>
+      </div>
+      <div class="modal-body">
+        <p>{{ _('게시글을 정말 삭제할까요?') }}</p>
+      </div>
+      <form class="modal-footer" method="post" action="{{ post.get_absolute_url() }}/delete/">
+        {% csrf_token %}
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('취소') }}</button>
+        <button type="submit" class="btn btn-danger">{{ _('삭제') }}</a>
+      </form>
+    </div>
+  </div>
+</div>

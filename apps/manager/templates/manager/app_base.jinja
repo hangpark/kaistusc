@@ -2,20 +2,12 @@
 
 {% block main_area %}
 {% set category=service.category %}
-<div id="container" class="spot">
+<div id="container">
   <div id="main" class="page-item container-fluid">
-    <div id="main-header" class="row hidden-xs">
-      <img src="{{ static('manager/images/header_wall.png') }}">
-      <div class="main-header-container">
-        <div class="main-header-item col-sm-2">
-          <span>{{ category.name }}</span>
-        </div>
-      </div>
-    </div>
     <div id="main-content" class="row">
       <nav id="lnb" class="hidden-xs col-sm-2 list-group">
-      {% for item in category.service_set.all() %}
-        <a class="list-group-item {% if item == service %}lnb-selected{% endif %}" href="{{ item.get_absolute_url() }}"><span class="lnb-arrow"></span>{{ item.name }}</a>
+      {% for item in category.get_services(request.user) %}
+        <a class="list-group-item {% if item == service %}lnb-selected{% endif %}" href="{{ item.get_absolute_url() }}">{{ item.name }}</a>
       {% endfor %}
       </nav>
       <article id="main-body" class="col-xs-12 col-sm-10">

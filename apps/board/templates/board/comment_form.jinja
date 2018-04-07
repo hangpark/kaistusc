@@ -1,0 +1,11 @@
+<form id="comment-form" class="input-group">{% csrf_token %}
+	<div id="comment-form-content-wrap">
+		<textarea class="form-control custom-control" name="content"></textarea>
+	</div>
+	{% if board.check_role(BOARD_ROLE['DEBATE']) %}
+	<input id="comment-form-file" type="file" name="files">
+	{% endif %}
+	<span id="btn-comment-form" class="input-group-addon btn btn-primary" type="button">{{ _('등록') }}</span>
+</form>
+
+<input type="hidden" id="comment-no-input" value="{{ _('댓글 내용을 입력해주세요.') }}"/>

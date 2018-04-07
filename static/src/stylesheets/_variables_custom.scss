@@ -30,6 +30,28 @@ $basic-anim-time:         .5s;
 //
 //##
 
+$brand-primary: #7ebbef;
+$brand-primary-darker: darken($brand-primary, 10%);
+$brand-primary-lighter: lighten($brand-primary, 10%);
+$brand-primary-hover: #51a3e9;
+$bg-primary : #d1ebff;
+$bg-primary-darker : darken($bg-primary, 4%);
+$bg-primary-dark : darken($bg-primary, 7%);
+$bg-primary-lighter : lighten($bg-primary, 4%);
+$bg-primary-light : lighten($bg-primary, 7%);
+
+$gray-0: #000;
+$gray-1: #333;
+$gray-2: #666;
+$gray-3: #999;
+$gray-4: #ccc;
+$gray-5: #fff;
+
+$btn-primary-bg:                 $brand-primary !default;
+$btn-primary-border:             darken($btn-primary-bg, 5%) !default;
+
+
+
 $color-1:                 #bc8dbe;
 $color-2:                 #5c6cb2;
 $color-3:                 #d84b83;
@@ -54,7 +76,7 @@ $screen-lg-min:           1200px;
 $main-max-width:          $screen-md-min;
 //$body-bg:
 // Jumbotron 등에서 사용
-$body-black-bg:           #dcdcdd;
+$body-black-bg:           #ddd;
 
 //** 우선적 z-index 값
 // Header, Footer 등이 다른 컨텐츠보다 우선적으로 보여야 하는 경우 사용
@@ -92,10 +114,10 @@ $header-img-width:        273px;
 $header-vertical-base-margin:     19px;
 $header-vertical-large-margin:    35px;
 
-$header-gnb-width:        560px;
-$header-col-margin:       10px;
+$header-gnb-width:        992px;
+$header-col-margin:       5px;
 $header-col-padding:      15px;
-$main-service-bg:         rgba(80, 80, 80, .8);
+$main-service-bg:        #ffffff;
 
 
 //== Footer
@@ -129,10 +151,9 @@ $service-padding-vertical:      26px;
 $service-padding-horizontal:    22px;
 
 $service-lnb-padding:     14px 0 26px 16px;
-$service-lnb-radius:      14px;
 $service-lnb-item-gap:    6px;
+$service-lnb-selected-border:    4px;
 
-//** border-width 값
-$service-lnb-arrow-size:  5px 11px 5px 0;
-$service-lnb-arrow-top:   14px;
-$service-lnb-arrow-right: -1px;
+$dropdown-link-hover-bg: $bg-primary-lighter;
+
+$input-color-placeholder: #999 !default;

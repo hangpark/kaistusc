@@ -1,21 +1,34 @@
 {% from 'ksso/macros.jinja' import name %}
 
 <div id="comment-id-{{ comment.id }}" class="comment">
-  <div class="comment-header clearfix">
-    <div class="pull-left">
-      {{ name(comment.author) }}<span class="margin-both">|</span>{{ comment.date.strftime('%Y-%m-%d %H:%M:%S') }}
+  {% if comment.is_deleted %}
+    <div class="comment-content-deleted">{{ _("삭제된 댓글입니다.") }}</div>
+  {% else %}
+    <div class="comment-header clearfix">
+      <div class="pull-left">
+        {{ name(comment.author) }}<span class="margin-both">|</span>{{ comment.date.strftime('%Y/%m/%d %H:%M') }}
+      </div>
+      {% if comment.is_permitted(request.user, PERM_DELETE) %}
+      <form action="{{ comment.get_absolute_url() }}/delete/" class="pull-right">{% csrf_token %}
+        <i class="comment-remove fa fa-times"></i>
+      </form>
+      {% endif %}
     </div>
-    {% if comment.is_permitted(request.user, PERM_DELETE) %}
-    <form action="{{ comment.get_absolute_url() }}/delete/" class="pull-right">{% csrf_token %}
-      <i class="comment-remove fa fa-times"></i>
-    </form>
-    {% endif %}
-  </div>
-  <div class="comment-content">
-  {%- if comment.is_permitted(request.user, PERM_READ) -%}
-    {{ comment.content }}
-  {%- else -%}
-    {{ _("삭제되었습니다.") }}
+    {%- if comment.is_permitted(request.user, PERM_READ) -%}
+      <div class="comment-content">
+        {{ comment.content }}
+      </div>
+      {% if comment.attached_files() %}
+        <div id="comment-attached-file">
+        {{ _('첨부파일') }}
+        <p></p>
+        {% for file in comment.attached_files() %}
+          <p><a href="{{ file.get_absolute_url() }}">{{ file }} ({{ file.get_file_size()|filesizeformat }})</a></p>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {%- endif -%}
   {%- endif -%}
-  </div>
+  
 </div>
+

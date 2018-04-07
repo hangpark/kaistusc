@@ -1,6 +1,8 @@
 // 변수 재정의, 신규 정의
 @import 'variables_custom';
 
+@import 'global';
+
 // 부트스트랩
 @import 'bootstrap_custom';
 
@@ -14,3 +16,12 @@
 @import 'main_page';
 @import 'error_page';
 @import 'rule';
+@import 'banner';
+@import 'schedule';
+@import 'post_project_timeline';
+@import 'pdf';
+@import 'webdoc';
+@import 'sponsor';
+@import 'swiper';
+@import 'contact';
+@import 'board_banner';

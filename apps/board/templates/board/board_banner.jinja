@@ -1,0 +1,30 @@
+{% if board_banner %}
+  <div id="board-banner" class="alert alert-info">
+    <a href="{{board_banner.url}}"><b>{{board_banner.text}}</b></a>
+    {% if request.user.is_superuser %}
+      <div class="pull-right">
+        <a class="btn btn-link" href="{{ current_path }}/banner/edit/">{{ _('수정') }}</a>
+        <button id="delete-board-banner" class="btn btn-link">{{ _('삭제') }}</button>
+      </div>
+      {% csrf_token %}
+    {% endif %}
+  </div>
+{% elif request.user.is_superuser %}
+  <!-- 보드 배너가 없음을 알리고 추가 버튼 생성-->
+  <div id="board-banner" class="alert alert-info">
+    <b>{{ _('게시판 배너가 등록되지 않았습니다. 필요할 경우 등록 버튼을 눌러주세요.') }}</b>
+    <div class="pull-right">
+      <a href="{{ current_path }}/banner/new/">{{ _('등록') }}</a>
+    </div>
+  </div>
+{% endif %}
+
+<div 
+  id="delete-board-banner-context" 
+  data-current-url="{{ current_path }}"
+  data-url="{{ current_path }}/banner/{{board_banner.id}}/delete/"
+  data-confirm-msg="{{ _('게시판 배너를 삭제하시겠습니까') }}"
+  data-no-banner-msg="{{ _('게시판 배너가 등록되지 않았습니다. 필요할 경우 등록 버튼을 눌러주세요.') }}"
+  data-register-text="{{ _('등록') }}"
+  >
+</div>

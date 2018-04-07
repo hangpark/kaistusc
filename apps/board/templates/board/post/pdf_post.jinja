@@ -1,0 +1,57 @@
+{% from 'ksso/macros.jinja' import name %}
+{% from 'board/macros.jinja' import make_tag %}
+
+<div id="post-content">
+  {% if posts.object_list and posts.object_list[0].attachedfile_set.all() %}
+    <div id="pdf-success">
+
+      <div id="pdf-page-controller" class="row">
+        <div class="col">
+            <button id="pdf-prev" type="button" class="btn">{{ _('이전') }}</button>
+        </div>
+        <div class="col">
+            <button id="pdf-next" type="button" class="btn">{{ _('다음') }}</button>
+        </div>
+        <div class="col">
+            <input type="text" size="6" class="form-control" id="pdf-page-num" value="1">
+        </div>
+        <div class="col">
+            <button id="pdf-go-to-page" type="button" class="btn col">{{ _('페이지로 이동') }}</button>
+        </div>
+      </div>
+        
+      <div id="pdf-canvas-container" class="row well">
+        <canvas id="the-canvas"></canvas>
+        <canvas id="the-canvas-2"></canvas>
+      </div>
+
+    </div>
+
+    <div id="pdf-fail" hidden>{{ _('파일을 불러오는 데 실패했습니다.') }}</div>
+  {% else %}
+      {{ _('공약 및 정책자료집이 업로드 되지 않았습니다.') }}
+  {% endif %}
+</div>
+
+<div id="board-func" class="row">
+  <div class="pull-right col-sm-1">
+    {% if board.is_permitted(request.user, PERM_WRITE) %}
+        <a href="{{current_path}}/new/" class="btn btn-primary">{{ _('업로드') }}</a>
+    {% endif %}
+  </div>
+</div>
+
+
+{% if posts.object_list and posts.object_list[0].attachedfile_set.all() %}
+<div 
+  id="pdf-context" 
+  data-url="{{ posts.object_list[0].attachedfile_set.all()[0].get_absolute_url() }}">
+</div>
+{% else %}
+<div 
+  id="pdf-context" 
+  data-url="">
+</div>
+{% endif %}
+
+<script src="{{ static('js/pdf.js') }}"></script>

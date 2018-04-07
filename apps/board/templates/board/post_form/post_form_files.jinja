@@ -1,0 +1,18 @@
+<div id="file-func">
+    {% for file in files %}
+        <div class="prev-file col-xs-12 nopadding">
+        <input type="hidden" name="prev_files" value="{{ file.id }}">
+        <div class="prev-file-name">{{ file }}</div>
+        <span class="prev-file-del"><i class="fa fa-times"></i></span>
+        </div>
+    {% endfor %}
+    <div id="attach-file-wrap">
+        <div class="attach-file col-xs-12 nopadding">
+            <input type="file" name="files" {% if board.check_role(BOARD_ROLE['ARCHIVING']) or board.check_role(BOARD_ROLE['SWIPER']) %} required {% endif %}>
+            {% if not (board.check_role(BOARD_ROLE['ARCHIVING']) or board.check_role(BOARD_ROLE['SWIPER'])) %}
+            <span class="file-more"><i class="fa fa-plus"></i></span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div id="file-del-desc" style="display: none;"><i class="fa fa-times"></i></div>

@@ -2,34 +2,35 @@
 
 {% block main_area %}
 <div id="container">
-  <div class="alert alert-info" style="margin: 0;"><a href="/ot"><b><i class="fa fa-info-circle"></i> 2018년도 전기 새내기 새로 배움터 공연 투표가 시작되었습니다! (1.24 ~ 1.28)</b></a></div>
+  {% if topBanner %}
+  {% include 'manager/top_banner.jinja' %}
+  {% endif %}
   <div id="main-spot" class="spot hidden-xs">
-    <div class="page-item container-fluid">
-      <div class="spot-wrap row">
-        <img src="{{ static('manager/images/wall.png') }}">
+    <div class="page-item container-fluid spot-container">
+      <div class="spot-wrap">
         <div class="spot-item-container">
-          <div class="spot-item col-xs-3" onclick="location.href='/';">
+          <div class="spot-item col-xs-3" onclick="location.href='/board/data/';">
             <div class="spot-text">
-              <p><b>{{ _('총학생회 소개') }}</b></p>
-              <p>{{ _('Introduction') }}</p>
+              <p><b>{{ _('의결기구 자료') }}</b></p>
+              <p>{{ _('Student Legislative Archive') }}</p>
             </div>
           </div>
-          <div class="spot-item col-xs-3" onclick="location.href='/';">
+          <div class="spot-item col-xs-3" onclick="location.href='/board/work/';">
             <div class="spot-text">
-              <p><b>{{ _('공약 및 사업') }}</b></p>
-              <p>{{ _('Works') }}</p>
+              <p><b>{{ _('총학생회 사업현황') }}</b></p>
+              <p>{{ _('USC affairs current progress') }}</p>
             </div>
           </div>
-          <div class="spot-item col-xs-3" onclick="location.href='/';">
+          <div class="spot-item col-xs-3" onclick="location.href='/board/rocomm/';">
             <div class="spot-text">
               <p><b>{{ _('건의사항') }}</b></p>
-              <p>{{ _('Recomm.') }}</p>
+              <p>{{ _('Suggestions.') }}</p>
             </div>
           </div>
-          <div class="spot-item col-xs-3" onclick="location.href='/ot';">
+          <div class="spot-item col-xs-3" onclick="location.href='/board/shop/';">
             <div class="spot-text">
-              <p><b>{{ _('새터 공연 투표') }}</b></p>
-              <p>{{ _("Vote for Freshman OT") }}</p>
+              <p><b>{{ _('매점 및 잡화점 물품조회') }}</b></p>
+              <p>{{ _("School Stores' Items List") }}</p>
             </div>
           </div>
         </div>
@@ -38,18 +39,25 @@
   </div>
   <div id="main-page" class="page-item container-fluid">
     <div class="row">
-      <div id="main-board-list" class="col-sm-6">
-        {% for board in boards %}
-        {% include 'board/post_list_min.jinja' %}
-        {% endfor %}
+      {% if bannerCarousel %}
+      <div class="col-sm-12">
+        {% include 'board/banner_carousel.jinja' %}
       </div>
-      <div class="col-sm-6">
-        <a target="_blank" href="http://www.uplus.co.kr/sqr/evnt/evtp/RetrieveEventProgDetail.hpi?selectedEventId=254&utm_source=AD&utm_campaign=news&utm_medium=banner&utm_content=PC_S8_order">
-          <img id="banner" src="{{ static('manager/images/banner.jpg') }}">
-        </a>
-        <div id="fb-root"></div>
-        <script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v2.6&appId=551602898355546";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>
-        <div class="fb-page" data-href="https://www.facebook.com/kaistusc/" data-tabs="timeline" data-width="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/kaistusc/"><a href="https://www.facebook.com/kaistusc/">KAIST 학부 총학생회</a></blockquote></div></div>
+      {% endif %}
+      <div class="clearfix"></div>
+      <div id="main-page-content" class="container-fluid">
+      <div class="row">
+        <div id="main-board-list" class="col-sm-6">
+          {% if MainPoster %}
+            <img id="main-poster" src="{{MainPoster.image.url}}" alt="{{MainPoster.image.url}}"'>
+          {% endif%}
+        </div>
+        <div class="col-sm-6">
+          <div id="fb-root""></div>
+          <script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v2.6&appId=551602898355546";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>
+          <div class="fb-page" data-href="https://www.facebook.com/kaistusc/" data-tabs="timeline" data-width="500" data-height='660' data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/kaistusc/"><a href="https://www.facebook.com/kaistusc/">KAIST 학부 총학생회</a></blockquote></div></div>
+        </div>
+        </div>
       </div>
     </div>
     <div id="fnb" class="row">
