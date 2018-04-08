@@ -30,7 +30,7 @@ SECRET_KEY = '_dcwta0d49azy*1##hy*j*g)s8d3&q88q(eushtfqrx&ff#auw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr', u'kaistusc.hangpark.com']
+ALLOWED_HOSTS = [u'stein.kim', u'143.248.234.160', u'localhost', u'student.kaist.ac.kr', u'kaistusc.hangpark.com']
 
 CSRF_TRUSTED_ORIGINS = [u'143.248.234.160', u'localhost', u'student.kaist.ac.kr', u'kaistusc.hangpark.com']
 
@@ -107,8 +107,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kaistusc',
-        'USER': os.getenv('DB_ENV_MYSQL_USER'),
-        'PASSWORD': os.getenv('DB_ENV_MYSQL_PASSWORD'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
         'HOST': os.getenv('MYSQL_HOST') or 'db',
         'PORT': '3306'
     }
