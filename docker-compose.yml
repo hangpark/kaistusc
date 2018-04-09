@@ -7,7 +7,6 @@ services:
       - type: bind
         source: ./mysql.cnf
         target: /etc/my.cnf
-    volumes:
       - type: volume
         source: dbstore
         target: /var/lib/mysql
