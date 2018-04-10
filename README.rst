@@ -10,8 +10,11 @@ Deploy
 ------
 
 Go to 4) if you are updating already deployed one.
+
 1) Install certbot and get letsencrypt certbot.
+
 2) Write proxy server setting in the host. (SSL, proxypass to the port binded on the docker service "web")
+
 3) Go to project root and write .env file as follows:
 
     MYSQL_USER=username
@@ -29,6 +32,7 @@ Go to 4) if you are updating already deployed one.
     PORTAL_PUBLIC_KEY=portal_public_key
 
     CERT_PATH=/path/to/letsencrypt/cert
+    
 4) serveruser:/root/of/project $ **docker-compose up -d --build**
 
 
