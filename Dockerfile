@@ -12,6 +12,7 @@ RUN apt-get update \
     npm \
     nodejs-legacy \
     git \
+    netcat \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

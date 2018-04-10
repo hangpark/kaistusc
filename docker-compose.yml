@@ -1,0 +1,31 @@
+version: '3.6'
+
+services:
+  db:
+    image: mysql/mysql-server:5.7
+    restart: always
+    volumes:
+      - type: bind
+        source: ./mysql.cnf
+        target: /etc/my.cnf
+      - type: volume
+        source: dbstore
+        target: /var/lib/mysql
+    env_file:
+      - .env
+  web:
+    build: .
+    restart: always
+    volumes:
+      - type: bind
+        source: ${CERT_PATH}
+        target: /etc/kaistusc
+    env_file:
+      - .env
+    ports:
+      - "60080:80"
+    depends_on:
+      - db
+
+volumes:
+  dbstore:

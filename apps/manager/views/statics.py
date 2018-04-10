@@ -34,7 +34,7 @@ class MainPageView(PageView):
         except MainPoster.DoesNotExist:
             pass
         try:
-            context['topBanner'] = TopBanner.objects.get(terminate_at__gte=datetime.now())
+            context['topBanner'] = TopBanner.objects.get(models.Q(terminate_at__gte=datetime.now()) | models.Q(terminate_at__isnull=True))
         except TopBanner.DoesNotExist:
             pass
         return context
