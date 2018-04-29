@@ -20,6 +20,9 @@ services:
       - type: bind
         source: ${CERT_PATH}
         target: /etc/kaistusc
+      - type: volume
+        source: mediastore
+        target: /var/www/media
     env_file:
       - .env
     ports:
@@ -29,3 +32,4 @@ services:
 
 volumes:
   dbstore:
+  mediastore:
