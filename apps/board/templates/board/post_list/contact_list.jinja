@@ -6,7 +6,7 @@
   </div>
 
   <div class = "contact-body">
-    <p class="contact-text">{{contact.content}}</p>
+    <div class="contact-text">{{contact.content|linebreaks}}</div>
     <span class='contact-phone'>{{_("연락처")}}:{{contact.phone}}</span>
     <a href='{{contact.url}}' target="_blank" class="contact-link pull-right">{{_('기구 페이지로 이동')}}</a>
   </div>
