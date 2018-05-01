@@ -32,7 +32,6 @@ function _movePostTimelineSlider(vector) {
     $( "#project-timeline-current" ).animate({
         left: "+=" + vector,
     }, 500, _renderPostTimelineNvigateButton);
-    _renderPostTimelineNvigateButton();
 }
 
 function postProjectTimelineInitialize() {
@@ -60,8 +59,12 @@ function postProjectTimelineInitialize() {
 }
 
 function _slidePostTimeline(percentage) {
-    $('#project-timeline-slider').css('left', percentage + '%');
-    _renderPostTimelineNvigateButton();
+    $( "#project-timeline-slider" ).animate({
+        left: percentage + '%',
+      }, 500, function() {
+        $( "#project-timeline-current" ).show();
+        _renderPostTimelineNvigateButton();
+      });
 }
 
 function _renderPostTimelineNvigateButton() {

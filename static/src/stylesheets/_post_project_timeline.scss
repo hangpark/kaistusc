@@ -95,6 +95,7 @@ $project-timeline-point-interval: 20%;
 }  
 
 #project-timeline-current {
+    display: none;
     position: absolute;
     z-index: 2;
     left: calc(50% - 10px);
