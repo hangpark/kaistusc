@@ -88,12 +88,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    overflow: hidden;
   }
 
   #schedule-datetimepicker {
     input {
       border-radius: 0;
     }
+  }
+
+  .selected-schedule-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .schedule-title-en, #selected-schedule-title-en {
