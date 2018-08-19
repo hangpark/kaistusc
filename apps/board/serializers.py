@@ -9,8 +9,8 @@ class AttachedFileSerializer(serializers.ModelSerializer):
         model = AttachedFile
         fields = '__all__'
 
-class PostSerializer(serializers.ModelSerializer):
 
+class PostSerializer(serializers.ModelSerializer):
     attachedfile_set = AttachedFileSerializer(many=True, read_only=True)
     is_permitted_to_read = serializers.SerializerMethodField()
     is_permitted_to_edit = serializers.SerializerMethodField()
@@ -53,7 +53,8 @@ class PostSerializer(serializers.ModelSerializer):
         )
         depth = 2
 
-class RetrivePostSerializer(serializers.ModelSerializer):
+
+class RetrievePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = (
@@ -61,6 +62,7 @@ class RetrivePostSerializer(serializers.ModelSerializer):
             'content',
             'board',
         )
+
 
 class CreatePostSerializer(serializers.ModelSerializer):
     class Meta:

@@ -4,13 +4,15 @@ from rest_framework.pagination import LimitOffsetPagination
 from django.db.models import Q
 
 from apps.board.models import Post
-from apps.board.serializers import PostSerializer, CreatePostSerializer, RetrivePostSerializer
+from apps.board.serializers import PostSerializer, CreatePostSerializer, RetrievePostSerializer
 
 from apps.board.constants import POST_PER_PAGE, BOARD_ROLE
 from apps.manager.constants import *
 
+
 class PostPagination(LimitOffsetPagination):
     default_limit = POST_PER_PAGE
+
 
 class PostViewSet(
         mixins.ListModelMixin,
@@ -49,6 +51,6 @@ class PostViewSet(
         if self.action == 'create':
             return CreatePostSerializer
         elif self.action == 'retrive':
-            return RetrivePostSerializer
+            return RetrievePostSerializer
         else:
             return PostSerializer
