@@ -2,15 +2,20 @@
 KAIST 단일인증서비스 뷰.
 """
 
-from django.contrib.auth import login, logout
+from django.conf import settings as project_settings
+from django.contrib.auth import login, logout, load_backend, SESSION_KEY, BACKEND_SESSION_KEY
 from django.contrib.auth.views import redirect_to_login
+from django.contrib.sessions.models import Session
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, View
+
+from rest_framework import views, status, response
 
 from apps.manager.views import PageView
 
 from . import settings
 from .classes import PortalController
+from .serializers import UserSerializer
 
 
 class LoginView(TemplateView):
@@ -166,3 +171,35 @@ class DisagreeView(View):
         except:
             pass
         return redirect('main')
+
+
+class UserInfoView(views.APIView):
+    def get(self, request, format=None):
+        if request.META['REMOTE_ADDR'] not in project_settings.ALLOWED_REMOTE_ADDRS:
+            return response.Response(status=status.HTTP_400_BAD_REQUEST)
+
+        session_key = request.GET.get('session_key')
+
+        if not session_key:
+            return response.Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            session = Session.objects.get(session_key=session_key)
+
+            try:
+                user_id = session.get_decoded()[SESSION_KEY]
+                backend_path = session.get_decoded()[BACKEND_SESSION_KEY]
+
+            except KeyError:
+                pass
+
+            else:
+                if backend_path in project_settings.AUTHENTICATION_BACKENDS:
+                    backend = load_backend(backend_path)
+
+                    return response.Response(UserSerializer(backend.get_user(user_id)).data)
+
+        except Session.DoesNotExist:
+            pass
+
+        return response.Response(status=status.HTTP_404_NOT_FOUND)
