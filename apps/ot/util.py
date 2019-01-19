@@ -14,14 +14,21 @@ def is_freshman(user):
         return False
 
     portal_info = user.portal_info
-    return portal_info.ku_std_no[:4] == "2018" and portal_info.ku_acad_prog == "학사"
+    return portal_info.ku_std_no[:4] == "2019" and portal_info.ku_acad_prog == "학사"
 
 
 def is_tester(user):
     if not user.is_authenticated or not hasattr(user, 'portal_info'):
         return False
 
-    return user.portal_info.ku_std_no in ("20140191", "20170742", "20170286", "20170463", "20150305", "20170337", "20170656",)
+    return user.portal_info.ku_std_no in (
+        "20110208",
+        "20180379",
+        "20180419",
+        "20180058",
+        "20180634",
+        "20180154",
+    )
 
 
 def is_vote_period():
