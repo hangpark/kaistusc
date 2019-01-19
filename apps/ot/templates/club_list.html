@@ -24,11 +24,29 @@
     </div>
   </div>
   {% for club in clubs %}
-  <div class="col-xs-12">
-    <a href="{% url 'club_detail' club.pk %}" class="alert alert-info btn-block text-center">
-      {{ club.name }}
-    </a>
+  <div class="col-xs-12 col-sm-6 col-md-4" data-href="{% url 'club_detail' club.pk %}" style="cursor: pointer;">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h2>{{ club.name }}</h2>
+        {% for image in club.images.all %}
+          {% if image.is_main %}
+            <img src="{{ image.image.url }}" style="width: 100%; height: auto;">
+          {% endif %}
+        {% endfor %}
+        <div class="">
+          {{ club.one_line_intro }}
+        </div>
+      </div>
+    </div>
   </div>
   {% endfor %}
 </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    $('div[data-href]').on('click', function() {
+        location.href = $(this).data('href');
+    })
+  </script>
 {% endblock %}
