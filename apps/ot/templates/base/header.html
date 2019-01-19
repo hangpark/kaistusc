@@ -15,15 +15,16 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="{% url 't_size' %}">티셔츠 사이즈 조사</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-          공연 동아리 투표<span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="{% url 'club_list' %}?is_band=1">밴드 동아리 목록</a></li>
-            <li><a href="{% url 'club_list' %}?is_band=0">비밴드동아리 목록</a></li>
-          </ul>
-        </li>
+        <li><a href="{% url 'club_list' %}">공연 동아리 투표</a></li>
+{#        <li class="dropdown">#}
+{#          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#}
+{#          공연 동아리 투표<span class="caret"></span>#}
+{#          </a>#}
+{#          <ul class="dropdown-menu">#}
+{#            <li><a href="{% url 'club_list' %}?is_band=1">밴드 동아리 목록</a></li>#}
+{#            <li><a href="{% url 'club_list' %}?is_band=0">비밴드동아리 목록</a></li>#}
+{#          </ul>#}
+{#        </li>#}
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><p class="navbar-text">
