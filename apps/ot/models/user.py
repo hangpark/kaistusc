@@ -21,8 +21,8 @@ class Freshman(models.Model):
     )
     tsize = models.CharField(null=False, max_length=5, choices=sizes)
 
-    BAND_VOTE_LIMIT = 4
-    NON_BAND_VOTE_LIMIT = 3
+    BAND_VOTE_LIMIT = 0
+    NON_BAND_VOTE_LIMIT = 5
 
     def vote_limit_exceeded(self, is_band):
-        return self.voted_clubs.filter().count() > 5
+        return self.voted_clubs.filter().count() >= 5
