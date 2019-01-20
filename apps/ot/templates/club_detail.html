@@ -42,14 +42,14 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="page-header">
-      <h1 class="text-center">
-        {% if club.is_band %}
-        <a href="{% url 'club_list' %}?is_band=1" class="btn btn-info btn-xs">밴드</a>
-        {% else %}
-        <a href="{% url 'club_list' %}?is_band=0" class="btn btn-info btn-xs">비밴드</a>
-        {% endif %}
-        {{ club.name }}
-      </h1>
+{#      <h1 class="text-center">#}
+{#        {% if club.is_band %}#}
+{#        <a href="{% url 'club_list' %}?is_band=1" class="btn btn-info btn-xs">밴드</a>#}
+{#        {% else %}#}
+{#        <a href="{% url 'club_list' %}?is_band=0" class="btn btn-info btn-xs">비밴드</a>#}
+{#        {% endif %}#}
+{#        {{ club.name }}#}
+{#      </h1>#}
     </div>
   </div>
   <div class="col-xs-12" style="margin-bottom: 20px;">

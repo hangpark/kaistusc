@@ -74,29 +74,29 @@
       {% endif %}
       <div class="row">
         <div class="col-xs-1"></div>
-        <div class="col-xs-5">
-          <h3>
-            <a href="{% url 'club_list' %}?is_band=1">
-              밴드<small class="glyphicon glyphicon-chevron-right" aria-hidden="true"></small>
-            </a>
-          </h3>
-
-          <h1>{{ voted_band | length }} <small>/ 최대 {{ band_limit }}표</small></h1>
-          {% if user.freshman %}
-            <div class="list-group">
-            {% for club in voted_band %}
-            <a href="{% url 'club_detail' club.pk %}" class="list-group-item">{{ club.name }}</a>
-            {% endfor %}
-            </div>
-          {% endif %}
-        </div>
-        <div class="col-xs-5">
-          <h3>
-            <a href="{% url 'club_list' %}?is_band=0">
-              비밴드<small class="glyphicon glyphicon-chevron-right" aria-hidden="true"></small>
-            </a>
-          </h3>
-          <h1>{{ voted_non_band | length }} <small>/ 최대 {{ non_band_limit }}표</small></h1>
+{#        <div class="col-xs-5">#}
+{#          <h3>#}
+{#            <a href="{% url 'club_list' %}?is_band=1">#}
+{#              밴드<small class="glyphicon glyphicon-chevron-right" aria-hidden="true"></small>#}
+{#            </a>#}
+{#          </h3>#}
+{##}
+{#          <h1>{{ voted_band | length }} <small>/ 최대 {{ band_limit }}표</small></h1>#}
+{#          {% if user.freshman %}#}
+{#            <div class="list-group">#}
+{#            {% for club in voted_band %}#}
+{#            <a href="{% url 'club_detail' club.pk %}" class="list-group-item">{{ club.name }}</a>#}
+{#            {% endfor %}#}
+{#            </div>#}
+{#          {% endif %}#}
+{#        </div>#}
+        <div class="col-xs-10">
+{#          <h3>#}
+{#            <a href="{% url 'club_list' %}?is_band=0">#}
+{#              비밴드<small class="glyphicon glyphicon-chevron-right" aria-hidden="true"></small>#}
+{#            </a>#}
+{#          </h3>#}
+          <h1>{{ voted_non_band | length }} <small>/ 최대 {{ total_limit }}표</small></h1>
           {% if user.freshman %}
             <div class="list-group">
             {% for club in voted_non_band %}

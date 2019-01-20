@@ -21,6 +21,7 @@ class MainView(TemplateView):
 
         context['band_limit'] = Freshman.BAND_VOTE_LIMIT
         context['non_band_limit'] = Freshman.NON_BAND_VOTE_LIMIT
+        context['total_limit'] = Freshman.BAND_VOTE_LIMIT + Freshman.NON_BAND_VOTE_LIMIT
 
         return context
 
