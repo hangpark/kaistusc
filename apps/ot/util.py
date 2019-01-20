@@ -23,6 +23,8 @@ def is_tester(user):
 
     return user.portal_info.ku_std_no in (
         "20110208",
+        "20160776",
+        "20170604",
         "20180379",
         "20180419",
         "20180058",
