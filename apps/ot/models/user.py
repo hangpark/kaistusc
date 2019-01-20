@@ -25,4 +25,4 @@ class Freshman(models.Model):
     NON_BAND_VOTE_LIMIT = 3
 
     def vote_limit_exceeded(self, is_band):
-        return self.voted_clubs.filter(is_band=is_band).count() > 5
+        return self.voted_clubs.filter().count() > 5
