@@ -24,7 +24,14 @@ class ClubListView(ListView):
         else:
             queryset = Club.objects.all()
 
-        return queryset.order_by('?')
+        sorted_queryset = list()
+
+        for pk in [20, 18, 15, 17, 9, 21, 16, 8, 23, 13, 11, 10, 14]:
+            sorted_queryset.append(queryset.get(pk=pk))
+
+        return sorted_queryset
+
+        # return queryset.order_by('?')
 
 
 class ClubDetailView(DetailView):
